@@ -80,6 +80,12 @@ body { background: var(--ui-bg); }
 /* 移动端抽屉里的侧栏 */
 .doc-drawer .ui-drawer__panel { width: min(88vw, 320px); }
 .doc-drawer .ui-drawer__body { padding: var(--ui-space-4); }
+/* 抽屉里的站点导航与页面目录之间拉一条分隔：两者层级不同，不加线会看成一串 */
+.doc-drawer__site {
+  margin-bottom: var(--ui-space-4);
+  padding-bottom: var(--ui-space-4);
+  border-bottom: 1px solid var(--ui-border);
+}
 /* 抽屉是触屏场景，条目回到 40px 命中高度 */
 .doc-drawer .ui-sidenav__item { min-height: var(--ui-control-h); }
 
@@ -545,6 +551,225 @@ body { background: var(--ui-bg); }
   tab-size: 2;
 }
 .doc-export__code code { font-family: var(--ui-font-mono); white-space: pre; }
+
+/* ============================================================
+   首页落地页（docs/index.html 专有）
+   ------------------------------------------------------------
+   与其他三页不同，首页没有 .doc-shell 的两栏栅格，而是直接用
+   .ui-container 铺满；首屏主体是一个「左调色右导出」的双栏。
+   1023px 是本页的断点，与文档站侧栏收起（1024px）对齐。
+   ============================================================ */
+.doc-land { padding-bottom: var(--ui-space-16); }
+.doc-land-hero { padding: var(--ui-space-12) 0 var(--ui-space-8); }
+.doc-land-hero .ui-hero__title { max-width: 18ch; }
+
+.doc-land-tool {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--ui-space-5);
+  align-items: start;
+  scroll-margin-top: 76px;
+}
+@media (max-width: 1023px) {
+  .doc-land-tool { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --- 调色台 --- */
+.doc-land-lab {
+  padding: var(--ui-space-5);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-card);
+}
+.doc-land-lab__title { font-size: var(--ui-fs-15); font-weight: var(--ui-fw-semibold); color: var(--ui-text); }
+.doc-land-lab__sub {
+  margin-top: 2px;
+  font-size: var(--ui-type-caption);
+  line-height: 1.6;
+  color: var(--ui-text-3);
+}
+.doc-land-lab__pick {
+  margin-top: var(--ui-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+}
+.doc-land-preview {
+  margin-top: var(--ui-space-4);
+  padding: var(--ui-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-block);
+}
+.doc-land-preview__row { display: flex; align-items: center; flex-wrap: wrap; gap: var(--ui-space-3); }
+.doc-land-lab__foot {
+  margin-top: var(--ui-space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--ui-space-3);
+}
+
+/* --- 导出面板进右栏：五颗按钮改为两列网格，窄栏里不会挤成一坨 --- */
+.doc-export--land { margin-top: 0; }
+.doc-export--land .doc-export__head { display: block; }
+.doc-export--land .doc-export__ops {
+  margin-top: var(--ui-space-4);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.doc-export--land .doc-export__ops > .ui-btn { width: 100%; }
+.doc-export--land [data-export-link] { grid-column: 1 / -1; }
+
+/* --- 首页区块：只留上分隔线，节奏比文档页松一档 --- */
+.doc-land-sec {
+  padding: var(--ui-space-12) 0;
+  border-top: 1px solid var(--ui-border);
+  scroll-margin-top: 76px;
+}
+
+/* --- 「给 AI 用」的文件清单：左边固定宽度的文件名，右边说明 --- */
+.doc-ai-file {
+  display: grid;
+  grid-template-columns: 156px minmax(0, 1fr);
+  gap: var(--ui-space-3);
+  align-items: baseline;
+}
+@media (max-width: 640px) {
+  .doc-ai-file { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}
+
+/* ============================================================
+   AI 规范页（docs/ai.html 专有）
+   ------------------------------------------------------------
+   这一页的正文全部由 docs.js 从 oneui.spec.js 渲染，所以样式也要
+   覆盖到「渲染出来的表格」——规格表统一走 .ui-table--compact，
+   靠 .ai-table 收一层外边距，避免每张表都要单独写类。
+   ============================================================ */
+.ai-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--ui-space-4);
+}
+.ai-art {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-4);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-card);
+}
+.ai-art__top { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-3); }
+.ai-art__size {
+  flex: none;
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-type-overline);
+  color: var(--ui-text-3);
+}
+.ai-art__desc { flex: 1; font-size: var(--ui-type-body-sm); line-height: 1.65; color: var(--ui-text-2); }
+
+/* 渲染出来的规格表：紧凑、可横向滚动，行高比默认表格小一档 */
+.ai-table { margin-top: var(--ui-space-3); }
+.ai-table .ui-table { font-size: var(--ui-type-body-sm); }
+.ai-table .ui-table th { white-space: nowrap; }
+.ai-table code {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-type-caption);
+  color: var(--ui-text);
+  white-space: nowrap;
+}
+
+/* 片段：每条一个折叠面板，默认收起，避免这一页太长 */
+.ai-snip { margin-top: var(--ui-space-3); }
+.ai-snip .ui-collapse__panel { padding-top: 0; }
+.ai-snip__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2) var(--ui-space-3);
+  margin: var(--ui-space-3) 0;
+  font-size: var(--ui-type-caption);
+  color: var(--ui-text-3);
+}
+.ai-snip__code {
+  margin: 0;
+  max-height: 420px;
+  overflow: auto;
+  padding: var(--ui-space-3) var(--ui-space-4);
+  background: var(--ui-code-bg);
+  color: var(--ui-code-text);
+  border-radius: var(--ui-radius-block);
+  font-size: var(--ui-fs-12);
+  line-height: 1.7;
+  tab-size: 2;
+}
+.ai-snip__code code { font-family: var(--ui-font-mono); white-space: pre; }
+
+/* ============================================================
+   自检页（docs/check.html 专有）
+   ============================================================ */
+.chk-input {
+  width: 100%;
+  min-height: 200px;
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-fs-12);
+  line-height: 1.7;
+  tab-size: 2;
+}
+.chk-report { margin-top: var(--ui-space-5); }
+.chk-sum {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2) var(--ui-space-4);
+  padding: var(--ui-space-4);
+  border-radius: var(--ui-radius-block);
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-border);
+  font-size: var(--ui-type-body-sm);
+}
+.chk-sum__n { font-family: var(--ui-font-mono); font-weight: var(--ui-fw-semibold); font-size: var(--ui-fs-20); }
+.chk-sum--ok .chk-sum__n { color: var(--ui-success); }
+.chk-sum--bad .chk-sum__n { color: var(--ui-danger); }
+.chk-list { margin-top: var(--ui-space-4); display: flex; flex-direction: column; gap: var(--ui-space-2); }
+.chk-item {
+  padding: var(--ui-space-3) var(--ui-space-4);
+  border-radius: var(--ui-radius-block);
+  border: 1px solid var(--ui-border);
+  background: var(--ui-surface);
+  box-shadow: inset 3px 0 0 var(--ui-border-strong);
+}
+.chk-item--error { box-shadow: inset 3px 0 0 var(--ui-danger); }
+.chk-item--warn { box-shadow: inset 3px 0 0 var(--ui-warning-500); }
+.chk-item__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2) var(--ui-space-3);
+}
+.chk-item__rule { font-weight: var(--ui-fw-semibold); color: var(--ui-text); font-size: var(--ui-type-body-sm); }
+.chk-item__line {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-type-overline);
+  color: var(--ui-text-3);
+}
+.chk-item__hit {
+  display: block;
+  margin-top: var(--ui-space-2);
+  padding: 2px var(--ui-space-2);
+  border-radius: var(--ui-radius-xs);
+  background: var(--ui-code-bg);
+  color: var(--ui-code-text);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-fs-12);
+  overflow-x: auto;
+  white-space: pre;
+}
+.chk-item__fix { margin-top: var(--ui-space-2); font-size: var(--ui-type-caption); color: var(--ui-text-2); }
 
 /* 页脚 */
 .doc-footer { border-top: 1px solid var(--ui-border); background: var(--ui-surface); }

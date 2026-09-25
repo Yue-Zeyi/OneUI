@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-ui-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>合规自检 · OneUI</title>
+<meta name="description" content="粘贴 HTML，按 OneUI 规范逐条检查：非 OneUI 类名、裸色值、非字阶字号、缺失的 ARIA、漏配的 data-target 等，每条给出行号与修法。">
+<link rel="stylesheet" href="../library/tokens.css">
+<link rel="stylesheet" href="../library/base.css">
+<link rel="stylesheet" href="../library/components.css">
+<link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+<header class="ui-navbar doc-navbar" data-ui="navbar" data-navbar-drawer="#docDrawer">
+  <div class="ui-container ui-container--wide ui-navbar__inner">
+    <a class="ui-navbar__brand" href="index.html">
+      <span class="ui-navbar__logo" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.4 5.9 8.4 3.6v8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.2" y="11.45" width="9.6" height="1.9" rx="0.95" fill="currentColor"/></svg>
+      </span>
+      OneUI
+      <span class="doc-brand-sub">v1.0.0</span>
+    </a>
+    <nav class="ui-nav" aria-label="主导航">
+      <a class="ui-nav__link" href="index.html">首页</a>
+      <a class="ui-nav__link" href="docs.html">文档</a>
+      <a class="ui-nav__link" href="ai.html">AI 规范</a>
+      <a class="ui-nav__link" href="check.html" aria-current="page">自检</a>
+    </nav>
+    <div class="ui-navbar__actions">
+      <button class="ui-icon-btn" type="button" data-theme-toggle aria-pressed="false" aria-label="切换深浅色">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.2v1.6M10 15.2v1.6M3.2 10h1.6M15.2 10h1.6M5.2 5.2l1.1 1.1M13.7 13.7l1.1 1.1M14.8 5.2l-1.1 1.1M6.3 13.7l-1.1 1.1"/><circle cx="10" cy="10" r="3.1"/></svg>
+      </button>
+      <div class="ui-dropdown-wrap doc-accent-picker" data-ui="dropdown" data-accent-picker>
+        <button class="ui-icon-btn" type="button" data-ui="dropdown-trigger" aria-label="切换主色" title="切换主色">
+          <span class="doc-accent-picker__dot" aria-hidden="true"></span>
+        </button>
+        <div class="ui-menu doc-accent-menu" role="menu" aria-label="预设主色">
+          <div class="ui-menu__label">主色预设</div>
+          <button class="ui-menu__item" role="menuitemradio" type="button" data-value="ink" data-accent-option="ink" aria-checked="true">
+            <span class="doc-accent-swatch" style="background:#18181B" aria-hidden="true"></span>墨黑
+            <span class="ui-menu__check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4"/></svg></span>
+          </button>
+          <button class="ui-menu__item" role="menuitemradio" type="button" data-value="blue" data-accent-option="blue" aria-checked="false">
+            <span class="doc-accent-swatch" style="background:#2563EB" aria-hidden="true"></span>品蓝
+            <span class="ui-menu__check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4"/></svg></span>
+          </button>
+          <button class="ui-menu__item" role="menuitemradio" type="button" data-value="indigo" data-accent-option="indigo" aria-checked="false">
+            <span class="doc-accent-swatch" style="background:#4F46E5" aria-hidden="true"></span>靛蓝
+            <span class="ui-menu__check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4"/></svg></span>
+          </button>
+          <button class="ui-menu__item" role="menuitemradio" type="button" data-value="emerald" data-accent-option="emerald" aria-checked="false">
+            <span class="doc-accent-swatch" style="background:#047857" aria-hidden="true"></span>翠绿
+            <span class="ui-menu__check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4"/></svg></span>
+          </button>
+          <button class="ui-menu__item" role="menuitemradio" type="button" data-value="orange" data-accent-option="orange" aria-checked="false">
+            <span class="doc-accent-swatch" style="background:#C2410C" aria-hidden="true"></span>橙
+            <span class="ui-menu__check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4"/></svg></span>
+          </button>
+          <button class="ui-menu__item" role="menuitemradio" type="button" data-value="violet" data-accent-option="violet" aria-checked="false">
+            <span class="doc-accent-swatch" style="background:#7C3AED" aria-hidden="true"></span>紫罗兰
+            <span class="ui-menu__check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4"/></svg></span>
+          </button>
+          <div class="ui-menu__divider"></div>
+          <button class="ui-menu__item" role="menuitem" type="button" data-accent-palette>
+            <span class="ui-menu__icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.2"/><circle cx="7.2" cy="7.9" r="1.05"/><circle cx="12.8" cy="7.9" r="1.05"/><circle cx="8.3" cy="12.9" r="1.05"/></svg></span>调色板
+            <span class="ui-menu__shortcut">自定义</span>
+          </button>
+        </div>
+      </div>
+      <button class="ui-icon-btn ui-navbar__toggle" type="button" data-ui-navbar-toggle aria-expanded="false" aria-label="打开目录">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+      </button>
+      <a class="ui-btn ui-btn--primary ui-btn--sm" href="ai.html" style="height:32px">看规范</a>
+    </div>
+  </div>
+</header>
+
+<div class="ui-drawer ui-drawer--left doc-drawer" id="docDrawer" role="dialog" aria-modal="true" aria-label="页面导航" aria-hidden="true">
+  <div class="ui-drawer__panel">
+    <div class="ui-drawer__header">
+      <div class="ui-drawer__title">导航</div>
+      <button class="ui-icon-btn" type="button" data-ui-close aria-label="关闭">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>
+      </button>
+    </div>
+    <div class="ui-drawer__body">
+      <nav class="ui-sidenav doc-drawer__site" aria-label="站点导航">
+        <div class="ui-sidenav__group">
+          <div class="ui-sidenav__label">站点</div>
+          <a class="ui-sidenav__item" href="index.html">首页</a>
+          <a class="ui-sidenav__item" href="docs.html">文档</a>
+          <a class="ui-sidenav__item" href="ai.html">AI 规范</a>
+          <a class="ui-sidenav__item" href="check.html" aria-current="page">自检</a>
+        </div>
+      </nav>
+      <nav class="ui-sidenav" aria-label="本页导航">
+        <div class="ui-sidenav__group">
+          <div class="ui-sidenav__label">本页</div>
+          <a class="ui-sidenav__item" href="#chk-use">粘贴检查</a>
+          <a class="ui-sidenav__item" href="#chk-rules">检查项清单</a>
+          <a class="ui-sidenav__item" href="#chk-limit">它能查出什么</a>
+        </div>
+      </nav>
+    </div>
+    <div class="doc-drawer__foot doc-accent-mobile">
+      <div class="doc-accent-mobile__title">主色预设</div>
+      <div class="doc-accent-presets">
+        <button class="doc-accent-dot" type="button" data-accent-option="ink" style="background:#18181B" aria-label="墨黑" aria-checked="true" role="menuitemradio"></button>
+        <button class="doc-accent-dot" type="button" data-accent-option="blue" style="background:#2563EB" aria-label="品蓝" aria-checked="false" role="menuitemradio"></button>
+        <button class="doc-accent-dot" type="button" data-accent-option="indigo" style="background:#4F46E5" aria-label="靛蓝" aria-checked="false" role="menuitemradio"></button>
+        <button class="doc-accent-dot" type="button" data-accent-option="emerald" style="background:#047857" aria-label="翠绿" aria-checked="false" role="menuitemradio"></button>
+        <button class="doc-accent-dot" type="button" data-accent-option="orange" style="background:#C2410C" aria-label="橙" aria-checked="false" role="menuitemradio"></button>
+        <button class="doc-accent-dot" type="button" data-accent-option="violet" style="background:#7C3AED" aria-label="紫罗兰" aria-checked="false" role="menuitemradio"></button>
+      </div>
+      <button class="ui-btn ui-btn--default ui-btn--sm doc-accent-mobile__palette" type="button" data-accent-palette>
+        <span class="doc-accent-chip" data-accent-chip aria-hidden="true"></span>调色板
+      </button>
+    </div>
+  </div>
+</div>
+
+<main class="doc-land" id="top">
+  <div class="ui-container ui-container--wide">
+
+    <section class="doc-land-hero">
+      <div class="doc-hero__eyebrow">
+        <span class="ui-navbar__logo" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.4 5.9 8.4 3.6v8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.2" y="11.45" width="9.6" height="1.9" rx="0.95" fill="currentColor"/></svg>
+        </span>
+        合规自检
+      </div>
+      <h1 class="ui-hero__title">把写好的 HTML 贴进来</h1>
+      <p class="ui-hero__desc">
+        规范写在 <a class="ui-link" href="ai.html">AI 规范</a> 里，是用来说明「该怎么做」的；
+        这一页是用来验证「有没有做到」的。它逐条对照同一份规则集并给出行号与修法——
+        AI 写完自己跑一遍，比人肉 review 有效。
+      </p>
+      <div class="doc-hero__badges">
+        <span class="ui-badge ui-badge--pill">16 条规则</span>
+        <span class="ui-badge ui-badge--outline ui-badge--pill">纯前端 · 不外传</span>
+        <span class="ui-badge ui-badge--outline ui-badge--pill">Ctrl/⌘ + Enter 运行</span>
+      </div>
+    </section>
+
+    <!-- ==================== 粘贴区 ==================== -->
+    <section class="doc-land-sec" id="chk-use">
+      <div class="doc-section__head">
+        <div class="doc-section__eyebrow">Check</div>
+        <h2 class="doc-section__title">粘贴检查</h2>
+        <p class="doc-section__desc">
+          可以贴一个组件片段，也可以贴整页 HTML。<b>内容不会离开这台机器</b>——检查全部在浏览器里完成，没有网络请求。
+        </p>
+      </div>
+
+      <div class="ui-stack ui-stack--4">
+        <label class="ui-label" for="chkInput">待检查的 HTML</label>
+        <textarea class="ui-textarea chk-input" id="chkInput" data-chk-input spellcheck="false" placeholder="把 HTML 贴在这里，或点下面的示例。"></textarea>
+
+        <div class="ui-cluster ui-cluster--2">
+          <button class="ui-btn ui-btn--primary" type="button" data-chk-run>开始检查</button>
+          <button class="ui-btn ui-btn--default" type="button" data-chk-sample="#chkBad">载入错误示例</button>
+          <button class="ui-btn ui-btn--default" type="button" data-chk-sample="#chkGood">载入正确示例</button>
+          <button class="ui-btn ui-btn--ghost" type="button" data-chk-clear>清空</button>
+        </div>
+
+        <div class="chk-report" data-chk-report aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ==================== 规则清单 ==================== -->
+    <section class="doc-land-sec" id="chk-rules">
+      <div class="doc-section__head">
+        <div class="doc-section__eyebrow">Rules</div>
+        <h2 class="doc-section__title">检查项清单</h2>
+        <p class="doc-section__desc">
+          <b>错误</b>会让功能不工作或主题失效；<b>提醒</b>是可维护性问题，可以权衡后再决定改不改。
+          这份清单与检查实现读的是同一份规则表，不会出现「页面写着会查、实际没查」。
+        </p>
+      </div>
+      <div data-chk-rules></div>
+    </section>
+
+    <!-- ==================== 边界说明 ==================== -->
+    <section class="doc-land-sec" id="chk-limit">
+      <div class="doc-section__head">
+        <div class="doc-section__eyebrow">Limits</div>
+        <h2 class="doc-section__title">它能查出什么，查不出什么</h2>
+        <p class="doc-section__desc">说清边界，免得把「检查通过」误当成「已经正确」。</p>
+      </div>
+
+      <div class="ui-grid ui-grid--2 ui-grid--tight">
+        <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-stack ui-stack--4">
+          <div class="ui-h4">查得出</div>
+          <ul class="ui-list">
+            <li class="ui-list__item ui-list__item--interactive">用了别的库的类名、Token、字号、间距、圆角</li>
+            <li class="ui-list__item ui-list__item--interactive">弹层触发按钮漏了 <code class="ui-code">data-target</code></li>
+            <li class="ui-list__item ui-list__item--interactive">弹层、图标按钮、折叠面板、标签页缺 ARIA</li>
+            <li class="ui-list__item ui-list__item--interactive">按钮漏写 <code class="ui-code">type</code>、错误态没告知读屏</li>
+            <li class="ui-list__item ui-list__item--interactive"><code class="ui-code">!important</code> 与自写固定定位弹层</li>
+          </ul>
+        </div></div>
+
+        <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-stack ui-stack--4">
+          <div class="ui-h4">查不出</div>
+          <ul class="ui-list">
+            <li class="ui-list__item ui-list__item--interactive">对比度是否达标 —— 要算实际渲染色，属于运行时</li>
+            <li class="ui-list__item ui-list__item--interactive">键盘顺序与焦点陷阱是否真的可用</li>
+            <li class="ui-list__item ui-list__item--interactive">命中的 <code class="ui-code">data-target</code> 是否真的存在对应元素</li>
+            <li class="ui-list__item ui-list__item--interactive">文案是否说清了结果与下一步</li>
+            <li class="ui-list__item ui-list__item--interactive">写在外部 CSS 文件里的样式（这里只扫 HTML 内的内联样式与 class）</li>
+          </ul>
+          <div class="ui-caption ui-muted">
+            后面这几项要靠人工与真实的键盘、读屏测试。工具的边界说清楚，比含糊地说「已检查」有用。
+          </div>
+        </div></div>
+      </div>
+
+      <div class="doc-note">
+        <b>规则集来自哪里：</b><code class="ui-code">docs/oneui.spec.js</code> 里的禁止清单与状态契约。
+        改了规范，这一页的规则与文案跟着变——页面里没有手写的第二份副本。
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="doc-footer">
+  <div class="ui-container ui-container--wide" style="padding-block: var(--ui-space-8)">
+    <div class="ui-row ui-row--between">
+      <div class="ui-stack ui-stack--2">
+        <div class="ui-h4">OneUI</div>
+        <div class="ui-caption ui-muted">框架无关的通用 UI 组件库 · v1.0.0 · 中性无色主题 + 单一可配置主色</div>
+      </div>
+      <div class="ui-cluster ui-cluster--4">
+        <a class="ui-footer__link" href="index.html">首页</a>
+        <a class="ui-footer__link" href="docs.html">文档</a>
+        <a class="ui-footer__link" href="ai.html">AI 规范</a>
+        <a class="ui-footer__link" href="check.html">自检</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="ui-backtop" type="button" data-ui="backtop" aria-label="回到顶部">
+  <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16V5M5.5 9.5L10 5l4.5 4.5"/></svg>
+</button>
+
+<!-- 示例源码放在 type=text/plain 的脚本块里：脚本块是原始文本，尖括号无需转义 -->
+<script type="text/plain" id="chkBad">
+<div class="container">
+  <div class="row d-flex">
+    <button class="btn btn-primary"
+            style="background:#2563EB; border-radius:10px; margin-bottom:10px">
+      主按钮
+    </button>
+
+    <button class="ui-btn ui-btn--primary">忘了写 type</button>
+
+    <button class="ui-icon-btn">
+      <svg viewBox="0 0 20 20"><path d="M4 10h12"/></svg>
+    </button>
+  </div>
+
+  <button class="ui-btn ui-btn--default" data-ui="modal">缺 data-target，点不开</button>
+
+  <div class="ui-modal" id="m1">
+    <div class="ui-modal__dialog">
+      <div class="ui-modal__body">弹层本体缺 role 与 aria</div>
+    </div>
+  </div>
+
+  <span class="ui-popconfirm-host" data-ui="popconfirm">
+    <button class="ui-btn ui-btn--danger-outline" type="button"
+            data-ui="popconfirm-trigger">删除</button>
+  </span>
+
+  <input class="ui-input is-invalid" type="text"
+         style="padding:10px; position:fixed; color:var(--ui-p-600)!important">
+
+  <button class="ui-collapse__header" type="button">缺 aria-expanded 与 aria-controls</button>
+
+  <div class="ui-table-wrap" data-ui="table-sort">
+    <table class="ui-table">
+      <thead><tr>
+        <th><button class="ui-table__sort" type="button">表头按钮缺 data-sort，点了不排序</button></th>
+      </tr></thead>
+      <tbody><tr><td>1</td></tr></tbody>
+    </table>
+  </div>
+</div>
+</script>
+
+<script type="text/plain" id="chkGood">
+<div class="ui-card">
+  <div class="ui-card__header">
+    <div class="ui-card__title">成员</div>
+    <div class="ui-card__desc">共 3 人，2 人已激活</div>
+  </div>
+  <div class="ui-card__body ui-stack ui-stack--4">
+    <div class="ui-field">
+      <label class="ui-label" for="chkEmail">邮箱 <span class="ui-label__required">*</span></label>
+      <input class="ui-input" id="chkEmail" type="email" placeholder="name@company.com">
+    </div>
+    <div class="ui-cluster ui-cluster--2">
+      <button class="ui-btn ui-btn--default" type="button">取消</button>
+      <button class="ui-btn ui-btn--primary" type="button"
+              data-ui="modal" data-target="#chkInvite">邀请</button>
+    </div>
+  </div>
+</div>
+
+<div class="ui-modal" id="chkInvite" role="dialog" aria-modal="true"
+     aria-labelledby="chkInviteTitle" aria-hidden="true">
+  <div class="ui-modal__dialog">
+    <div class="ui-modal__header">
+      <div class="ui-modal__title" id="chkInviteTitle">邀请成员</div>
+      <button class="ui-icon-btn ui-icon-btn--sm" type="button"
+              data-ui-close aria-label="关闭">
+        <svg viewBox="0 0 20 20"><path d="M5 5l10 10"/></svg>
+      </button>
+    </div>
+    <div class="ui-modal__body">填邮箱后发送邀请。</div>
+  </div>
+</div>
+</script>
+
+<script src="../library/components.js"></script>
+<script src="oneui.spec.js"></script>
+<script src="oneui.ai.js"></script>
+<script src="docs.js"></script>
+</body>
+</html>

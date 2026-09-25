@@ -1066,6 +1066,12 @@
 }
 .ui-tooltip.is-open { opacity: 1; transform: none; }
 
+/* 二次确认的宿主：包住触发按钮，声明式写法挂在它身上（data-ui="popconfirm"）。
+   浮层面板由 JS 注入到 <body>，不走宿主定位，所以这里不需要 box 样式。
+   但必须有 display 值：宿主是 <span>，行内盒会带出「相邻元素之间的半个空格」
+   与基线错位两个问题，触发按钮一多就会看出参差。 */
+.ui-popconfirm-host { display: inline-flex; vertical-align: top; }
+
 /* 二次确认气泡 */
 .ui-popconfirm {
   position: fixed;

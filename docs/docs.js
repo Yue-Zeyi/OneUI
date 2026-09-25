@@ -193,9 +193,34 @@
     '--ui-primary-dark-weak', '--ui-primary-dark-weak-hover', '--ui-primary-dark-border',
     '--ui-primary-dark-text'];
   var INLINE_PROPS = RAMP_STEPS.map(function (s) { return '--ui-p-' + s; }).concat(DERIVED);
+  var CUSTOM_STYLE_ID = 'oneui-custom-accent';
 
+  /* 清掉自定义主色的全部痕迹：旧行内样式（历史版本残留）+ 注入的规则。
+     切回预设、换色、恢复默认都会走到这里，漏掉任何一个来源都会留下幽灵值。 */
   function clearInlineAccent() {
     INLINE_PROPS.forEach(function (p) { root.style.removeProperty(p); });
+    var el = document.getElementById(CUSTOM_STYLE_ID);
+    if (el && el.parentNode) el.parentNode.removeChild(el);
+  }
+
+  /* 自定义主色必须落在一个 <style> 规则里，不能写行内样式。
+     为什么：主色底上的字色在浅色/深色两套主题下要用**不同**的值 —— 浅色看
+     --ui-primary-text，深色看 --ui-primary-dark-text，这个切换靠 tokens.css
+     里深色块（权重 0,2,0）把 --ui-primary-text 改指过去完成。行内样式的
+     优先级高过任何选择器，会把那条映射整个压死。
+     实测症状：输入 #7F1D1D 这类深色，浅色下白字 10:1 完全正常；一进深色
+     模式主色被提亮到 #AE7171，文字却还是行内写死的白字，只剩 3.89:1。
+     用 :root:where([data-ui-accent="custom"])（恒 0,1,0）+ 注入位置在
+     tokens.css 之后：浅色下按源码顺序盖过 :root 的默认值，深色块又能照常
+     接管那几个槽位 —— 与导出的 oneui-theme.css 是同一套机制。 */
+  function writeCustomAccent(css) {
+    var el = document.getElementById(CUSTOM_STYLE_ID);
+    if (!el) {
+      el = document.createElement('style');
+      el.id = CUSTOM_STYLE_ID;
+      document.head.appendChild(el);
+    }
+    el.textContent = css;
   }
 
   function currentAccent() { return root.getAttribute('data-ui-accent') || 'ink'; }
@@ -297,19 +322,21 @@
     while (contrast(BLACK, dk) < 4.8 && g2 < 40) { dk = mix(dk, WHITE, 0.05); g2++; }
 
     clearInlineAccent();
-    root.setAttribute('data-ui-accent', 'custom');   /* 不匹配任何预设块 → 行内值说了算 */
-    RAMP_STEPS.forEach(function (s) { root.style.setProperty('--ui-p-' + s, ramp[s]); });
+    root.setAttribute('data-ui-accent', 'custom');   /* 不匹配任何预设块 → 注入的规则说了算 */
     var px = function (s) { return 'var(--ui-p-' + s + ')'; };
-    root.style.setProperty('--ui-primary-hover', px(700));
-    root.style.setProperty('--ui-primary-active', px(800));
-    root.style.setProperty('--ui-primary-text', textToken);
-    root.style.setProperty('--ui-primary-dark', rgbToHex(dk));
-    root.style.setProperty('--ui-primary-dark-hover', rgbToHex(mix(dk, WHITE, 0.14)));
-    root.style.setProperty('--ui-primary-dark-active', rgbToHex(mix(dk, WHITE, 0.26)));
-    root.style.setProperty('--ui-primary-dark-weak', px(900));
-    root.style.setProperty('--ui-primary-dark-weak-hover', px(800));
-    root.style.setProperty('--ui-primary-dark-border', px(700));
-    root.style.setProperty('--ui-primary-dark-text', 'var(--ui-n-950)');
+    var decl = [];
+    RAMP_STEPS.forEach(function (s) { decl.push('  --ui-p-' + s + ': ' + ramp[s] + ';'); });
+    decl.push('  --ui-primary-hover: ' + px(700) + ';');
+    decl.push('  --ui-primary-active: ' + px(800) + ';');
+    decl.push('  --ui-primary-text: ' + textToken + ';');
+    decl.push('  --ui-primary-dark: ' + rgbToHex(dk) + ';');
+    decl.push('  --ui-primary-dark-hover: ' + rgbToHex(mix(dk, WHITE, 0.14)) + ';');
+    decl.push('  --ui-primary-dark-active: ' + rgbToHex(mix(dk, WHITE, 0.26)) + ';');
+    decl.push('  --ui-primary-dark-weak: ' + px(900) + ';');
+    decl.push('  --ui-primary-dark-weak-hover: ' + px(800) + ';');
+    decl.push('  --ui-primary-dark-border: ' + px(700) + ';');
+    decl.push('  --ui-primary-dark-text: var(--ui-n-950);');
+    writeCustomAccent(':root:where([data-ui-accent="custom"]) {\n' + decl.join('\n') + '\n}');
 
     if (!quiet) {
       try {
@@ -1252,6 +1279,223 @@
     ].join('\n') + '\n';
   }
 
+  /* 完整样板页：golden.html
+     它和 index.html 的分工不同 —— 那个证明「能跑起来」，这个证明「一整页
+     该怎么组织」：导航、指标、卡片、表格、表单、弹窗，以及事件怎么接。
+     AI 最擅长模仿而不是推导，所以一份正确的全页比十条规则都管用。
+     这份同时也是自检页「正确示例」的同源参照，别写过时的写法。 */
+  function goldenPage() {
+    return [
+      '<!DOCTYPE html>',
+      '<html lang="zh-CN" data-ui-theme="light" data-ui-accent="brand">',
+      '<head>',
+      '<meta charset="utf-8">',
+      '<meta name="viewport" content="width=device-width, initial-scale=1">',
+      '<title>成员管理 · OneUI 样板页</title>',
+      '<!-- 顺序不可颠倒：tokens 定义变量 → base 定页面基线 → components 用它们；',
+      '     oneui-theme 放最末，它要覆盖主色阶，必须排在 tokens 之后。 -->',
+      '<link rel="stylesheet" href="oneui/tokens.css">',
+      '<link rel="stylesheet" href="oneui/base.css">',
+      '<link rel="stylesheet" href="oneui/components.css">',
+      '<link rel="stylesheet" href="oneui/oneui-theme.css">',
+      '</head>',
+      '<body>',
+      '',
+      '<!-- 顶部导航。窄屏时 .ui-nav 会隐藏，导航落进抽屉（data-navbar-drawer 指过去）。 -->',
+      '<header class="ui-navbar" data-ui="navbar" data-navbar-drawer="#navDrawer">',
+      '  <div class="ui-container ui-container--wide ui-navbar__inner">',
+      '    <a class="ui-navbar__brand" href="#">',
+      '      <span class="ui-navbar__logo" aria-hidden="true">',
+      '        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.4 5.9 8.4 3.6v8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.2" y="11.45" width="9.6" height="1.9" rx="0.95" fill="currentColor"/></svg>',
+      '      </span>',
+      '      Acme',
+      '    </a>',
+      '    <nav class="ui-nav" aria-label="主导航">',
+      '      <a class="ui-nav__link" href="#" aria-current="page">成员</a>',
+      '      <a class="ui-nav__link" href="#">计费</a>',
+      '      <a class="ui-nav__link" href="#">设置</a>',
+      '    </nav>',
+      '    <div class="ui-navbar__actions">',
+      '      <button class="ui-btn ui-btn--primary ui-btn--sm" type="button"',
+      '              data-ui="modal" data-target="#inviteModal">邀请成员</button>',
+      '      <button class="ui-icon-btn ui-navbar__toggle" type="button"',
+      '              data-ui-navbar-toggle aria-expanded="false" aria-label="打开导航">',
+      '        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h14M3 10h14M3 14h14"/></svg>',
+      '      </button>',
+      '    </div>',
+      '  </div>',
+      '</header>',
+      '',
+      '<!-- 窄屏导航抽屉 -->',
+      '<div class="ui-drawer ui-drawer--left" id="navDrawer" role="dialog" aria-modal="true" aria-label="导航" aria-hidden="true">',
+      '  <div class="ui-drawer__panel">',
+      '    <div class="ui-drawer__header">',
+      '      <div class="ui-drawer__title">导航</div>',
+      '      <button class="ui-icon-btn" type="button" data-ui-close aria-label="关闭">',
+      '        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>',
+      '      </button>',
+      '    </div>',
+      '    <div class="ui-drawer__body">',
+      '      <nav class="ui-sidenav ui-sidenav" aria-label="站点导航">',
+      '        <a class="ui-sidenav__item" href="#" aria-current="page">成员</a>',
+      '        <a class="ui-sidenav__item" href="#">计费</a>',
+      '        <a class="ui-sidenav__item" href="#">设置</a>',
+      '      </nav>',
+      '    </div>',
+      '  </div>',
+      '</div>',
+      '',
+      '<main class="ui-container ui-section ui-stack ui-stack--8">',
+      '',
+      '  <!-- 区块标题 -->',
+      '  <header class="ui-section-header">',
+      '    <h1 class="ui-section-header__title">成员</h1>',
+      '    <p class="ui-section-header__desc">共 3 人。角色决定可见范围，改动即时生效。</p>',
+      '  </header>',
+      '',
+      '  <!-- 指标条：三个并列统计。数字列加 ui-num 保证等宽对齐。 -->',
+      '  <div class="ui-grid ui-grid--3 ui-grid--tight">',
+      '    <div class="ui-stat">',
+      '      <div class="ui-stat__label">总成员</div>',
+      '      <div class="ui-stat__value ui-num">3</div>',
+      '    </div>',
+      '    <div class="ui-stat">',
+      '      <div class="ui-stat__label">本月新增</div>',
+      '      <div class="ui-stat__value ui-num">2</div>',
+      '      <div class="ui-stat__caption"><span class="ui-stat__trend ui-stat__trend--up">+2</span> 较上月</div>',
+      '    </div>',
+      '    <div class="ui-stat">',
+      '      <div class="ui-stat__label">待接受邀请</div>',
+      '      <div class="ui-stat__value ui-num">1</div>',
+      '    </div>',
+      '  </div>',
+      '',
+      '  <!-- 主内容卡：工具栏 + 表格 -->',
+      '  <div class="ui-card">',
+      '    <div class="ui-card__header">',
+      '      <div class="ui-card__title">全部成员</div>',
+      '      <div class="ui-card__desc">点表头可排序</div>',
+      '    </div>',
+      '    <div class="ui-card__body ui-stack ui-stack--4">',
+      '      <div class="ui-toolbar">',
+      '        <div class="ui-toolbar__group">',
+      '          <input class="ui-input ui-input--sm" type="search" placeholder="搜索姓名或邮箱" aria-label="搜索成员">',
+      '        </div>',
+      '        <div class="ui-toolbar__spacer"></div>',
+      '        <div class="ui-toolbar__group">',
+      '          <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" id="exportBtn">导出</button>',
+      '        </div>',
+      '      </div>',
+      '',
+      '      <div class="ui-table-wrap" data-ui="table-sort">',
+      '        <table class="ui-table">',
+      '          <thead>',
+      '            <tr>',
+      '              <th><button class="ui-table__sort" type="button" data-sort="0" aria-sort="none">姓名</button></th>',
+      '              <th><button class="ui-table__sort" type="button" data-sort="1" aria-sort="none">角色</button></th>',
+      '              <th><button class="ui-table__sort" type="button" data-sort="2" aria-sort="none">最近登录</button></th>',
+      '              <th><span class="ui-caption ui-muted">操作</span></th>',
+      '            </tr>',
+      '          </thead>',
+      '          <tbody>',
+      '            <tr>',
+      '              <td>李工</td>',
+      '              <td><span class="ui-badge ui-badge--primary">管理员</span></td>',
+      '              <td class="ui-num">2 小时前</td>',
+      '              <td><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button">编辑</button></td>',
+      '            </tr>',
+      '            <tr>',
+      '              <td>王工</td>',
+      '              <td><span class="ui-badge">开发者</span></td>',
+      '              <td class="ui-num">3 天前</td>',
+      '              <td><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button">编辑</button></td>',
+      '            </tr>',
+      '            <tr>',
+      '              <td>赵工</td>',
+      '              <td><span class="ui-status ui-status--warning"><span class="ui-dot"></span>待接受</span></td>',
+      '              <td class="ui-num">—</td>',
+      '              <td><span class="ui-popconfirm-host" data-ui="popconfirm"',
+      '                        data-popconfirm-title="确认撤回这条邀请？"',
+      '                        data-popconfirm-desc="撤回后对方手上的链接立即失效，需要重新邀请。"',
+      '                        data-popconfirm-ok="撤回">',
+      '                <button class="ui-btn ui-btn--danger-outline ui-btn--sm" type="button" data-ui="popconfirm-trigger">撤回</button>',
+      '              </span></td>',
+      '            </tr>',
+      '          </tbody>',
+      '        </table>',
+      '      </div>',
+      '',
+      '      <!-- 提示条负责持续可见的状态说明，一次性反馈才用 toast -->',
+      '      <div class="ui-alert ui-alert--info">',
+      '        <span class="ui-alert__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v4.5M10 6.4v.6"/></svg></span>',
+      '        <div class="ui-alert__body">',
+      '          <div class="ui-alert__title">还有 1 条邀请未被接受</div>',
+      '          <div class="ui-alert__desc">邀请链接 24 小时后失效。失效后需要重新发送。</div>',
+      '        </div>',
+      '      </div>',
+      '    </div>',
+      '  </div>',
+      '',
+      '</main>',
+      '',
+      '<!-- 邀请弹窗。三件套 role / aria-modal / aria-labelledby 一个都不能少。 -->',
+      '<div class="ui-modal" id="inviteModal" role="dialog" aria-modal="true"',
+      '     aria-labelledby="inviteTitle" aria-hidden="true">',
+      '  <div class="ui-modal__dialog">',
+      '    <div class="ui-modal__header">',
+      '      <div class="ui-modal__title" id="inviteTitle">邀请成员</div>',
+      '      <button class="ui-icon-btn ui-icon-btn--sm" type="button" data-ui-close aria-label="关闭">',
+      '        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg>',
+      '      </button>',
+      '    </div>',
+      '    <div class="ui-modal__body">',
+      '      <div class="ui-field">',
+      '        <label class="ui-label" for="inviteEmail">邮箱 <span class="ui-label__required">*</span></label>',
+      '        <input class="ui-input" id="inviteEmail" type="email" placeholder="name@company.com">',
+      '        <div class="ui-help">对方会收到一封含 24 小时有效链接的邮件。</div>',
+      '      </div>',
+      '    </div>',
+      '    <div class="ui-modal__footer">',
+      '      <button class="ui-btn ui-btn--default" type="button" data-ui-close>取消</button>',
+      '      <button class="ui-btn ui-btn--primary" type="button" id="inviteOk">发送邀请</button>',
+      '    </div>',
+      '  </div>',
+      '</div>',
+      '',
+      '<script src="oneui/components.js"></script>',
+      '<script>',
+      '  /* 行为都通过 ui:* 自定义事件广播，这里是原生接法。',
+      '     换到 Vue / React 里就是 @ui:sort 或 addEventListener，逻辑一样。 */',
+      '  document.querySelector("[data-ui=\\"table-sort\\"]").addEventListener("ui:sort", function (e) {',
+      '    UI.toast({',
+      '      message: "已按第 " + (e.detail.index + 1) + " 列" +',
+      '               (e.detail.direction === "ascending" ? "升序" : "降序") + "排列",',
+      '      duration: 1600',
+      '    });',
+      '  });',
+      '',
+      '  document.getElementById("exportBtn").addEventListener("click", function () {',
+      '    UI.toast({ message: "已开始导出", type: "success", description: "完成后会发到你的邮箱。" });',
+      '  });',
+      '',
+      '  document.getElementById("inviteOk").addEventListener("click", function () {',
+      '    var email = document.getElementById("inviteEmail");',
+      '    if (!email.value.trim()) {',
+      '      email.setAttribute("aria-invalid", "true");',
+      '      email.classList.add("is-invalid");',
+      '      UI.toast({ message: "请先填写邮箱", type: "danger" });',
+      '      email.focus();',
+      '      return;',
+      '    }',
+      '    UI.modal.close("#inviteModal");',
+      '    UI.toast({ message: "邀请已发送", type: "success", description: "对方接受后会自动加入。" });',
+      '  });',
+      '</script>',
+      '</body>',
+      '</html>'
+    ].join('\n');
+  }
+
   function starterReadme() {
     return [
       '# OneUI Starter',
@@ -1263,12 +1507,26 @@
       '| 文件 | 说明 |',
       '| --- | --- |',
       '| `index.html` | 最小接入示例，从这里开始改 |',
+      '| `golden.html` | 一整页完整样板：导航、指标、表格、表单、弹窗与事件接线 |',
+      '| `AGENTS.md` | **给 AI 的规则**：禁止清单、Token 契约、决策表、15 个组件的完整片段 |',
+      '| `oneui.spec.json` | 组件契约的机器读版本，AI 按需取用 |',
+      '| `llms.txt` | 索引，供抓站场景使用 |',
       '| `oneui/tokens.css` | 全部设计 Token，三层结构：L1 原始 → L2 语义 → L3 组件 |',
       '| `oneui/base.css` | 重置与排版基线 |',
       '| `oneui/components.css` | 组件样式 |',
       '| `oneui/components.js` | 组件行为，原生 JS，导出 `window.UI` |',
       '| `oneui/oneui-theme.css` | 本次导出的主色主题 |',
       '| `oneui/tokens.json` | 同一套 Token 的 JSON 版，给设计侧用 |',
+      '',
+      '## 让 AI 照着写',
+      '',
+      '`AGENTS.md` 放在项目根目录就行 —— 多数编码助手（CodeBuddy、Claude Code、Cursor 等）',
+      '会自动读取它。`oneui.spec.json` 与它同级，AI 要查某个组件的准确类名时再读。',
+      '',
+      '这一步不做的话，AI 会按它的先验生成 Bootstrap 或 Tailwind 的类名：',
+      '`container` / `d-flex` / `btn-primary` 在这套库里全都不存在，写了不报错，只是完全不生效。',
+      '',
+      '改完自己的代码，可以回文档站的「自检」页把 HTML 贴进去，逐条对照规范查一遍。',
       '',
       '## 接入',
       '',
@@ -1312,6 +1570,20 @@
     ].join('\n');
   }
 
+  /* 给 AI 的那几份。它们在内存里生成，不走 fetch —— 所以 content 部分
+     随便什么环境都能出，file:// 下不可用的只有需要读源码的 library/。
+     少了这一步，导出的就只是一套「看得见」的样式，而不是「能让 AI 照着写」的规范。 */
+  function aiBundle() {
+    var spec = window.OneUISpec;
+    var ai = window.OneUIAI;
+    if (!spec || !ai) return [];
+    return [
+      { name: 'AGENTS.md', text: ai.renderAgentsMd(spec) },
+      { name: 'llms.txt', text: ai.renderLlmsTxt(spec) },
+      { name: 'oneui.spec.json', text: ai.renderSpecJson(spec) }
+    ];
+  }
+
   function buildStarterZip() {
     var jobs = STARTER_SOURCES.map(function (pair) {
       return fetchText(pair[1]).then(function (text) { return { name: pair[0], text: text }; });
@@ -1320,8 +1592,11 @@
       return zipStore([
         { name: 'README.md', text: starterReadme() },
         { name: 'index.html', text: starterDemo() },
+        { name: 'golden.html', text: goldenPage() },
+        /* 规范放在项目根：AGENTS.md 是多数编码助手会自动读的位置，
+           spec.json 与它同级便于互相引用。 */
         { name: 'oneui/oneui-theme.css', text: buildThemeCss() }
-      ].concat(files));
+      ].concat(aiBundle(), files));
     });
   }
 
@@ -1446,4 +1721,483 @@
       UI.toast({ message: n ? '已选择 ' + n + ' 个文件' : '未选择文件', type: n ? 'success' : 'warning' });
     });
   }
+
+  /* ============================================================
+     AI 规范页（docs/ai.html）
+     ------------------------------------------------------------
+     这一页的正文全部从 oneui.spec.js 渲染出来，页面里只有空容器。
+     这么做的理由不是省事，是**不允许漂移**：规范若有一份手写的副本，
+     改了数据源而忘了改副本，页面上就会教 AI 用不存在的类名。
+     现在页面与导出文件走同一组渲染函数，二者不可能不一致。
+
+     元素存在性守卫：其他三页没有这些容器，整段直接返回。
+     ============================================================ */
+  (function initAiPage() {
+    var host = document.querySelector('[data-ai-forbidden]');
+    if (!host) return;
+    var spec = window.OneUISpec;
+    var ai = window.OneUIAI;
+    if (!spec || !ai) {
+      host.innerHTML = '<div class="doc-note doc-note--warn">规范数据源没加载成功，请检查 oneui.spec.js 与 oneui.ai.js 的路径。</div>';
+      return;
+    }
+
+    /* ---------- 四个产物：在内存里生成，file:// 下同样可用 ---------- */
+    var ARTIFACTS = {
+      agents: { name: 'AGENTS.md',        mime: 'text/markdown;charset=utf-8', text: ai.renderAgentsMd(spec) },
+      llms:   { name: 'llms.txt',         mime: 'text/plain;charset=utf-8',    text: ai.renderLlmsTxt(spec) },
+      full:   { name: 'llms-full.txt',    mime: 'text/plain;charset=utf-8',    text: ai.renderLlmsFull(spec) },
+      spec:   { name: 'oneui.spec.json',  mime: 'application/json;charset=utf-8', text: ai.renderSpecJson(spec) }
+    };
+
+    var esc = function (s) {
+      return String(s === undefined || s === null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    };
+    var kb = function (s) { return (new Blob([s]).size / 1024).toFixed(1) + ' KB'; };
+
+    /* 规格表统一走这个：紧凑表格 + 横向滚动 + 等宽类名 */
+    function tbl(head, rows) {
+      var h = '<div class="ui-table-wrap ai-table"><table class="ui-table ui-table--compact"><thead><tr>';
+      head.forEach(function (c) { h += '<th>' + esc(c) + '</th>'; });
+      h += '</tr></thead><tbody>';
+      rows.forEach(function (r) {
+        h += '<tr>';
+        r.forEach(function (c) {
+          /* 约定：单元格传 {code:'x'} 走等宽样式，传字符串走普通文本 */
+          if (c && typeof c === 'object' && c.code) h += '<td><code>' + esc(c.code) + '</code></td>';
+          else h += '<td>' + esc(c) + '</td>';
+        });
+        h += '</tr>';
+      });
+      return h + '</tbody></table></div>';
+    }
+    var inline = function (s) {
+      /* 把 `xxx` 与 **xxx** 转成标签，其余转义。规范文案里这两种标记用得很多。 */
+      return esc(s)
+        .replace(/`([^`]+)`/g, '<code class="ui-code">$1</code>')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    };
+
+    /* ---------- 产物尺寸 ---------- */
+    Object.keys(ARTIFACTS).forEach(function (k) {
+      var el = document.querySelector('[data-ai-size="' + k + '"]');
+      if (!el) return;
+      el.textContent = ARTIFACTS[k].text.split('\n').length + ' 行 · ' + kb(ARTIFACTS[k].text);
+    });
+
+    /* ---------- 复制 / 下载 ---------- */
+    document.querySelectorAll('[data-ai-copy]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var a = ARTIFACTS[btn.getAttribute('data-ai-copy')];
+        if (!a) return;
+        UI.copy(a.text).then(function (ok) {
+          UI.toast({
+            message: ok ? a.name + ' 已复制（' + a.text.split('\n').length + ' 行）' : '复制失败，请改用「下载」',
+            type: ok ? 'success' : 'warning', duration: 4000
+          });
+        });
+      });
+    });
+    document.querySelectorAll('[data-ai-download]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var a = ARTIFACTS[btn.getAttribute('data-ai-download')];
+        if (!a) return;
+        saveFile(a.name, a.text, a.mime);
+      });
+    });
+
+    /* ---------- 禁止清单 / 必须做的事 ---------- */
+    host.innerHTML = tbl(['不要写', '为什么', '改成'], spec.forbidden.map(function (f) {
+      return [{ code: f.bad }, inline(f.why), inline(f.fix)];
+    }));
+    document.querySelector('[data-ai-required]').innerHTML =
+      tbl(['规则', '漏了的后果'], spec.required.map(function (r) { return [inline(r.rule), inline(r.why)]; }));
+
+    /* ---------- Token 三层 + 常用 token ---------- */
+    document.querySelector('[data-ai-token-layers]').innerHTML =
+      tbl(['层', '名字', '前缀', '作用', '你什么时候碰它'], spec.tokens.layers.map(function (t) {
+        return [t.id, t.name, { code: t.prefix }, inline(t.role), inline(t.useIn)];
+      })) +
+      '<div class="doc-note">' + inline(spec.tokens.priority) + '</div>';
+
+    document.querySelector('[data-ai-token-common]').innerHTML =
+      tbl(['token', '用途'], spec.tokens.common.map(function (t) { return [{ code: t.token }, inline(t.use)]; }));
+
+    /* ---------- 状态方向 ---------- */
+    document.querySelector('[data-ai-state]').innerHTML =
+      '<div class="doc-note">' + inline(spec.stateDirection.summary) + '</div>' +
+      tbl(['档位', '角色'], spec.stateDirection.ramp.map(function (r) {
+        return [{ code: '--ui-p-' + r.step }, inline(r.role)];
+      })) +
+      '<div class="doc-note">' + spec.stateDirection.exceptions.map(function (s) { return '· ' + inline(s); }).join('<br>') + '</div>';
+
+    /* ---------- 刻度 ---------- */
+    document.querySelector('[data-ai-scales]').innerHTML =
+      '<div class="doc-note">' + inline(spec.scales.space.note) + '</div>' +
+      tbl(['间距 token', '值', '典型用途'], spec.scales.space.steps.map(function (s) {
+        return [{ code: s.token }, s.px + 'px', inline(s.use)];
+      })) +
+      '<div class="doc-note">' + inline(spec.scales.radius.note) + '</div>' +
+      tbl(['圆角 token', '值', '用途'], spec.scales.radius.steps.map(function (s) {
+        return [{ code: s.token }, s.px + 'px', inline(s.use)];
+      })) +
+      '<div class="doc-note">' + inline(spec.scales.fontSize.note) + '</div>' +
+      tbl(['档位 token', '值', '语义 token', '用途'], spec.scales.fontSize.steps.map(function (s) {
+        return [{ code: s.token }, s.px + 'px', s.semantic ? { code: s.semantic } : '—', inline(s.use)];
+      }));
+
+    /* ---------- 决策表 ---------- */
+    document.querySelector('[data-ai-decisions]').innerHTML =
+      tbl(['场景', '用', '不要用'], spec.decisions.map(function (d) {
+        return [inline(d.scene), inline(d.use), inline(d.avoid)];
+      }));
+
+    /* ---------- 组件速查 ---------- */
+    var comps = ai.allComponents(spec);
+    document.querySelector('[data-ai-components]').innerHTML =
+      tbl(['基类', '组件', '用途'], comps.map(function (c) {
+        return [{ code: c.base + (c.level === 'core' ? '  ★' : '') }, c.title, inline(c.useWhen)];
+      }));
+
+    /* ---------- 常用片段：每条一个折叠面板，默认收起 ---------- */
+    var snips = spec.components.core.map(function (c, i) {
+      var pid = 'aisnp' + i;
+      var h = '<div class="ui-collapse__item ai-snip">' +
+        '<button class="ui-collapse__header" type="button" aria-expanded="false" aria-controls="' + pid + '">' +
+          '<span>' + esc(c.title) + ' <code class="ui-code">' + esc(c.base) + '</code></span>' +
+          '<span class="ui-collapse__chevron"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8l4.5 4.5L14.5 8"/></svg></span>' +
+        '</button>' +
+        '<div class="ui-collapse__panel" id="' + pid + '" hidden>';
+      h += '<div class="ai-snip__meta"><span>用它的时机：' + esc(c.useWhen) + '</span>' +
+           (c.notWhen ? '<span>不要用的时机：' + esc(c.notWhen) + '</span>' : '') + '</div>';
+      if (c.variants && c.variants.length) {
+        h += tbl(['变体', '什么时候用'], c.variants.map(function (v) { return [{ code: v.cls }, inline(v.when)]; }));
+      }
+      h += '<pre class="ai-snip__code"><code>' + esc(c.snippet) + '</code></pre>';
+      if (c.attrs && c.attrs.length) {
+        h += '<div class="ai-snip__meta">' + c.attrs.map(function (a) {
+          return '<span><code class="ui-code">' + esc(a.attr) + '</code> —— ' + esc(a.why) + '</span>';
+        }).join('') + '</div>';
+      }
+      if (c.aria && c.aria.length) h += '<div class="ai-snip__meta"><span>无障碍：' + esc(c.aria.join('；')) + '</span></div>';
+      return h + '</div></div>';
+    }).join('');
+    var snipHost = document.querySelector('[data-ai-snippets]');
+    snipHost.innerHTML = '<div class="ui-collapse" data-ui="collapse">' + snips + '</div>';
+
+    /* ---------- 钩子 / 事件 / API ---------- */
+    document.querySelector('[data-ai-behaviors]').innerHTML =
+      tbl(['属性', '挂在哪', '说明'], spec.behaviors.map(function (b) {
+        return [{ code: b.attr }, b.on, inline(b.note)];
+      }));
+    document.querySelector('[data-ai-events]').innerHTML =
+      tbl(['事件', '载荷', '来源', '触发时机'], spec.events.map(function (e) {
+        return [{ code: e.name }, { code: e.payload }, e.from, inline(e.when)];
+      }));
+    document.querySelector('[data-ai-api]').innerHTML =
+      tbl(['调用', '用途'], spec.api.map(function (a) { return [{ code: a.call }, inline(a.use)]; }));
+
+    /* 新插入的 DOM 要再走一次初始化，否则折叠面板不工作。 */
+    UI.init(snipHost);
+  })();
+
+  /* ============================================================
+     自检页（docs/check.html）
+     ------------------------------------------------------------
+     规则集与 oneui.spec.js 同源：禁止清单里那些「会被写错的东西」，
+     在这里变成可执行的检查。AI 写完让它自己跑一遍，比人肉 review 有效。
+
+     实现取向：全部按「单个开标签」为检查单位。
+     不用 DOMParser 是因为这个页面要能贴片段（没有 html/body 的残片），
+     DOMParser 会把残片补全成完整文档，行号就对不上了。
+     以标签为单位既能拿到准确偏移，也覆盖了绝大多数真实错误。
+     ============================================================ */
+  /* ============================================================
+     自检页（docs/check.html）
+     ------------------------------------------------------------
+     规则集与 oneui.spec.js 同源：禁止清单里那些「会被写错的东西」，
+     在这里变成可执行的检查。AI 写完让它自己跑一遍，比人肉 review 有效。
+
+     检查单位是「单个开标签 + 内联样式」。不用 DOMParser 是因为这一页
+     要能贴片段（没有 html/body 的残片），DOMParser 会把残片补全成完整
+     文档，行号就对不上了。以标签为单位既能拿到准确偏移，也覆盖了绝大
+     多数真实错误 —— 下面每一条结构规则都只需要看一个开标签就够。
+     ============================================================ */
+  (function initCheckPage() {
+    var input = document.querySelector('[data-chk-input]');
+    var out = document.querySelector('[data-chk-report]');
+    if (!input || !out) return;
+
+    var spec = window.OneUISpec;
+
+    /* ---------- 规则集 ----------
+       检查实现与页面上那份规则清单都读这里。写成一份表而不是散在代码里，
+       是为了避免「页面写着会查 A、实际没查」—— 那正是这套东西要防的病。
+       级别：error 会让功能不工作或主题失效；warn 是可维护性问题。 */
+    var RULES = [
+      { id: 'alien', sev: 'error', name: '非 OneUI 类名',
+        fix: '本库没有这类类名，写了不报错但完全不生效。改用 ui- 前缀的等价类。' },
+      { id: 'hex', sev: 'error', name: '裸色值',
+        fix: '换成语义 token：var(--ui-primary) / var(--ui-text-2) / var(--ui-danger)。写死色值换主题时不会跟随。' },
+      { id: 'fontpx', sev: 'error', name: '裸 px 字号',
+        fix: '字阶是离散档位。用 var(--ui-fs-14) 或 var(--ui-type-body) 这类语义 token。' },
+      { id: 'space', sev: 'warn', name: '间距不在 4pt 刻度上',
+        fix: '基准是 4pt（4/8/12/16/20/24/32/40/48/64）。用 var(--ui-space-*)；相邻元素之间优先用父容器的 gap。' },
+      { id: 'radius', sev: 'warn', name: '自由圆角',
+        fix: '圆角只有 4/8/12/16/24/32/999 六档。用 var(--ui-radius-control|block|card|sheet|pill)。' },
+      { id: 'important', sev: 'error', name: '!important',
+        fix: '覆盖库样式是不可逆的耦合，组件升级后会静默失效或反向打架。改 token，或在组件外层写自己的类。' },
+      { id: 'fixed', sev: 'warn', name: '自写固定定位',
+        fix: '若在做弹层，改用 .ui-modal / .ui-drawer —— 层级、滚动锁、焦点陷阱、Esc 关闭都要自己做，很难做全。' },
+      { id: 'l1', sev: 'warn', name: 'L1 原子层泄漏',
+        fix: '组件样式只该用 L2 语义层（var(--ui-primary)）。L1 是主题的作用域，深色模式下它的取值是错的。' },
+      { id: 'trigger', sev: 'error', name: '触发器缺 data-target',
+        fix: '触发按钮靠 data-target="#id" 找目标，少一个就点不开。' },
+      { id: 'dialog', sev: 'error', name: '弹层缺无障碍三件套',
+        fix: '要有 role="dialog" aria-modal="true" 与 aria-labelledby="<标题 id>"（或 aria-label）。漏了读屏软件会继续念背景内容。' },
+      { id: 'btntype', sev: 'error', name: '按钮缺 type',
+        fix: '表单里按钮默认是 submit，不写会意外提交整个表单。显式写 type="button" 或 "submit"。' },
+      { id: 'iconlabel', sev: 'error', name: '图标按钮缺 aria-label',
+        fix: '按钮内只有 SVG，读屏用户只会听到「按钮」。必须用 aria-label 说明它做什么。' },
+      { id: 'collapse', sev: 'error', name: '折叠面板 header 缺 aria',
+        fix: 'aria-expanded 与 aria-controls 都要有，否则键盘与读屏用户看不出当前是展开还是收起。' },
+      { id: 'tab', sev: 'error', name: '标签页缺 aria',
+        fix: '每个 role="tab" 都要有 aria-selected 与 aria-controls，缺一环方向键导航就失效。' },
+      { id: 'popconf', sev: 'error', name: '二次确认缺文案',
+        fix: '破坏性操作必须写 data-popconfirm-title 与 data-popconfirm-desc，desc 里要说清后果与不可逆性。' },
+      { id: 'invdesc', sev: 'error', name: '错误态未告知读屏',
+        fix: '标红之外还要 aria-invalid="true"，并用 aria-describedby 指向错误元素。' },
+      { id: 'sortkey', sev: 'error', name: '排序表头缺 data-sort',
+        fix: '组件只绑定带 data-sort="列号" 的表头按钮，漏了它会一声不吭地不排序。列号从 0 起算。' }
+    ];
+    var R = {};
+    RULES.forEach(function (r) { R[r.id] = r; });
+
+    /* 非 OneUI 的类名。这些是「写了不报错但完全不生效」，最该拦的一类。 */
+    var ALIEN_EXACT = [
+      'container', 'container-fluid', 'row', 'flex', 'clearfix',
+      'btn', 'form-control', 'form-group', 'input-group', 'table-responsive',
+      'd-flex', 'd-block', 'd-none', 'd-grid', 'd-inline', 'd-inline-block',
+      'text-center', 'text-left', 'text-right', 'pull-left', 'pull-right'
+    ];
+    var ALIEN_PREFIX = [
+      'btn-', 'col-', 'el-', 'ant-', 'layui-', 'van-', 'vant-', 'ivu-', 'nut-',
+      'mt-', 'mb-', 'ml-', 'mr-', 'pt-', 'pb-', 'pl-', 'pr-', 'px-', 'py-',
+      'w-', 'h-', 'gap-', 'grid-cols-', 'text-', 'bg-', 'font-'
+    ];
+
+    var RADIUS_OK = spec.scales.radius.steps.map(function (s) { return s.px; });
+
+    function lineOf(src, idx) {
+      var n = 1;
+      for (var i = 0; i < idx && i < src.length; i++) if (src.charCodeAt(i) === 10) n++;
+      return n;
+    }
+    /* 把注释内容替换成等长空格：既屏蔽注释里的误报，又保住后续匹配的偏移，
+       这样行号才是对的。整行注释会变成整行空格，换行符保留。 */
+    function blankComments(src) {
+      return src.replace(/<!--[\s\S]*?-->/g, function (m) { return m.replace(/[^\n]/g, ' '); });
+    }
+
+    function check(src) {
+      var issues = [];
+      var text = blankComments(src);
+
+      function add(id, idx, hit) {
+        var r = R[id];
+        issues.push({
+          sev: r.sev, rule: r.name, fix: r.fix,
+          line: lineOf(text, idx),
+          hit: String(hit).replace(/\s+/g, ' ').trim().slice(0, 160)
+        });
+      }
+      function scan(id, re) {
+        var m;
+        re.lastIndex = 0;
+        while ((m = re.exec(text)) !== null) {
+          add(id, m.index, m[0]);
+          if (m.index === re.lastIndex) re.lastIndex++;
+        }
+      }
+
+      /* --- 1. 非 OneUI 类名：逐个 class 词元判断，避免误伤 ui-row 里的 row --- */
+      var classRe = /class\s*=\s*("([^"]*)"|'([^']*)')/gi, cm;
+      while ((cm = classRe.exec(text)) !== null) {
+        var raw = cm[2] !== undefined ? cm[2] : cm[3];
+        raw.split(/\s+/).forEach(function (tok) {
+          if (!tok || tok === 'ui' || tok.indexOf('ui-') === 0) return;
+          var isAlien = ALIEN_EXACT.indexOf(tok) >= 0 || ALIEN_PREFIX.some(function (p) {
+            return tok.indexOf(p) === 0;
+          });
+          if (isAlien) add('alien', cm.index, tok + '   ←   class="' + raw.trim() + '"');
+        });
+      }
+
+      /* --- 2. 具体色值 --- */
+      scan('hex', /#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b(?![0-9a-fA-F])/g);
+      scan('hex', /\brgba?\s*\(|\bhsla?\s*\(/g);
+
+      /* --- 3. 裸 px 字号 --- */
+      scan('fontpx', /font-size\s*:\s*[^;{}"']*?\d+px/gi);
+
+      /* --- 4. 间距刻度 --- */
+      var spRe = /(margin|padding|gap)(?:-(?:top|bottom|left|right|block|inline))?\s*:\s*([^;{}"']+)/gi, sm;
+      while ((sm = spRe.exec(text)) !== null) {
+        var pxRe = /(-?\d*\.?\d+)px/g, pm, bad = null;
+        while ((pm = pxRe.exec(sm[2])) !== null) {
+          var n = parseFloat(pm[1]);
+          if (n !== 0 && n % 4 !== 0) { bad = pm[0]; break; }
+        }
+        if (bad) add('space', sm.index, sm[0].trim() + '   ←   ' + bad + ' 不在刻度上');
+      }
+
+      /* --- 5. 圆角刻度 --- */
+      var brRe = /border-radius\s*:\s*([^;{}"']+)/gi, bm;
+      while ((bm = brRe.exec(text)) !== null) {
+        var bpx = /(\d+)px/g, bp, badR = null;
+        while ((bp = bpx.exec(bm[1])) !== null) {
+          var rv = parseInt(bp[1], 10);
+          if (rv !== 0 && RADIUS_OK.indexOf(rv) < 0) { badR = bp[1] + 'px'; break; }
+        }
+        if (badR) add('radius', bm.index, bm[0].trim() + '   ←   ' + badR);
+      }
+
+      /* --- 6~8. 纯文本模式匹配 --- */
+      scan('important', /!\s*important/gi);
+      scan('fixed', /position\s*:\s*fixed/gi);
+      scan('l1', /var\(\s*--ui-[pn]-\d+\s*\)/g);
+
+      /* --- 9. 结构性规则：只看单个开标签 --- */
+      function eachTag(re, id, ok, describe) {
+        var m;
+        re.lastIndex = 0;
+        while ((m = re.exec(text)) !== null) {
+          if (!ok(m[0])) add(id, m.index, describe ? describe(m[0]) : m[0]);
+        }
+      }
+
+      eachTag(/<[a-z]+\b[^>]*\bdata-ui\s*=\s*"(?:modal|drawer)"[^>]*>/gi, 'trigger',
+        function (t) { return /\bdata-target\s*=/.test(t); });
+
+      eachTag(/<[a-z]+\b[^>]*\bclass\s*=\s*"[^"]*\bui-(?:modal|drawer)\b[^"]*"[^>]*>/gi, 'dialog',
+        function (t) {
+          return /\brole\s*=\s*"dialog"/.test(t) &&
+                 /\baria-modal\s*=\s*"true"/.test(t) &&
+                 (/\baria-labelledby\s*=/.test(t) || /\baria-label\s*=/.test(t));
+        });
+
+      eachTag(/<button\b[^>]*\bclass\s*=\s*"[^"]*\bui-btn\b[^"]*"[^>]*>/gi, 'btntype',
+        function (t) { return /\btype\s*=/.test(t); });
+
+      eachTag(/<button\b[^>]*\bclass\s*=\s*"[^"]*\bui-icon-btn\b[^"]*"[^>]*>/gi, 'iconlabel',
+        function (t) { return /\baria-label\s*=/.test(t); });
+
+      eachTag(/<button\b[^>]*\bclass\s*=\s*"[^"]*\bui-collapse__header\b[^"]*"[^>]*>/gi, 'collapse',
+        function (t) { return /\baria-expanded\s*=/.test(t) && /\baria-controls\s*=/.test(t); });
+
+      eachTag(/<button\b[^>]*\brole\s*=\s*"tab"[^>]*>/gi, 'tab',
+        function (t) { return /\baria-selected\s*=/.test(t) && /\baria-controls\s*=/.test(t); });
+
+      eachTag(/<[a-z]+\b[^>]*\bdata-ui\s*=\s*"popconfirm"[^>]*>/gi, 'popconf',
+        function (t) { return /\bdata-popconfirm-title\s*=/.test(t) && /\bdata-popconfirm-desc\s*=/.test(t); });
+
+      eachTag(/<input\b[^>]*\bclass\s*=\s*"[^"]*\bis-invalid\b[^"]*"[^>]*>/gi, 'invdesc',
+        function (t) { return /\baria-invalid\s*=\s*"true"/.test(t); });
+
+      eachTag(/<button\b[^>]*\bclass\s*=\s*"[^"]*\bui-table__sort\b[^"]*"[^>]*>/gi, 'sortkey',
+        function (t) { return /\bdata-sort\s*=/.test(t); });
+
+      /* 同一位置同一规则只报一次（class 词元循环可能重复命中同一个标签） */
+      var seen = {};
+      return issues.filter(function (i) {
+        var k = i.rule + '@' + i.line + '@' + i.hit;
+        if (seen[k]) return false;
+        seen[k] = true;
+        return true;
+      }).sort(function (a, b) { return a.line - b.line; });
+    }
+
+    function esc(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function report(issues) {
+      var errs = issues.filter(function (i) { return i.sev === 'error'; }).length;
+      var warns = issues.length - errs;
+      var verdict = errs ? '先修错误，提醒可以权衡。'
+        : (warns ? '没有硬错误，提醒项按需处理。' : '干净。可以放心提交。');
+      var h = '<div class="chk-sum ' + (errs ? 'chk-sum--bad' : 'chk-sum--ok') + '">' +
+        '<span class="chk-sum__n">' + errs + '</span><span>个错误</span>' +
+        '<span class="chk-sum__n">' + warns + '</span><span>个提醒</span>' +
+        '<span class="ui-caption ui-muted">' + verdict + '</span>' +
+        '</div>';
+      if (!issues.length) return h;
+      h += '<div class="chk-list">';
+      issues.forEach(function (i) {
+        h += '<div class="chk-item chk-item--' + i.sev + '">' +
+          '<div class="chk-item__head">' +
+            '<span class="ui-badge ' + (i.sev === 'error' ? 'ui-badge--danger' : 'ui-badge--warning') + '">' +
+              (i.sev === 'error' ? '错误' : '提醒') + '</span>' +
+            '<span class="chk-item__rule">' + esc(i.rule) + '</span>' +
+            '<span class="chk-item__line">第 ' + i.line + ' 行</span>' +
+          '</div>' +
+          '<code class="chk-item__hit">' + esc(i.hit) + '</code>' +
+          '<div class="chk-item__fix">' + esc(i.fix) + '</div>' +
+        '</div>';
+      });
+      return h + '</div>';
+    }
+
+    function run() {
+      var src = input.value;
+      if (!src.trim()) {
+        out.innerHTML = '<div class="doc-note doc-note--warn">先贴一段 HTML 再查。可以点上面的示例，或就近复制文档站里任意一个组件的代码块。</div>';
+        return;
+      }
+      out.innerHTML = report(check(src));
+    }
+
+    /* ---------- 页面上那份规则清单：读同一份 RULES ---------- */
+    var rulesHost = document.querySelector('[data-chk-rules]');
+    if (rulesHost) {
+      var h = '<div class="ui-table-wrap ai-table"><table class="ui-table ui-table--compact"><thead><tr>' +
+        '<th>级别</th><th>规则</th><th>怎么改</th></tr></thead><tbody>';
+      RULES.forEach(function (r) {
+        h += '<tr>' +
+          '<td><span class="ui-badge ' + (r.sev === 'error' ? 'ui-badge--danger' : 'ui-badge--warning') + '">' +
+            (r.sev === 'error' ? '错误' : '提醒') + '</span></td>' +
+          '<td>' + esc(r.name) + '</td>' +
+          '<td>' + esc(r.fix) + '</td>' +
+        '</tr>';
+      });
+      rulesHost.innerHTML = h + '</tbody></table></div>';
+    }
+
+    /* ---------- 交互 ---------- */
+    var btn = document.querySelector('[data-chk-run]');
+    if (btn) btn.addEventListener('click', run);
+    var clr = document.querySelector('[data-chk-clear]');
+    if (clr) clr.addEventListener('click', function () {
+      input.value = '';
+      out.innerHTML = '';
+      input.focus();
+    });
+    /* 示例放在 <script type="text/plain"> 里：脚本块是原始文本，
+       尖括号不用写成 &lt;，示例源码在 HTML 里照样能原样阅读。 */
+    document.querySelectorAll('[data-chk-sample]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var srcEl = document.querySelector(b.getAttribute('data-chk-sample'));
+        if (!srcEl) return;
+        input.value = srcEl.textContent.replace(/^\n+/, '').replace(/\s+$/, '');
+        run();
+      });
+    });
+    /* Ctrl / Cmd + Enter 直接跑 */
+    input.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); run(); }
+    });
+  })();
+
 })();

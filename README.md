@@ -31,14 +31,24 @@ OneUI/
 │   ├── components.js        行为层（弹层、提示、标签页…），原生 JS，零依赖
 │   └── tokens.json          Token 导出（primitive / preset / semantic / component / scale），
 │                            供设计工具与跨端（小程序/RN/Android/iOS）对齐
-├── docs/                    ← 组件文档站（在线实例 + 代码片段 + 契约表）
-│   ├── index.html
-│   ├── docs.css
-│   └── docs.js
+├── docs/                    ← 文档站（四个页面，共用一份 docs.css / docs.js）
+│   ├── index.html           落地页：主色调色台 + 实时预览 + 导出面板 + 三步接入
+│   ├── docs.html            组件文档：在线实例 + 代码片段 + 契约表
+│   ├── ai.html              AI 规范页：禁止清单 / Token / 决策 / 组件速查，可直接下载四份交付物
+│   ├── check.html           合规自检：粘贴你写的 HTML，按规则清单逐条挑错
+│   ├── oneui.spec.js        组件契约的唯一数据源（四份 AI 产物都由它生成）
+│   ├── oneui.ai.js          渲染器：把 spec 渲染成 AGENTS.md / llms.txt / JSON
+│   ├── llms.txt             给 AI 的精简索引（约 30 行，随取随读）
+│   ├── llms-full.txt        上面那份 + 完整契约全文
+│   ├── oneui.spec.json      机器可读的完整契约
+│   ├── docs.css / docs.js   文档站的样式与行为
+├── tools/                   ← 开发用，不进发布物
+│   └── build-ai-files.mjs   由 spec 生成四份 AI 产物，并拿 spec 里的类名去 CSS 反向对账
+├── AGENTS.md                ← 给编码助手的项目规范（由 build-ai-files 生成）
 └── README.md
 ```
 
-> `docs/` 只是文档站，可以不发布；`library/` 才是交付物。
+> `docs/` 与 `tools/` 都不是交付物；`library/` 才是。四份 AI 产物是**生成物**，改了 `oneui.spec.js` 或组件样式后要重跑 `node tools/build-ai-files.mjs`（加 `--check` 只校验不写文件）。
 
 ## 2. 快速开始
 
@@ -150,14 +160,14 @@ await OneUI.copy('要复制的文本');
 
 ### 3.5 从文档站直接导出
 
-文档站的「主色配置」区块底部有个**导出**面板，把当前这一版配色打包带走。五项里只有 zip 需要读文件，其余四项任何环境（含 `file://`）都能用：
+文档站**首页落地页**右侧有个**导出**面板，把当前这一版配色打包带走。五项里只有 zip 需要读文件，其余四项任何环境（含 `file://`）都能用：
 
 | 操作 | 产物 |
 | --- | --- |
 | 复制 CSS | 当前主题的 `oneui-theme.css` 全文进剪贴板 |
 | 下载 oneui-theme.css | 上面那份，优先走系统「另存为」对话框 |
 | 下载 tokens.json | 同一套 Token 的 JSON 版（值已解析成最终色值），可直接喂 Tokens Studio / Style Dictionary |
-| 下载 starter.zip | library 五个文件 + 这一版主题 + 最小示例页 + 接入说明，解压即能跑 |
+| 下载 starter.zip | library 五个文件 + 这一版主题 + **示例页 + 可直接照抄的样板页（golden.html）** + AGENTS.md / oneui.spec.json / llms.txt + 接入说明，解压即能跑 |
 | 复制分享链接 | 把主色与主题编码进 URL hash，如 `#accent=custom&c=%23FF6B35&theme=dark`，别人打开就是同一个配色 |
 
 几条约定：
@@ -256,3 +266,23 @@ Chrome / Edge 88+、Safari 14+、Firefox 78+（对齐 2021 年后的常青版本
 - 类名前缀统一 `ui-`，CSS 变量前缀统一 `--ui-`，工具类前缀 `u-`，事件前缀 `ui:`——与产品名 `OneUI` 的对应关系见开头的「命名约定」表。若与现有项目冲突，可用构建期重命名。
 - 组件层不引入任何图标字体或图标库：图标由使用方以 inline SVG 提供，样式只约定 20px / 2px 描边 / 圆头端点。
 - 未提供的能力（有意不做）：日期选择器、级联选择、富文本、虚拟滚动表格——这些属于业务组件，建议按需在项目内实现，样式继续复用本库 Token。
+
+## 9. 让 AI 照着写
+
+这套库把「AI 能读懂并遵从」当成一等能力，四份交付物全部由 `docs/oneui.spec.js`（唯一数据源）生成，**手改无意义**：
+
+| 文件 | 给谁用 | 怎么用 |
+|---|---|---|
+| `AGENTS.md` | Claude Code / Cursor / Copilot 等会自动读根目录的助手 | 放仓库根，14 节：禁止清单、必须做的事、Token、状态方向、刻度、决策、组件速查、片段、写完自查 |
+| `llms.txt` | 会按 llms.txt 约定取索引的爬虫 / 助手 | 约 30 行索引，先读它再决定要不要拉全文 |
+| `llms-full.txt` | 需要一次性拿到全部规则的助手 | 索引 + AGENTS.md 全文 + 契约 JSON |
+| `oneui.spec.json` | 程序 / 设计工具 | 机器可读契约：15 个核心组件的 base / 用途 / 变体 / 尺寸 / 状态 / 属性 / aria / 事件 / 片段 |
+
+配套两道防线：
+
+1. **防漂移**：`node tools/build-ai-files.mjs` 生成产物时，会拿 spec 里声明过的类名去 `library/*.css` 反向对账，**声明了但 CSS 里没有的直接 `exit 1`**。规范与实现从此不会各说各话。
+2. **写完自检**：`docs/check.html` 是个粘贴式检查器，把你写的 HTML 贴进去，按 17 条规则逐条挑错（非 OneUI 类名、裸色值、非 4pt 间距、缺 `type`、缺 aria、表头缺 `data-sort` 等），错误与提醒分级，注释里的内容不会误报。
+
+浏览器里的 `docs/ai.html` 是这四份产物的可视化入口，可以直接复制或下载。
+
+> 用法一句话：把 `AGENTS.md` 放进你的项目根目录，剩下的交给助手。若它写出了违规代码，把那段 HTML 贴进 `docs/check.html` 就能定位是哪条规则没遵守。

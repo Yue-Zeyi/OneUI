@@ -1,0 +1,29 @@
+# OneUI
+
+> 不挑框架的通用 UI 组件库。CSS 变量 + 原生 JS，零依赖零构建。中性无色主题打底，主色一处可换；每个交互组件实现七态，命中区与对比度按无障碍底线校验。
+
+引入三个 CSS 文件和一个 JS 文件即可用，Vue / React / Svelte / 原生页面 / 服务端模板都一样。
+下面的路径都相对于仓库根目录。
+
+## 文档
+
+- [AGENTS.md](AGENTS.md)：规则与禁止清单。写代码前先读这一份。
+- [oneui.spec.json](oneui.spec.json)：完整组件契约（机器读）。
+
+## 源码
+
+- [tokens.css](library/tokens.css)：设计 Token，三层结构的 L1 与 L2
+- [base.css](library/base.css)：重置、排版、布局、工具类
+- [components.css](library/components.css)：全部组件样式
+- [components.js](library/components.js)：行为层，原生 JS
+
+## 最容易做错的事
+
+- 不要写 `container / row / col-* / d-flex / mt-3 / px-4` —— Bootstrap 与 Tailwind 的类名。本库没有这些，写了不报错，只是完全不生效。
+- 不要写 `btn / btn-primary / el-button / ant-btn` —— 其他组件库的按钮类名。本库一律 ui- 前缀 + BEM 双横线。
+- 不要写 `color: #2563EB` —— 写死色值会绕过主题层：换主色、切深色模式时它不会变，是整站唯一不跟随的地方。
+- 不要写 `font-size: 14px 这类裸 px 字号` —— 字阶是离散档位（40/32/24/20/16/15/14/13/12/11），裸写 px 会跳出体系且不随排版比例调整。
+
+## 可选
+
+- [llms-full.txt](llms-full.txt)：上面几份拼成一整份，供一次性读入。

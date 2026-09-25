@@ -196,11 +196,18 @@
       if (state.open) return;
       state.open = true;
       if (opts.backdrop !== false) {
-        state.backdrop = document.createElement('div');
-        state.backdrop.className = 'ui-backdrop';
-        state.backdrop.addEventListener('click', function () { if (opts.maskClosable !== false) close(); });
-        document.body.appendChild(state.backdrop);
-        requestAnimationFrame(function () { state.backdrop.classList.add('is-open'); });
+        var backdrop = document.createElement('div');
+        state.backdrop = backdrop;
+        backdrop.className = 'ui-backdrop';
+        backdrop.addEventListener('click', function () { if (opts.maskClosable !== false) close(); });
+        document.body.appendChild(backdrop);
+        /* 闭包里必须用局部引用。state.backdrop 会被 close() 置 null，而 rAF 是延后执行的：
+           同一帧内先 open() 再 close()（点开就被 Esc 关掉、或程序里连调两下），
+           回调跑到时 state.backdrop 已是 null，当场抛 TypeError 并中断后续脚本。
+           再加一道 isConnected：已被摘掉的遮罩，不该被上一帧的旧回调补上 is-open。 */
+        requestAnimationFrame(function () {
+          if (backdrop.isConnected) backdrop.classList.add('is-open');
+        });
       }
       el.classList.add('is-open');
       el.setAttribute('aria-hidden', 'false');
@@ -769,10 +776,20 @@
       if (!once(btn, 'dismiss')) return;
       bind(function (el) {
         el.addEventListener('click', function () {
-          var target = resolve(el.getAttribute('data-ui-dismiss'));
+          var spec = (el.getAttribute('data-ui-dismiss') || '').trim();
+          /* 值可以是指向弹层的选择器；留空表示「关掉我所在的那条提示」，
+             这是 .ui-alert__close 的惯用写法，省得给每条提示起 id。
+             注意不能把空串喂给 resolve：querySelector('') 会抛 SyntaxError。 */
+          var target = spec ? resolve(spec) : el.closest('.ui-alert, [data-dismissible]');
           if (!target) return;
-          var layer = getLayer(target);
-          if (layer) layer.close();
+          var layer = modalRegistry.get(target);
+          if (layer && layer.isOpen()) { layer.close('dismiss'); return; }
+          /* 普通元素（提示条）从没 open 过，close() 会因为 state.open 为假直接 return，
+             所以这里自己收尾：先广播 ui:dismiss 让页面能拦，再摘节点。
+             这里刻意用 modalRegistry.get 而不是 getLayer：后者会顺手给提示条
+             注册一个弹层对象，属于无谓的副作用。 */
+          emit(target, 'ui:dismiss', {});
+          target.remove();
         });
       }, btn, 'dismiss');
     });

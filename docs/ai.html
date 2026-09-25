@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-ui-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 规范 · OneUI</title>
+<meta name="description" content="让 AI 照着 OneUI 写的四份机器可读文件：AGENTS.md、llms.txt、oneui.spec.json、golden.html。含禁止清单、决策表与组件契约。">
+<link rel="stylesheet" href="../library/tokens.css">
+<link rel="stylesheet" href="../library/base.css">
+<link rel="stylesheet" href="../library/components.css">
+<link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+<header class="ui-navbar doc-navbar" data-ui="navbar" data-navbar-drawer="#docDrawer">
+  <div class="ui-container ui-container--wide ui-navbar__inner">
+    <a class="ui-navbar__brand" href="index.html">
+      <span class="ui-navbar__logo" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.4 5.9 8.4 3.6v8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.2" y="11.45" width="9.6" height="1.9" rx="0.95" fill="currentColor"/></svg>
+      </span>
+      OneUI
+      <span class="doc-brand-sub">v1.0.0</span>
+    </a>
+    <nav class="ui-nav" aria-label="主导航">
+      <a class="ui-nav__link" href="index.html">首页</a>
+      <a class="ui-nav__link" href="docs.html">文档</a>
+      <a class="ui-nav__link" href="ai.html" aria-current="page">AI 规范</a>
+      <a class="ui-nav__link" href="check.html">自检</a>
+    </nav>
+    <div class="ui-navbar__actions">
+      <button class="ui-icon-btn" type="button" data-theme-toggle aria-pressed="false" aria-label="切换深浅色">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.2v1.6M10 15.2v1.6M3.2 10h1.6M15.2 10h1.6M5.2 5.2l1.1 1.1M13.7 13.7l1.1 1.1M14.8 5.2l-1.1 1.1M6.3 13.7l-1.1 1.1"/><circle cx="10" cy="10" r="3.1"/></svg>
+      </button>
+      <div class="ui-dropdown-wrap doc-accent-picker" data-ui="dropdown" data-accent-picker>
+        <button class="ui-icon-btn" type="button" data-ui="dropdown-trigger" aria-label="切换主色" title="切换主色">
+          <span class="doc-accent-picker__dot" aria-hidden="true"></span>
+        </button>
+        <div class="ui-menu doc-accent-menu" role="menu" aria-label="预设主色">
+          <div class="ui-menu__label">主色预设</div>
+          <button class="ui-menu__item" role="menuitemradio" type="button" data-value="ink" data-accent-option="ink" aria-checked="true">
+            <span class="doc-accent-swatch" style="background:#18181B" aria-hidden="true"></span>墨黑
+            <span class="ui-menu__check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4"/></svg></span>
+          </button>
+          <button class="ui-menu__item" role="menuitemradio" type="button" data-value="blue" data-accent-option="blue" aria-checked="false">
+            <span class="doc-accent-swatch" style="background:#2563EB" aria-hidden="true"></span>品蓝
+            <span class="ui-menu__check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4"/></svg></span>
+          </button>
+          <button class="ui-menu__item" role="menuitemradio" type="button" data-value="indigo" data-accent-option="indigo" aria-checked="false">
+            <span class="doc-accent-swatch" style="background:#4F46E5" aria-hidden="true"></span>靛蓝
+            <span class="ui-menu__check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4"/></svg></span>
+          </button>
+          <button class="ui-menu__item" role="menuitemradio" type="button" data-value="emerald" data-accent-option="emerald" aria-checked="false">
+            <span class="doc-accent-swatch" style="background:#047857" aria-hidden="true"></span>翠绿
+            <span class="ui-menu__check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4"/></svg></span>
+          </button>
+          <button class="ui-menu__item" role="menuitemradio" type="button" data-value="orange" data-accent-option="orange" aria-checked="false">
+            <span class="doc-accent-swatch" style="background:#C2410C" aria-hidden="true"></span>橙
+            <span class="ui-menu__check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4"/></svg></span>
+          </button>
+          <button class="ui-menu__item" role="menuitemradio" type="button" data-value="violet" data-accent-option="violet" aria-checked="false">
+            <span class="doc-accent-swatch" style="background:#7C3AED" aria-hidden="true"></span>紫罗兰
+            <span class="ui-menu__check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4"/></svg></span>
+          </button>
+          <div class="ui-menu__divider"></div>
+          <button class="ui-menu__item" role="menuitem" type="button" data-accent-palette>
+            <span class="ui-menu__icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.2"/><circle cx="7.2" cy="7.9" r="1.05"/><circle cx="12.8" cy="7.9" r="1.05"/><circle cx="8.3" cy="12.9" r="1.05"/></svg></span>调色板
+            <span class="ui-menu__shortcut">自定义</span>
+          </button>
+        </div>
+      </div>
+      <button class="ui-icon-btn ui-navbar__toggle" type="button" data-ui-navbar-toggle aria-expanded="false" aria-label="打开目录">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+      </button>
+      <a class="ui-btn ui-btn--primary ui-btn--sm" href="check.html" style="height:32px">去自检</a>
+    </div>
+  </div>
+</header>
+
+<!-- 移动端目录抽屉 -->
+<div class="ui-drawer ui-drawer--left doc-drawer" id="docDrawer" role="dialog" aria-modal="true" aria-label="页面导航" aria-hidden="true">
+  <div class="ui-drawer__panel">
+    <div class="ui-drawer__header">
+      <div class="ui-drawer__title">目录</div>
+      <button class="ui-icon-btn" type="button" data-ui-close aria-label="关闭">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>
+      </button>
+    </div>
+    <div class="ui-drawer__body">
+      <nav class="ui-sidenav doc-drawer__site" aria-label="站点导航">
+        <div class="ui-sidenav__group">
+          <div class="ui-sidenav__label">站点</div>
+          <a class="ui-sidenav__item" href="index.html">首页</a>
+          <a class="ui-sidenav__item" href="docs.html">文档</a>
+          <a class="ui-sidenav__item" href="ai.html" aria-current="page">AI 规范</a>
+          <a class="ui-sidenav__item" href="check.html">自检</a>
+        </div>
+      </nav>
+      <div data-drawer-nav></div>
+    </div>
+    <div class="doc-drawer__foot doc-accent-mobile">
+      <div class="doc-accent-mobile__title">主色预设</div>
+      <div class="doc-accent-presets">
+        <button class="doc-accent-dot" type="button" data-accent-option="ink" style="background:#18181B" aria-label="墨黑" aria-checked="true" role="menuitemradio"></button>
+        <button class="doc-accent-dot" type="button" data-accent-option="blue" style="background:#2563EB" aria-label="品蓝" aria-checked="false" role="menuitemradio"></button>
+        <button class="doc-accent-dot" type="button" data-accent-option="indigo" style="background:#4F46E5" aria-label="靛蓝" aria-checked="false" role="menuitemradio"></button>
+        <button class="doc-accent-dot" type="button" data-accent-option="emerald" style="background:#047857" aria-label="翠绿" aria-checked="false" role="menuitemradio"></button>
+        <button class="doc-accent-dot" type="button" data-accent-option="orange" style="background:#C2410C" aria-label="橙" aria-checked="false" role="menuitemradio"></button>
+        <button class="doc-accent-dot" type="button" data-accent-option="violet" style="background:#7C3AED" aria-label="紫罗兰" aria-checked="false" role="menuitemradio"></button>
+      </div>
+      <button class="ui-btn ui-btn--default ui-btn--sm doc-accent-mobile__palette" type="button" data-accent-palette>
+        <span class="doc-accent-chip" data-accent-chip aria-hidden="true"></span>调色板
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="top"></div>
+
+<div class="doc-shell">
+  <aside class="doc-side" aria-label="页面目录">
+    <nav class="ui-sidenav doc-side__inner" data-side-nav>
+      <div class="ui-sidenav__group" data-nav-group>
+        <div class="ui-sidenav__label">给 AI 用</div>
+        <a class="ui-sidenav__item" data-nav-item="四份文件 取用 agents llms spec" href="#ai-files">四份文件</a>
+        <a class="ui-sidenav__item" data-nav-item="禁止清单 必须做 required forbidden" href="#ai-rules">禁止与必须</a>
+        <a class="ui-sidenav__item" data-nav-item="token 三层 刻度 间距 圆角 字阶 状态方向" href="#ai-tokens">Token 与刻度</a>
+      </div>
+      <div class="ui-sidenav__group" data-nav-group>
+        <div class="ui-sidenav__label">怎么用</div>
+        <a class="ui-sidenav__item" data-nav-item="决策表 场景 选哪个组件 decision" href="#ai-decisions">什么场景用什么</a>
+        <a class="ui-sidenav__item" data-nav-item="组件速查 清单 inventory" href="#ai-components">组件速查</a>
+        <a class="ui-sidenav__item" data-nav-item="片段 示例 snippet 照抄" href="#ai-snippets">常用片段</a>
+      </div>
+      <div class="ui-sidenav__group" data-nav-group>
+        <div class="ui-sidenav__label">约定</div>
+        <a class="ui-sidenav__item" data-nav-item="行为钩子 data-ui 事件 event API" href="#ai-events">钩子与事件</a>
+        <a class="ui-sidenav__item" data-nav-item="防漂移 校验 构建 一致性" href="#ai-drift">规范为什么不会过期</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="doc-main">
+
+    <section class="doc-hero">
+      <div class="doc-hero__eyebrow">
+        <span class="ui-navbar__logo" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.4 5.9 8.4 3.6v8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.2" y="11.45" width="9.6" height="1.9" rx="0.95" fill="currentColor"/></svg>
+        </span>
+        AI 规范
+      </div>
+      <h1 class="ui-hero__title">让 AI 照着这套 UI 写</h1>
+      <p class="ui-hero__desc">
+        不写规范，AI 只会按它的先验生成 Bootstrap 或 Tailwind 的类名——类名不对、Token 不对、状态方向也不对。
+        这一页把「怎么用」写成了机器可读的文件，随 starter.zip 一起进你的项目。
+      </p>
+      <div class="doc-hero__badges">
+        <span class="ui-badge ui-badge--pill">4 份文件</span>
+        <span class="ui-badge ui-badge--outline ui-badge--pill">单数据源生成</span>
+        <span class="ui-badge ui-badge--outline ui-badge--pill">与 CSS 双向对账</span>
+      </div>
+    </section>
+
+    <!-- ==================== 1. 四份文件 ==================== -->
+    <section class="doc-section" id="ai-files">
+      <div class="doc-section__head">
+        <div class="doc-section__eyebrow">Artifacts</div>
+        <h2 class="doc-section__title">四份文件，各管一段</h2>
+        <p class="doc-section__desc">
+          由浅入深。AI 不必一次读完四份：它按需读——不知道这是什么就读第一份，
+          要写具体组件时只看第三份里那一段。
+        </p>
+      </div>
+
+      <div class="ai-grid">
+        <div class="ai-art">
+          <div class="ai-art__top">
+            <code class="ui-code">llms.txt</code>
+            <span class="ai-art__size" data-ai-size="llms"></span>
+          </div>
+          <div class="ai-art__desc">索引。这是什么、关键文件在哪。遵循 llmstxt.org 约定，AI 抓站时第一个读到的就是它。</div>
+          <div class="ui-cluster ui-cluster--2">
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-ai-copy="llms">复制</button>
+            <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ai-download="llms">下载</button>
+          </div>
+        </div>
+
+        <div class="ai-art">
+          <div class="ai-art__top">
+            <code class="ui-code">AGENTS.md</code>
+            <span class="ai-art__size" data-ai-size="agents"></span>
+          </div>
+          <div class="ai-art__desc">规则。禁止清单 + 必须做的事 + 决策表 + 15 个组件的完整片段。放在你项目根目录，支持它的编辑器会自动读到。</div>
+          <div class="ui-cluster ui-cluster--2">
+            <button class="ui-btn ui-btn--primary ui-btn--sm" type="button" data-ai-copy="agents">复制</button>
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-ai-download="agents">下载</button>
+          </div>
+        </div>
+
+        <div class="ai-art">
+          <div class="ai-art__top">
+            <code class="ui-code">oneui.spec.json</code>
+            <span class="ai-art__size" data-ai-size="spec"></span>
+          </div>
+          <div class="ai-art__desc">契约。每个组件的类名、变体、尺寸、状态、必需属性、ARIA、事件与代码片段。机器读的那一份。</div>
+          <div class="ui-cluster ui-cluster--2">
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-ai-copy="spec">复制</button>
+            <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ai-download="spec">下载</button>
+          </div>
+        </div>
+
+        <div class="ai-art">
+          <div class="ai-art__top">
+            <code class="ui-code">llms-full.txt</code>
+            <span class="ai-art__size" data-ai-size="full"></span>
+          </div>
+          <div class="ai-art__desc">上面几份拼成一整份。只在你没有文件读取能力、必须一次性把规范贴进对话时用它。</div>
+          <div class="ui-cluster ui-cluster--2">
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-ai-copy="full">复制</button>
+            <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ai-download="full">下载</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-note">
+        <b>怎么用：</b>把 <code class="ui-code">AGENTS.md</code> 和 <code class="ui-code">oneui.spec.json</code> 放进项目根目录就行，
+        多数编码助手会自动读取前者。其余两份不用放——<code class="ui-code">llms.txt</code> 是给爬站场景的，
+        <code class="ui-code">llms-full.txt</code> 是给「只能贴文本」的场景的。
+        首页导出的 <code class="ui-code">starter.zip</code> 里这四份都已经放好了。
+      </div>
+    </section>
+
+    <!-- ==================== 2. 禁止与必须 ==================== -->
+    <section class="doc-section" id="ai-rules">
+      <div class="doc-section__head">
+        <div class="doc-section__eyebrow">Guardrails</div>
+        <h2 class="doc-section__title">禁止与必须</h2>
+        <p class="doc-section__desc">
+          禁止清单比允许清单有效。AI 的默认先验是 Bootstrap 与 Tailwind，
+          不明确否定，它就会写出 <code class="ui-code">container</code> / <code class="ui-code">d-flex</code> / <code class="ui-code">btn-primary</code>。
+        </p>
+      </div>
+      <div data-ai-forbidden></div>
+
+      <div class="doc-subhead">必须做的事</div>
+      <p class="doc-section__desc">这些不是风格偏好。每一条漏了都有具体后果。</p>
+      <div data-ai-required></div>
+    </section>
+
+    <!-- ==================== 3. Token 与刻度 ==================== -->
+    <section class="doc-section" id="ai-tokens">
+      <div class="doc-section__head">
+        <div class="doc-section__eyebrow">Tokens</div>
+        <h2 class="doc-section__title">Token 与刻度</h2>
+        <p class="doc-section__desc">
+          三层结构，你自己的样式里应该只出现中间那层。猜不到的是「hover 该取哪一档」与「10px 为什么不能用」，
+          所以这些都以表格写死。
+        </p>
+      </div>
+
+      <div data-ai-token-layers></div>
+
+      <div class="doc-subhead">常用语义 token</div>
+      <div data-ai-token-common></div>
+
+      <div class="doc-subhead">状态方向</div>
+      <div data-ai-state></div>
+
+      <div class="doc-subhead">间距 · 圆角 · 字阶</div>
+      <div data-ai-scales></div>
+    </section>
+
+    <!-- ==================== 4. 决策表 ==================== -->
+    <section class="doc-section" id="ai-decisions">
+      <div class="doc-section__head">
+        <div class="doc-section__eyebrow">Decisions</div>
+        <h2 class="doc-section__title">什么场景用什么</h2>
+        <p class="doc-section__desc">
+          类名往往能写对，选错容器才是更常见的错——用卡片包一行操作、用两列表格展示一对「标签 - 值」、
+          用 <code class="ui-code">ui-row</code> 排一排按钮（它不换行，窄屏就溢出）。
+        </p>
+      </div>
+      <div data-ai-decisions></div>
+    </section>
+
+    <!-- ==================== 5. 组件速查 ==================== -->
+    <section class="doc-section" id="ai-components">
+      <div class="doc-section__head">
+        <div class="doc-section__eyebrow">Inventory</div>
+        <h2 class="doc-section__title">组件速查</h2>
+        <p class="doc-section__desc">
+          标 ★ 的是高频组件，下一节给了完整片段；其余知道基类名与用途即可，写法照抄这些结构。
+        </p>
+      </div>
+      <div data-ai-components></div>
+    </section>
+
+    <!-- ==================== 6. 常用片段 ==================== -->
+    <section class="doc-section" id="ai-snippets">
+      <div class="doc-section__head">
+        <div class="doc-section__eyebrow">Snippets</div>
+        <h2 class="doc-section__title">常用片段</h2>
+        <p class="doc-section__desc">
+          AI 最擅长模仿而不是推导。给它一段能直接改的完整结构，比给它十条规则都管用。
+        </p>
+      </div>
+      <div data-ai-snippets></div>
+    </section>
+
+    <!-- ==================== 7. 钩子与事件 ==================== -->
+    <section class="doc-section" id="ai-events">
+      <div class="doc-section__head">
+        <div class="doc-section__eyebrow">Wiring</div>
+        <h2 class="doc-section__title">钩子与事件</h2>
+        <p class="doc-section__desc">
+          声明式交互全靠 <code class="ui-code">data-ui</code>。「写了没反应」绝大多数是把属性挂错了元素，
+          或者漏了配套的第二个属性。
+        </p>
+      </div>
+      <div data-ai-behaviors></div>
+
+      <div class="doc-subhead">对外事件</div>
+      <p class="doc-section__desc">都是 <code class="ui-code">ui:*</code> 自定义事件，冒泡到 <code class="ui-code">document</code>。</p>
+      <div data-ai-events></div>
+
+      <div class="doc-subhead">命令式 API</div>
+      <div data-ai-api></div>
+    </section>
+
+    <!-- ==================== 8. 防漂移 ==================== -->
+    <section class="doc-section" id="ai-drift">
+      <div class="doc-section__head">
+        <div class="doc-section__eyebrow">Why it stays true</div>
+        <h2 class="doc-section__title">规范为什么不会过期</h2>
+        <p class="doc-section__desc">
+          规范最大的风险不是写得不全，是<b>和代码脱节</b>：三个月后 CSS 改了类名，文档还写着旧的，
+          AI 照着写就是错的——比没有规范更糟。
+        </p>
+      </div>
+
+      <div class="ui-grid ui-grid--2 ui-grid--tight">
+        <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-stack ui-stack--4">
+          <div class="ui-h4">单一数据源</div>
+          <p class="ui-text-sm ui-muted">
+            这一页看到的每个字、以及四份导出文件，都来自 <code class="ui-code">docs/oneui.spec.js</code> 一个文件。
+            页面渲染与文件生成走的是同一组函数，不可能出现「页面上说 A、导出的文件里说 B」。
+          </p>
+        </div></div>
+        <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-stack ui-stack--4">
+          <div class="ui-h4">双向对账</div>
+          <p class="ui-text-sm ui-muted">
+            <code class="ui-code">tools/build-ai-files.mjs</code> 会把规范里声明过的每个类名拿去
+            <code class="ui-code">components.css</code> 与 <code class="ui-code">base.css</code> 里核对。
+            声明了却不存在就<b>直接构建失败</b>——这种错最危险，因为页面只是静默变形，不报错。
+          </p>
+        </div></div>
+      </div>
+
+      <div class="doc-demo doc-demo--stack">
+        <span class="doc-demo__label">构建命令</span>
+        <div class="ui-codeblock">
+<pre><code># 生成四份产物（AGENTS.md / llms.txt / llms-full.txt / oneui.spec.json）
+node tools/build-ai-files.mjs
+
+# 只校验不写文件，提交前或 CI 里用
+node tools/build-ai-files.mjs --check</code></pre>
+        </div>
+      </div>
+
+      <div class="doc-note doc-note--warn">
+        <b>改了库就要改规范：</b>新增组件、改类名、调整刻度之后，都要重跑上面这条命令并提交产物。
+        忘了跑的话，最后一次提交里的规范就停留在旧状态——这正是这套机制要防的事。
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="doc-footer">
+  <div class="ui-container ui-container--wide" style="padding-block: var(--ui-space-8)">
+    <div class="ui-row ui-row--between">
+      <div class="ui-stack ui-stack--2">
+        <div class="ui-h4">OneUI</div>
+        <div class="ui-caption ui-muted">框架无关的通用 UI 组件库 · v1.0.0 · 中性无色主题 + 单一可配置主色</div>
+      </div>
+      <div class="ui-cluster ui-cluster--4">
+        <a class="ui-footer__link" href="index.html">首页</a>
+        <a class="ui-footer__link" href="docs.html">文档</a>
+        <a class="ui-footer__link" href="ai.html">AI 规范</a>
+        <a class="ui-footer__link" href="check.html">自检</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="ui-backtop" type="button" data-ui="backtop" aria-label="回到顶部">
+  <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16V5M5.5 9.5L10 5l4.5 4.5"/></svg>
+</button>
+
+<noscript>
+  <div class="ui-container ui-container--wide" style="padding-block: var(--ui-space-6)">
+    <div class="ui-alert ui-alert--neutral">
+      <span class="ui-alert__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v4.5M10 6.4v.6"/></svg></span>
+      <div class="ui-alert__body">
+        <div class="ui-alert__title">本页内容由脚本渲染</div>
+        <div class="ui-alert__desc">请开启 JavaScript。或者直接阅读仓库根目录的 AGENTS.md，两者内容一致。</div>
+      </div>
+    </div>
+  </div>
+</noscript>
+
+<script src="../library/components.js"></script>
+<script src="oneui.spec.js"></script>
+<script src="oneui.ai.js"></script>
+<script src="docs.js"></script>
+</body>
+</html>

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OneUI · 通用 UI 组件库</title>
-<meta name="description" content="框架无关的通用 UI 组件库：中性无色主题 + 单一可配置主色，零依赖，纯 CSS 变量驱动。">
+<meta name="description" content="框架无关的通用 UI 组件库：中性无色主题 + 单一可配置主色，零依赖，纯 CSS 变量驱动。挑好主色即可导出主题，并附一套让 AI 读懂的规范。">
 <link rel="stylesheet" href="../library/tokens.css">
 <link rel="stylesheet" href="../library/base.css">
 <link rel="stylesheet" href="../library/components.css">
@@ -12,10 +12,12 @@
 </head>
 <body>
 
-<!-- ==================== 顶部导航（组件库 navbar 组件实例） ==================== -->
+<!-- ==================== 顶部导航（组件库 navbar 组件实例） ====================
+     四个页面各有一份同样的导航，改动时四份要一起改。
+     不做 JS 注入：那样无 JS 时导航就没了，而且脚本执行前会有一次布局跳动。 -->
 <header class="ui-navbar doc-navbar" data-ui="navbar" data-navbar-drawer="#docDrawer">
   <div class="ui-container ui-container--wide ui-navbar__inner">
-    <a class="ui-navbar__brand" href="#top">
+    <a class="ui-navbar__brand" href="index.html">
       <span class="ui-navbar__logo" aria-hidden="true">
         <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.4 5.9 8.4 3.6v8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.2" y="11.45" width="9.6" height="1.9" rx="0.95" fill="currentColor"/></svg>
       </span>
@@ -23,11 +25,10 @@
       <span class="doc-brand-sub">v1.0.0</span>
     </a>
     <nav class="ui-nav" aria-label="主导航">
-      <a class="ui-nav__link" href="#start">快速开始</a>
-      <a class="ui-nav__link" href="#tokens">Token</a>
-      <a class="ui-nav__link" href="#btn">组件</a>
-      <a class="ui-nav__link" href="#pattern-dashboard">组合示例</a>
-      <a class="ui-nav__link" href="#a11y">质量清单</a>
+      <a class="ui-nav__link" href="index.html" aria-current="page">首页</a>
+      <a class="ui-nav__link" href="docs.html">文档</a>
+      <a class="ui-nav__link" href="ai.html">AI 规范</a>
+      <a class="ui-nav__link" href="check.html">自检</a>
     </nav>
     <div class="ui-navbar__actions">
       <button class="ui-icon-btn" type="button" data-theme-toggle aria-pressed="false" aria-label="切换深浅色">
@@ -74,21 +75,40 @@
       <button class="ui-icon-btn ui-navbar__toggle" type="button" data-ui-navbar-toggle aria-expanded="false" aria-label="打开目录">
         <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
       </button>
-      <a class="ui-btn ui-btn--primary ui-btn--sm" href="#start" style="height:32px">开始使用</a>
+      <a class="ui-btn ui-btn--primary ui-btn--sm" href="docs.html" style="height:32px">看组件</a>
     </div>
   </div>
 </header>
 
 <!-- 移动端目录抽屉 -->
-<div class="ui-drawer ui-drawer--left doc-drawer" id="docDrawer" role="dialog" aria-modal="true" aria-label="组件目录" aria-hidden="true">
+<div class="ui-drawer ui-drawer--left doc-drawer" id="docDrawer" role="dialog" aria-modal="true" aria-label="页面导航" aria-hidden="true">
   <div class="ui-drawer__panel">
     <div class="ui-drawer__header">
-      <div class="ui-drawer__title">组件目录</div>
+      <div class="ui-drawer__title">导航</div>
       <button class="ui-icon-btn" type="button" data-ui-close aria-label="关闭">
         <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>
       </button>
     </div>
-    <div class="ui-drawer__body" data-drawer-nav></div>
+    <div class="ui-drawer__body">
+      <!-- 站点导航：≤768px 顶部主导航整体隐藏，这四页链接只在抽屉里可达 -->
+      <nav class="ui-sidenav doc-drawer__site" aria-label="站点导航">
+        <div class="ui-sidenav__group">
+          <div class="ui-sidenav__label">站点</div>
+          <a class="ui-sidenav__item" href="index.html" aria-current="page">首页</a>
+          <a class="ui-sidenav__item" href="docs.html">文档</a>
+          <a class="ui-sidenav__item" href="ai.html">AI 规范</a>
+          <a class="ui-sidenav__item" href="check.html">自检</a>
+        </div>
+      </nav>
+      <nav class="ui-sidenav" aria-label="本页导航">
+        <div class="ui-sidenav__group">
+          <div class="ui-sidenav__label">本页</div>
+          <a class="ui-sidenav__item" href="#export">调色与导出</a>
+          <a class="ui-sidenav__item" href="#start">三步接入</a>
+          <a class="ui-sidenav__item" href="#ai">给 AI 用</a>
+        </div>
+      </nav>
+    </div>
     <!-- 窄屏专用的主色预设行：窄屏导航栏已无余量，把同一组选项落到抽屉底部 -->
     <div class="doc-drawer__foot doc-accent-mobile">
       <div class="doc-accent-mobile__title">主色预设</div>
@@ -107,154 +127,151 @@
   </div>
 </div>
 
-<div id="top"></div>
+<main class="doc-land" id="top">
+  <div class="ui-container ui-container--wide">
 
-<div class="doc-shell">
-  <!-- ==================== 侧栏目录 ==================== -->
-  <aside class="doc-side" aria-label="组件目录">
-    <div class="doc-side__search">
-      <div class="ui-search">
-        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="9" r="5.5"/><path d="M13 13l3.5 3.5"/></svg>
-        <input class="ui-input ui-input--sm" type="search" placeholder="搜索组件…" data-doc-search aria-label="搜索组件">
-      </div>
-    </div>
-    <nav class="ui-sidenav doc-side__inner" data-side-nav>
-      <div class="ui-sidenav__group" data-nav-group>
-        <div class="ui-sidenav__label">开始</div>
-        <a class="ui-sidenav__item" data-nav-item="快速开始 引入 安装" href="#start">快速开始</a>
-        <a class="ui-sidenav__item" data-nav-item="设计原则 十诫 一致性" href="#principles">设计原则</a>
-      </div>
-      <div class="ui-sidenav__group" data-nav-group>
-        <div class="ui-sidenav__label">主题与 Token</div>
-        <a class="ui-sidenav__item" data-nav-item="设计 Token 色板 字阶 间距 圆角 阴影 动效 层级" href="#tokens">设计 Token</a>
-        <a class="ui-sidenav__item" data-nav-item="主色配置 主题 换肤 品牌色 预设 配色 深色" href="#accent">主色配置</a>
-      </div>
-      <div class="ui-sidenav__group" data-nav-group>
-        <div class="ui-sidenav__label">基础组件</div>
-        <a class="ui-sidenav__item" data-nav-item="按钮 button 变体 尺寸 状态" href="#btn">按钮</a>
-        <a class="ui-sidenav__item" data-nav-item="图标按钮 icon button" href="#icon-btn">图标按钮</a>
-        <a class="ui-sidenav__item" data-nav-item="徽章 标签 badge tag chip 状态点" href="#badge">徽章与标签</a>
-        <a class="ui-sidenav__item" data-nav-item="头像 avatar" href="#avatar">头像</a>
-      </div>
-      <div class="ui-sidenav__group" data-nav-group>
-        <div class="ui-sidenav__label">表单</div>
-        <a class="ui-sidenav__item" data-nav-item="输入框 input 文本域 textarea" href="#input">输入框</a>
-        <a class="ui-sidenav__item" data-nav-item="输入组 搜索框 input group search" href="#input-group">输入组与搜索</a>
-        <a class="ui-sidenav__item" data-nav-item="复选框 单选框 开关 checkbox radio switch" href="#choice">选择控件</a>
-        <a class="ui-sidenav__item" data-nav-item="上传 dropzone file 文件" href="#upload">上传</a>
-        <a class="ui-sidenav__item" data-nav-item="表单 校验 validate form" href="#form">表单与校验</a>
-      </div>
-      <div class="ui-sidenav__group" data-nav-group>
-        <div class="ui-sidenav__label">反馈</div>
-        <a class="ui-sidenav__item" data-nav-item="提示条 alert 通告" href="#alert">提示条</a>
-        <a class="ui-sidenav__item" data-nav-item="轻提示 toast message 消息" href="#toast">轻提示 Toast</a>
-        <a class="ui-sidenav__item" data-nav-item="模态框 弹窗 modal dialog" href="#modal">模态框</a>
-        <a class="ui-sidenav__item" data-nav-item="抽屉 drawer 侧滑" href="#drawer">抽屉</a>
-        <a class="ui-sidenav__item" data-nav-item="气泡提示 tooltip" href="#tooltip">气泡提示</a>
-        <a class="ui-sidenav__item" data-nav-item="二次确认 popconfirm 危险操作" href="#tooltip">二次确认</a>
-        <a class="ui-sidenav__item" data-nav-item="进度条 环形进度 progress" href="#progress">进度</a>
-        <a class="ui-sidenav__item" data-nav-item="加载态 loading spinner 骨架屏 skeleton" href="#loading">加载与骨架屏</a>
-        <a class="ui-sidenav__item" data-nav-item="空状态 empty 结果页 result" href="#empty">空状态与结果页</a>
-      </div>
-      <div class="ui-sidenav__group" data-nav-group>
-        <div class="ui-sidenav__label">导航</div>
-        <a class="ui-sidenav__item" data-nav-item="侧栏导航 sidenav 菜单" href="#sidenav">侧栏导航</a>
-        <a class="ui-sidenav__item" data-nav-item="标签页 tabs" href="#tabs">标签页</a>
-        <a class="ui-sidenav__item" data-nav-item="分段控件 segmented" href="#segmented">分段控件</a>
-        <a class="ui-sidenav__item" data-nav-item="面包屑 breadcrumb" href="#breadcrumb">面包屑</a>
-        <a class="ui-sidenav__item" data-nav-item="分页 pagination" href="#pagination">分页</a>
-        <a class="ui-sidenav__item" data-nav-item="步骤条 steps 流程" href="#steps">步骤条</a>
-        <a class="ui-sidenav__item" data-nav-item="下拉菜单 menu dropdown" href="#menu">下拉菜单</a>
-        <a class="ui-sidenav__item" data-nav-item="页脚 footer" href="#footer">页脚</a>
-      </div>
-      <div class="ui-sidenav__group" data-nav-group>
-        <div class="ui-sidenav__label">数据展示</div>
-        <a class="ui-sidenav__item" data-nav-item="卡片 card" href="#card">卡片</a>
-        <a class="ui-sidenav__item" data-nav-item="统计卡 stat 指标" href="#stat">统计卡</a>
-        <a class="ui-sidenav__item" data-nav-item="特性卡 feature 图标" href="#feature">特性卡</a>
-        <a class="ui-sidenav__item" data-nav-item="表格 table 排序" href="#table">表格</a>
-        <a class="ui-sidenav__item" data-nav-item="描述列表 列表 desc list" href="#desc">描述列表与列表</a>
-        <a class="ui-sidenav__item" data-nav-item="时间线 timeline" href="#timeline">时间线</a>
-        <a class="ui-sidenav__item" data-nav-item="折叠面板 collapse accordion" href="#collapse">折叠面板</a>
-        <a class="ui-sidenav__item" data-nav-item="代码块 codeblock 复制" href="#codeblock">代码块</a>
-      </div>
-      <div class="ui-sidenav__group" data-nav-group>
-        <div class="ui-sidenav__label">布局与区块</div>
-        <a class="ui-sidenav__item" data-nav-item="容器 栅格 layout grid" href="#layout">容器与栅格</a>
-        <a class="ui-sidenav__item" data-nav-item="hero 区块标题 section header" href="#hero-block">Hero 与区块标题</a>
-        <a class="ui-sidenav__item" data-nav-item="指标条 metrics 工具栏 toolbar CTA" href="#blocks">指标条与 CTA</a>
-      </div>
-      <div class="ui-sidenav__group" data-nav-group>
-        <div class="ui-sidenav__label">组合示例</div>
-        <a class="ui-sidenav__item" data-nav-item="数据看板区块 组合 pattern" href="#pattern-dashboard">数据看板区块</a>
-        <a class="ui-sidenav__item" data-nav-item="方案对比区 pricing 组合" href="#pattern-plans">方案对比区</a>
-        <a class="ui-sidenav__item" data-nav-item="流程协作区 steps 组合" href="#pattern-flow">流程协作区</a>
-      </div>
-      <div class="ui-sidenav__group" data-nav-group>
-        <div class="ui-sidenav__label">质量</div>
-        <a class="ui-sidenav__item" data-nav-item="无障碍 质量清单 a11y 对比度 命中区" href="#a11y">无障碍与质量清单</a>
-      </div>
-    </nav>
-    <div class="doc-side__empty" data-doc-empty>没有匹配的组件，换个关键词试试。</div>
-  </aside>
-
-  <!-- ==================== 主内容 ==================== -->
-  <main class="doc-main">
-
-    <!-- 首屏 -->
-    <section class="doc-hero">
+    <!-- ==================== 首屏标题 ==================== -->
+    <section class="doc-land-hero">
       <div class="doc-hero__eyebrow">
         <span class="ui-navbar__logo" aria-hidden="true">
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.4 5.9 8.4 3.6v8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.2" y="11.45" width="9.6" height="1.9" rx="0.95" fill="currentColor"/></svg>
         </span>
         OneUI
       </div>
+      <h1 class="ui-hero__title">挑一种主色，<br>拿到一整套 UI</h1>
+      <p class="ui-hero__desc">
+        中性灰阶打底，主色只留一个可换的接口。下面这些组件都是真的——调色、换深浅色，
+        它们立刻跟着走；定下来之后，导出 CSS、Token、整个起步工程，连同<b>一套让 AI 照着写的规范</b>。
+      </p>
       <div class="doc-hero__badges">
         <span class="ui-badge ui-badge--pill">v1.0.0</span>
-        <span class="ui-badge ui-badge--outline ui-badge--pill">零依赖</span>
-        <span class="ui-badge ui-badge--outline ui-badge--pill">中性无色主题</span>
-        <span class="ui-badge ui-badge--outline ui-badge--pill">可配单一主色</span>
+        <span class="ui-badge ui-badge--outline ui-badge--pill">零依赖 · 零构建</span>
+        <span class="ui-badge ui-badge--outline ui-badge--pill">40+ 组件</span>
+        <span class="ui-badge ui-badge--outline ui-badge--pill">AI 可读</span>
       </div>
-      <h1 class="ui-hero__title">一套不挑框架的<br>通用 UI 组件库</h1>
-      <p class="ui-hero__desc">
-        CSS 变量 + 原生 JS，三个文件即可接入：Vue、React、Svelte、原生页面、服务端模板都能直接用。
-        中性灰阶打底，主色一处可换；每个交互组件实现七态，命中区与对比度按无障碍底线校验。
-      </p>
-      <div class="doc-hero__actions">
-        <a class="ui-btn ui-btn--primary ui-btn--lg" href="#start">快速开始</a>
-        <a class="ui-btn ui-btn--default ui-btn--lg" href="#btn">浏览 40+ 组件</a>
-        <button class="ui-btn ui-btn--ghost ui-btn--lg" type="button" data-ui="copy" data-copy-target="#quickcode" data-copy-toast="引入代码已复制">复制引入代码</button>
+    </section>
+
+    <!-- ==================== 首屏主体：调色台 + 导出 ==================== -->
+    <section class="doc-land-tool" id="export" aria-label="调色与导出">
+
+      <!-- 左：调色台 -->
+      <div class="doc-land-lab">
+        <div class="doc-land-lab__head">
+          <div class="doc-land-lab__title">调色台</div>
+          <div class="doc-land-lab__sub">
+            改动直接写到 <code class="ui-code">&lt;html&gt;</code> 的 <code class="ui-code">--ui-p-*</code>；
+            组件引用的是语义层，所以下面全部一起跟随，不需要逐个改。
+          </div>
+        </div>
+
+        <div class="doc-land-lab__pick">
+          <div class="ui-label">预设主色 / 自定义</div>
+          <div class="doc-accent-presets">
+            <button class="doc-accent-dot" type="button" data-accent-option="ink" style="background:#18181B" aria-label="墨黑" aria-checked="true" role="menuitemradio"></button>
+            <button class="doc-accent-dot" type="button" data-accent-option="blue" style="background:#2563EB" aria-label="品蓝" aria-checked="false" role="menuitemradio"></button>
+            <button class="doc-accent-dot" type="button" data-accent-option="indigo" style="background:#4F46E5" aria-label="靛蓝" aria-checked="false" role="menuitemradio"></button>
+            <button class="doc-accent-dot" type="button" data-accent-option="emerald" style="background:#047857" aria-label="翠绿" aria-checked="false" role="menuitemradio"></button>
+            <button class="doc-accent-dot" type="button" data-accent-option="orange" style="background:#C2410C" aria-label="橙" aria-checked="false" role="menuitemradio"></button>
+            <button class="doc-accent-dot" type="button" data-accent-option="violet" style="background:#7C3AED" aria-label="紫罗兰" aria-checked="false" role="menuitemradio"></button>
+          </div>
+          <div class="doc-accent-row">
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-accent-palette>
+              <span class="doc-accent-chip" data-accent-chip aria-hidden="true"></span>调色板
+            </button>
+            <input class="ui-input ui-input--sm doc-accent-input" type="text" placeholder="#2563EB" data-accent-input aria-label="自定义主色（十六进制）" spellcheck="false">
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-accent-reset>恢复默认</button>
+          </div>
+        </div>
+
+        <div class="doc-land-preview" data-accent-preview aria-label="组件实时预览">
+          <div class="doc-land-preview__row">
+            <button class="ui-btn ui-btn--primary" type="button">主按钮</button>
+            <button class="ui-btn ui-btn--default" type="button">次按钮</button>
+            <button class="ui-btn ui-btn--ghost" type="button">幽灵按钮</button>
+            <button class="ui-btn ui-btn--danger-outline" type="button">危险描边</button>
+          </div>
+          <div class="doc-land-preview__row">
+            <span class="ui-badge ui-badge--primary">主色标签</span>
+            <span class="ui-badge">默认标签</span>
+            <span class="ui-status ui-status--info"><span class="ui-dot" style="background: var(--ui-primary)"></span>进行中</span>
+          </div>
+          <div class="doc-land-preview__row">
+            <div class="ui-progress" style="width: 140px"><div class="ui-progress__bar" style="width: 62%"></div></div>
+            <div class="ui-switch"><input type="checkbox" id="landSwitch" checked><span class="ui-switch__track"></span><label class="ui-switch__label" for="landSwitch">开关</label></div>
+          </div>
+          <div class="doc-land-preview__row">
+            <input class="ui-input" type="text" placeholder="输入框，焦点环取主色" style="max-width: 240px">
+            <button class="ui-icon-btn" type="button" aria-label="更多操作">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10" cy="4.6" r=".9"/><circle cx="10" cy="10" r=".9"/><circle cx="10" cy="15.4" r=".9"/></svg>
+            </button>
+          </div>
+          <div class="ui-alert ui-alert--info">
+            <span class="ui-alert__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v4.5M10 6.4v.6"/></svg></span>
+            <div class="ui-alert__body">
+              <div class="ui-alert__title">提示条</div>
+              <div class="ui-alert__desc">浅底、描边、图标同样派生自主色。</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="doc-land-lab__foot">
+          <span class="ui-caption ui-muted">深浅色用右上角开关切换，预览实时跟随</span>
+          <a class="ui-btn ui-btn--ghost ui-btn--sm" href="docs.html#accent">换肤机制怎么实现的</a>
+        </div>
       </div>
-      <div class="doc-meta-grid">
-        <div class="ui-stat">
-          <div class="ui-stat__label">组件</div>
-          <div class="ui-stat__value">40<span class="ui-stat__unit">+</span></div>
-          <div class="ui-stat__caption ui-caption ui-muted">8 个分组，含 3 个组合示例</div>
+
+      <!-- 右：导出面板 -->
+      <div class="doc-export doc-export--land" data-export>
+        <div class="doc-export__head">
+          <div>
+            <div class="doc-export__title">导出这一版</div>
+            <div class="doc-export__sub">
+              当前 <b data-export-current>中性墨黑 · 浅色</b>，导出内容随主色与主题实时重算
+            </div>
+          </div>
+          <div class="doc-export__ops">
+            <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-export-copy>复制 CSS</button>
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-css>下载 oneui-theme.css</button>
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-json>下载 tokens.json</button>
+            <button class="ui-btn ui-btn--primary ui-btn--sm" type="button" data-export-zip>下载 starter.zip</button>
+            <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-export-link>复制分享链接</button>
+          </div>
         </div>
-        <div class="ui-stat">
-          <div class="ui-stat__label">设计 Token</div>
-          <div class="ui-stat__value">130<span class="ui-stat__unit">+</span></div>
-          <div class="ui-caption ui-muted">三层结构，支持跨端导出</div>
+        <div class="ui-collapse doc-export__preview" data-ui="collapse">
+          <div class="ui-collapse__item">
+            <button class="ui-collapse__header" type="button" aria-expanded="false" aria-controls="exportCss">
+              <span>预览 oneui-theme.css <span class="doc-export__lines" data-export-lines></span></span>
+              <span class="ui-collapse__chevron"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8l4.5 4.5L14.5 8"/></svg></span>
+            </button>
+            <div class="ui-collapse__panel" id="exportCss" hidden>
+              <pre class="doc-export__code"><code data-export-code></code></pre>
+            </div>
+          </div>
         </div>
-        <div class="ui-stat">
-          <div class="ui-stat__label">运行时依赖</div>
-          <div class="ui-stat__value">0</div>
-          <div class="ui-caption ui-muted">无构建、无框架、无第三方包</div>
+        <div class="doc-note" data-export-hint>
+          <b>starter.zip 是「解压即能跑」的一份：</b><code class="ui-code">library/</code> 五个文件 + 这一版主题 +
+          最小示例页 + 一页完整样板 + <code class="ui-code">AGENTS.md</code> 与组件契约。
+          后两样是给 AI 看的——放进你的项目，它写的页面就自然是这套 UI。
+          <b>复制分享链接</b>会把当前主色与主题编码进 URL 的 hash，别人打开就是同一个配色。
         </div>
-        <div class="ui-stat">
-          <div class="ui-stat__label">接入文件</div>
-          <div class="ui-stat__value">3<span class="ui-stat__unit">个</span></div>
-          <div class="ui-caption ui-muted">tokens · base · components</div>
+        <div class="doc-note doc-note--warn" data-export-warn hidden>
+          <b>starter.zip 暂时不可用。</b>它要把 <code class="ui-code">library/</code> 里的源码一起打包，而浏览器不允许页面在
+          <code class="ui-code">file://</code> 下读取本地文件（这正是它比另外几个导出项多出来的依赖）。
+          在项目根目录起一个本地服务再访问即可恢复，例如 <code class="ui-code">python -m http.server</code> 之后打开
+          <code class="ui-code">http://localhost:8000/docs/</code>。其余四项不读文件，任何环境下都能用。
         </div>
       </div>
     </section>
 
-    <!-- 快速开始 -->
-    <section class="doc-section" id="start">
+    <!-- ==================== 三步接入 ==================== -->
+    <section class="doc-land-sec" id="start">
       <div class="doc-section__head">
         <div class="doc-section__eyebrow">Getting started</div>
-        <h2 class="doc-section__title">快速开始</h2>
-        <p class="doc-section__desc">把三个文件拷进你的项目，按顺序引入即可。不需要构建工具，也不需要任何 npm 依赖。</p>
+        <h2 class="doc-section__title">三步接入</h2>
+        <p class="doc-section__desc">
+          把三个文件拷进你的项目，按顺序引入。不需要构建工具，也不需要任何 npm 依赖——
+          Vue、React、Svelte、原生页面、服务端模板都一样用。
+        </p>
       </div>
 
       <div class="doc-code">
@@ -305,2290 +322,69 @@ const ok = await UI.confirm({
       </div>
     </section>
 
-    <!-- 设计原则 -->
-    <section class="doc-section" id="principles">
+    <!-- ==================== 给 AI 用 ==================== -->
+    <section class="doc-land-sec" id="ai">
       <div class="doc-section__head">
-        <div class="doc-section__eyebrow">Principles</div>
-        <h2 class="doc-section__title">八条设计原则</h2>
-        <p class="doc-section__desc">组件库不只是样式集合，它约束的是「什么不能妥协」。以下八条是所有组件的验收标准。</p>
-      </div>
-      <div class="ui-grid ui-grid--4 ui-grid--tight">
-        <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-feature">
-          <span class="ui-feature__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6" rx="1.6"/><rect x="11" y="11" width="6" height="6" rx="1.6"/><path d="M9 6h5v5"/></svg></span>
-          <div class="ui-feature__title">状态完备</div>
-          <p class="ui-feature__desc">任何会等待的操作都要有 空 / 加载 / 成功 / 失败 四态，缺一不可上线。</p>
-        </div></div>
-        <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-feature">
-          <span class="ui-feature__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="12" rx="2"/><path d="M3 9h14M8 4v12"/></svg></span>
-          <div class="ui-feature__title">结构稳定</div>
-          <p class="ui-feature__desc">同一流程的四态共用一副骨架，只换内容不换结构，避免页面跳动。</p>
-        </div></div>
-        <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-feature">
-          <span class="ui-feature__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="13" height="5" rx="2.5"/><path d="M6 15h8"/></svg></span>
-          <div class="ui-feature__title">单一主操作</div>
-          <p class="ui-feature__desc">每屏至多一个实心主按钮，第二重要操作降级为描边，第三为幽灵或文字。</p>
-        </div></div>
-        <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-feature">
-          <span class="ui-feature__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6.5h13M3.5 10h13M3.5 13.5h7"/><circle cx="14.5" cy="13.5" r="2"/></svg></span>
-          <div class="ui-feature__title">Token 唯一来源</div>
-          <p class="ui-feature__desc">组件里不出现字面量色值与魔法数字，换肤只改 L1/L2 变量。</p>
-        </div></div>
-        <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-feature">
-          <span class="ui-feature__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 6.5v7M6.5 10h7"/></svg></span>
-          <div class="ui-feature__title">可读性底线</div>
-          <p class="ui-feature__desc">正文对比度 ≥ 4.5:1，大字与非文本元素 ≥ 3:1；状态不靠颜色单独传达。</p>
-        </div></div>
-        <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-feature">
-          <span class="ui-feature__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3v14M6 7v6M14 7v6"/></svg></span>
-          <div class="ui-feature__title">命中区底线</div>
-          <p class="ui-feature__desc">可点元素实际命中区 ≥ 44×44，视觉尺寸可以更小，但触控区域不变。</p>
-        </div></div>
-        <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-feature">
-          <span class="ui-feature__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 6.5V10l3 2"/></svg></span>
-          <div class="ui-feature__title">即时反馈</div>
-          <p class="ui-feature__desc">操作后 100ms 内必须有可见变化；超过 1 秒要给进度；超过 10 秒要能取消。</p>
-        </div></div>
-        <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-feature">
-          <span class="ui-feature__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.8l7 12.4H3L10 2.8z"/><path d="M10 8v3.2M10 13.4v.4"/></svg></span>
-          <div class="ui-feature__title">错误可行动</div>
-          <p class="ui-feature__desc">错误提示 = 现象 + 原因 + 下一步动作 + 可复制的错误码，禁止只说「操作失败」。</p>
-        </div></div>
-      </div>
-    </section>
-
-    <!-- Token -->
-    <section class="doc-section" id="tokens">
-      <div class="doc-section__head">
-        <div class="doc-section__eyebrow">Foundations</div>
-        <h2 class="doc-section__title">设计 Token</h2>
+        <div class="doc-section__eyebrow">AI ready</div>
+        <h2 class="doc-section__title">让 AI 照着这套 UI 写</h2>
         <p class="doc-section__desc">
-          三层结构：<strong>L1 原始层</strong>（色阶与标量）→ <strong>L2 语义层</strong>（绑定用途，组件只引用这层）→ <strong>L3 组件层</strong>（绑定槽位）。
-          换主题只改 L1/L2，组件代码零改动。完整清单见 <code class="ui-code">library/tokens.css</code> 与 <code class="ui-code">library/tokens.json</code>。
+          不写规范，AI 只会按它的先验生成 Bootstrap 或 Tailwind 的类名——类名不对、Token 不对、
+          状态方向也不对。所以这里把「怎么用」写成了四份机器可读的文件，随 starter.zip 一起进你的项目。
         </p>
       </div>
 
-      <h3 class="doc-subhead">中性灰阶（唯一基础色阶，无色相）</h3>
-      <div class="doc-swatches">
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-n-0)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">n-0</div><div class="doc-swatch__val">#FFFFFF</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-n-25)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">n-25</div><div class="doc-swatch__val">#FCFCFD</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-n-50)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">n-50</div><div class="doc-swatch__val">#F7F7F8</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-n-100)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">n-100</div><div class="doc-swatch__val">#F1F1F3</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-n-150)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">n-150</div><div class="doc-swatch__val">#E7E7EA</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-n-200)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">n-200</div><div class="doc-swatch__val">#D9D9DE</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-n-300)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">n-300</div><div class="doc-swatch__val">#C1C1C8</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-n-400)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">n-400</div><div class="doc-swatch__val">#9C9CA5</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-n-500)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">n-500</div><div class="doc-swatch__val">#71717A</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-n-600)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">n-600</div><div class="doc-swatch__val">#52525B</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-n-700)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">n-700</div><div class="doc-swatch__val">#3F3F46</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-n-800)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">n-800</div><div class="doc-swatch__val">#27272A</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-n-900)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">n-900</div><div class="doc-swatch__val">#18181B</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-n-950)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">n-950</div><div class="doc-swatch__val">#0E0E11</div></div></div>
-      </div>
-
-      <h3 class="doc-subhead">语义色（组件只引用这一层，完整清单见 <code class="ui-code">library/tokens.css</code>）</h3>
-      <div class="doc-swatches">
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-primary)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">--ui-primary</div><div class="doc-swatch__val">主色 · 可配置</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-primary-hover)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">primary-hover</div><div class="doc-swatch__val">400 ~ 700 档</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-primary-active)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">primary-active</div><div class="doc-swatch__val">再深 / 再浅一档</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-primary-weak)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">--ui-primary-weak</div><div class="doc-swatch__val">主色浅底</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-bg)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">--ui-bg</div><div class="doc-swatch__val">页面画布</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-surface)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">--ui-surface</div><div class="doc-swatch__val">卡片 / 面板</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-text)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">--ui-text</div><div class="doc-swatch__val">一级文字</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-text-2)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">--ui-text-2</div><div class="doc-swatch__val">二级文字</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-border)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">--ui-border</div><div class="doc-swatch__val">默认描边</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-control-track)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">control-track</div><div class="doc-swatch__val">开关轨道 / 灰面</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-disabled-bg)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">--ui-disabled-bg</div><div class="doc-swatch__val">禁用底</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-surface-invert)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">surface-invert</div><div class="doc-swatch__val">反色区块</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-nav-bg-hover)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">nav-bg-hover</div><div class="doc-swatch__val">导航 hover 底</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-nav-bg-active)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">nav-bg-active</div><div class="doc-swatch__val">导航选中底</div></div></div>
-      </div>
-
-      <div class="doc-note">
-        <strong>把 <code class="ui-code">--ui-bg</code> · <code class="ui-code">nav-bg-hover</code> · <code class="ui-code">nav-bg-active</code> 三块放一起看</strong>：这三级灰面是刻意拉开的。侧栏选中态一开始复用的是 <code class="ui-code">--ui-primary-weak</code>，而中性主题下它由 <code class="ui-code">--ui-p-50</code> 派生、恰好等于页面底 <code class="ui-code">--ui-bg</code>——两者都是 <code class="ui-code">#F7F7F8</code>，选中项和背景完全融成一片，等于没有选中态。所以「贴在页面底上的选中底」必须单独定义，不能借用主色浅底。
-      </div>
-
-      <h3 class="doc-subhead">状态色（底 / 主 / 字 三件套，文字用深一档保证对比度）</h3>
-      <div class="doc-swatches">
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-info-bg)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">info 底</div><div class="doc-swatch__val">字 #0369A1</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-success-bg)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">success 底</div><div class="doc-swatch__val">字 #15803D</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-warning-bg)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">warning 底</div><div class="doc-swatch__val">字 #B45309</div></div></div>
-        <div class="doc-swatch"><div class="doc-swatch__chip" style="background: var(--ui-danger-bg)"></div><div class="doc-swatch__body"><div class="doc-swatch__name">danger 底</div><div class="doc-swatch__val">字 #B91C1C</div></div></div>
-      </div>
-
-      <h3 class="doc-subhead">字阶（10 阶）</h3>
-      <div>
-        <div class="doc-type-row"><div class="doc-type-row__sample ui-display">组件库等级<br></div><div class="doc-type-row__meta">40/48 · bold</div></div>
-        <div class="doc-type-row"><div class="doc-type-row__sample ui-h1">页面主标题</div><div class="doc-type-row__meta">32/40 · bold</div></div>
-        <div class="doc-type-row"><div class="doc-type-row__sample ui-h2">区块标题</div><div class="doc-type-row__meta">24/32 · bold</div></div>
-        <div class="doc-type-row"><div class="doc-type-row__sample ui-h3">卡片标题</div><div class="doc-type-row__meta">20/28 · semibold</div></div>
-        <div class="doc-type-row"><div class="doc-type-row__sample ui-h4">条目标题</div><div class="doc-type-row__meta">16/24 · semibold</div></div>
-        <div class="doc-type-row"><div class="doc-type-row__sample ui-text">正文文本，用于说明段落与描述</div><div class="doc-type-row__meta">15/24 · regular</div></div>
-        <div class="doc-type-row"><div class="doc-type-row__sample ui-text-sm">次级正文，用于辅助信息</div><div class="doc-type-row__meta">13/20 · regular</div></div>
-        <div class="doc-type-row"><div class="doc-type-row__sample ui-caption">说明与脚注，最小可读字号</div><div class="doc-type-row__meta">12/18 · regular</div></div>
-        <div class="doc-type-row"><div class="doc-type-row__sample ui-overline">Overline label</div><div class="doc-type-row__meta">11/16 · semibold · 字距 .1em</div></div>
-      </div>
-
-      <h3 class="doc-subhead">间距（4pt 基准）</h3>
-      <div>
-        <div class="doc-space-row"><div class="doc-space-bar" style="width: 4px"></div><div class="doc-space-label">space-1 · 4</div></div>
-        <div class="doc-space-row"><div class="doc-space-bar" style="width: 8px"></div><div class="doc-space-label">space-2 · 8</div></div>
-        <div class="doc-space-row"><div class="doc-space-bar" style="width: 12px"></div><div class="doc-space-label">space-3 · 12</div></div>
-        <div class="doc-space-row"><div class="doc-space-bar" style="width: 16px"></div><div class="doc-space-label">space-4 · 16</div></div>
-        <div class="doc-space-row"><div class="doc-space-bar" style="width: 20px"></div><div class="doc-space-label">space-5 · 20</div></div>
-        <div class="doc-space-row"><div class="doc-space-bar" style="width: 24px"></div><div class="doc-space-label">space-6 · 24</div></div>
-        <div class="doc-space-row"><div class="doc-space-bar" style="width: 32px"></div><div class="doc-space-label">space-8 · 32</div></div>
-        <div class="doc-space-row"><div class="doc-space-bar" style="width: 40px"></div><div class="doc-space-label">space-10 · 40</div></div>
-        <div class="doc-space-row"><div class="doc-space-bar" style="width: 48px"></div><div class="doc-space-label">space-12 · 48</div></div>
-        <div class="doc-space-row"><div class="doc-space-bar" style="width: 64px"></div><div class="doc-space-label">space-16 · 64</div></div>
-      </div>
-
-      <h3 class="doc-subhead">圆角与阴影</h3>
-      <div class="doc-radius-row">
-        <div class="doc-radius-demo" style="border-radius: var(--ui-radius-xs)">4 · xs</div>
-        <div class="doc-radius-demo" style="border-radius: var(--ui-radius-sm)">8 · sm</div>
-        <div class="doc-radius-demo" style="border-radius: var(--ui-radius-md)">12 · md</div>
-        <div class="doc-radius-demo" style="border-radius: var(--ui-radius-lg)">16 · lg</div>
-        <div class="doc-radius-demo" style="border-radius: var(--ui-radius-xl)">24 · xl</div>
-        <div class="doc-radius-demo" style="border-radius: var(--ui-radius-2xl)">32 · 2xl</div>
-        <div class="doc-radius-demo" style="border-radius: var(--ui-radius-pill)">999</div>
-      </div>
-      <div class="doc-shadow-row" style="margin-top: var(--ui-space-4)">
-        <div class="doc-shadow-demo" style="box-shadow: var(--ui-shadow-xs)">shadow-xs</div>
-        <div class="doc-shadow-demo" style="box-shadow: var(--ui-shadow-sm)">shadow-sm</div>
-        <div class="doc-shadow-demo" style="box-shadow: var(--ui-shadow-md)">shadow-md</div>
-        <div class="doc-shadow-demo" style="box-shadow: var(--ui-shadow-lg)">shadow-lg</div>
-        <div class="doc-shadow-demo" style="box-shadow: var(--ui-shadow-xl)">shadow-xl</div>
-      </div>
-
-      <h3 class="doc-subhead">动效、层级与断点</h3>
-      <div class="doc-two-col">
-        <div class="doc-spec">
-          <div class="doc-spec__title">动效</div>
-          <div class="ui-table-wrap">
-            <table class="ui-table ui-table--compact">
-              <thead><tr><th>Token</th><th>值</th><th>用途</th></tr></thead>
-              <tbody>
-                <tr><td>--ui-dur-1</td><td>100ms</td><td>按压、即时反馈</td></tr>
-                <tr><td>--ui-dur-2</td><td>180ms</td><td>状态切换、展开收起</td></tr>
-                <tr><td>--ui-dur-3</td><td>280ms</td><td>弹层进出、页面转场</td></tr>
-                <tr><td>--ui-dur-loop</td><td>1200ms</td><td>不确定进度循环</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="doc-spec">
-          <div class="doc-spec__title">层级</div>
-          <div class="ui-table-wrap">
-            <table class="ui-table ui-table--compact">
-              <thead><tr><th>Token</th><th>值</th><th>内容</th></tr></thead>
-              <tbody>
-                <tr><td>--ui-z-sticky</td><td>20</td><td>吸顶栏、侧栏</td></tr>
-                <tr><td>--ui-z-dropdown</td><td>60</td><td>下拉菜单</td></tr>
-                <tr><td>--ui-z-overlay</td><td>80</td><td>遮罩、加载蒙层</td></tr>
-                <tr><td>--ui-z-modal</td><td>90</td><td>模态框、抽屉</td></tr>
-                <tr><td>--ui-z-toast</td><td>110</td><td>轻提示</td></tr>
-                <tr><td>--ui-z-tooltip</td><td>120</td><td>气泡提示、二次确认</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="doc-note">
-        <strong>断点：</strong>480 / 640 / 768 / 1024 / 1280。栅格列数与边距随断点变化，<code class="ui-code">--ui-page-gutter</code> 与 <code class="ui-code">--ui-container</code> 是唯二的布局变量。
-      </div>
-    </section>
-
-    <!-- 主色配置 -->
-    <section class="doc-section" id="accent">
-      <div class="doc-section__head">
-        <div class="doc-section__eyebrow">Theming</div>
-        <h2 class="doc-section__title">主色配置</h2>
-        <p class="doc-section__desc">
-          默认主题是中性无色：主色等于墨黑，整站呈现灰阶语汇。换品牌色有两条路——右上角开关直接挑一套预设，
-          或者覆盖 <code class="ui-code">--ui-p-50…900</code> 做自己的色阶。组件样式一行都不用改：
-          组件引用的是 L2 语义层，L2 引用的是 L1 色阶。
-        </p>
-      </div>
-
-      <div class="doc-code">
-        <div class="doc-code__head">
-          <span class="doc-code__label">CSS · 用内置预设，或自建一套色阶</span>
-          <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ui="copy" data-copy-target="#accentcode">复制</button>
-        </div>
-        <div class="ui-codeblock">
-<pre><code id="accentcode">/* 方式一：用内置预设。tokens.css 自带 blue / indigo / emerald / orange / violet，
-   不写这个属性就是默认的中性墨黑。两种主题、hover/active 方向都已配好。 */
-&lt;html data-ui-accent="blue"&gt;
-
-/* 方式二：自建色阶。加在 tokens.css 之后即可，档位契约如下。
-
-   选择器特意写成 :root:where([…]) 而不是 :root[…] —— :where() 的权重恒为 0，
-   整条选择器只剩 :root 的 0,1,0，刚好低于 tokens.css 里两个深色块（0,2,0）。
-   深色块要把下面这三个浅色槽位改指到 --ui-primary-dark-*，权重必须压得住它们。
-   若写成 :root[data-ui-accent="brand"]（0,2,0），本文件在后就会反过来压住深色块，
-   症状是深色模式下 hover 还是那个深蓝、主按钮仍然是白字。 */
-:root:where([data-ui-accent="brand"]) {
-  --ui-p-50:  #EFF6FF;   /* weak 淡底 */
-  --ui-p-100: #DBEAFE;   /* weak hover */
-  --ui-p-200: #BFDBFE;   /* weak 边框 */
-  --ui-p-300: #93C5FD;
-  --ui-p-400: #60A5FA;   /* 深色模式主色 */
-  --ui-p-500: #3B82F6;
-  --ui-p-600: #2563EB;   /* 主色本身，压白字必须 ≥4.5:1 */
-  --ui-p-700: #1D4ED8;   /* hover */
-  --ui-p-800: #1E40AF;   /* active */
-  --ui-p-900: #172554;   /* 深色模式下的淡底 */
-
-  /* 品牌色状态往"变深"走；墨黑是唯一例外，它往浅处走，否则加深肉眼不可见 */
-  --ui-primary-hover:  var(--ui-p-700);
-  --ui-primary-active: var(--ui-p-800);
-  --ui-primary-text:   var(--ui-n-0);    /* 600 档偏亮时改成 var(--ui-n-950) */
-
-  /* 深色模式不反白，改走上半档浅色以保住色相——墨黑没有色相可保，才整体反白 */
-  --ui-primary-dark:            var(--ui-p-400);
-  --ui-primary-dark-hover:      var(--ui-p-300);
-  --ui-primary-dark-active:     var(--ui-p-200);
-  --ui-primary-dark-weak:       var(--ui-p-900);
-  --ui-primary-dark-weak-hover: var(--ui-p-800);
-  --ui-primary-dark-border:     var(--ui-p-700);
-  --ui-primary-dark-text:       var(--ui-n-950);
-}</code></pre>
-        </div>
-      </div>
-
-      <div class="doc-accent-lab">
-        <div class="ui-stack ui-stack--2" style="min-width: 220px">
-          <div class="ui-label">预设主色 / 自定义色值</div>
-          <div class="doc-accent-presets">
-            <button class="doc-accent-dot" type="button" data-accent-option="ink" style="background:#18181B" aria-label="墨黑" aria-checked="true" role="menuitemradio"></button>
-            <button class="doc-accent-dot" type="button" data-accent-option="blue" style="background:#2563EB" aria-label="品蓝" aria-checked="false" role="menuitemradio"></button>
-            <button class="doc-accent-dot" type="button" data-accent-option="indigo" style="background:#4F46E5" aria-label="靛蓝" aria-checked="false" role="menuitemradio"></button>
-            <button class="doc-accent-dot" type="button" data-accent-option="emerald" style="background:#047857" aria-label="翠绿" aria-checked="false" role="menuitemradio"></button>
-            <button class="doc-accent-dot" type="button" data-accent-option="orange" style="background:#C2410C" aria-label="橙" aria-checked="false" role="menuitemradio"></button>
-            <button class="doc-accent-dot" type="button" data-accent-option="violet" style="background:#7C3AED" aria-label="紫罗兰" aria-checked="false" role="menuitemradio"></button>
-          </div>
-          <div class="doc-accent-row">
-            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-accent-palette>
-              <span class="doc-accent-chip" data-accent-chip aria-hidden="true"></span>调色板
-            </button>
-            <input class="ui-input ui-input--sm doc-accent-input" type="text" placeholder="#2563EB" data-accent-input aria-label="自定义主色（十六进制）" spellcheck="false">
-            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-accent-reset>恢复默认</button>
-          </div>
-        </div>
-        <div class="doc-accent-preview" data-accent-preview>
-          <button class="ui-btn ui-btn--primary" type="button">主按钮</button>
-          <button class="ui-btn ui-btn--default" type="button">次按钮</button>
-          <span class="ui-badge ui-badge--primary">标签</span>
-          <span class="ui-status ui-status--info"><span class="ui-dot" style="background: var(--ui-primary)"></span>进行中</span>
-          <div class="ui-progress" style="width: 120px"><div class="ui-progress__bar" style="width: 62%"></div></div>
-          <div class="ui-switch"><input type="checkbox" id="accentSwitch" checked><span class="ui-switch__track"></span><label class="ui-switch__label" for="accentSwitch">开关</label></div>
-        </div>
-      </div>
-      <div class="doc-export" data-export>
-        <div class="doc-export__head">
-          <div>
-            <div class="doc-export__title">导出这一版主题</div>
-            <div class="doc-export__sub">当前 <b data-export-current>中性墨黑 · 浅色</b>，导出内容随主色与主题实时重算</div>
-          </div>
-          <div class="doc-export__ops">
-            <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-export-copy>复制 CSS</button>
-            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-css>下载 oneui-theme.css</button>
-            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-json>下载 tokens.json</button>
-            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-zip>下载 starter.zip</button>
-            <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-export-link>复制分享链接</button>
-          </div>
-        </div>
-        <div class="ui-collapse doc-export__preview" data-ui="collapse">
-          <div class="ui-collapse__item">
-            <button class="ui-collapse__header" type="button" aria-expanded="false" aria-controls="exportCss">
-              <span>预览 oneui-theme.css <span class="doc-export__lines" data-export-lines></span></span>
-              <span class="ui-collapse__chevron"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8l4.5 4.5L14.5 8"/></svg></span>
-            </button>
-            <div class="ui-collapse__panel" id="exportCss" hidden>
-              <pre class="doc-export__code"><code data-export-code></code></pre>
-            </div>
-          </div>
-        </div>
-        <div class="doc-note" data-export-hint>
-          <b>怎么用：</b>把导出的 <code class="ui-code">oneui-theme.css</code> 放在 <code class="ui-code">tokens.css</code> 之后，
-          在 <code class="ui-code">&lt;html&gt;</code> 上写 <code class="ui-code">data-ui-accent="brand"</code> 即可；
-          文件末尾还附了一份「直改版」<code class="ui-code">:root</code>，不想加属性就直接用那份。
-          <b>starter.zip</b> 是「解压即能跑」的一份：library 五个文件 + 这一版主题 + 一个最小示例页 + 接入说明，
-          连 <code class="ui-code">README.md</code> 里的目录说明都写好了。
-          <b>复制分享链接</b>会把当前主色与主题编码进 URL 的 hash，别人打开就是同一个配色。
-          <br>
-          导出的文件<b>与深浅色无关</b>：浅色槽位和深色槽位都在里面，切主题即换一套。
-          它的选择器写成 <code class="ui-code">:root:where([…])</code> 正是为了让权重留在 0,1,0 ——
-          否则后引入的它会压住 tokens.css 的深色块，深色模式下 hover 会退回浅色档、主按钮的字会变成白色。
-        </div>
-        <div class="doc-note doc-note--warn" data-export-warn hidden>
-          <b>starter.zip 暂时不可用。</b>它要把 <code class="ui-code">library/</code> 里的源码一起打包，而浏览器不允许页面在
-          <code class="ui-code">file://</code> 下读取本地文件（这正是它比另外几个导出项多出来的依赖）。
-          在项目根目录起一个本地服务再访问即可恢复，例如 <code class="ui-code">python -m http.server</code> 之后打开
-          <code class="ui-code">http://localhost:8000/docs/</code>。其余四项不读文件，任何环境下都能用。
-        </div>
-      </div>
-      <div class="doc-note">
-        上面这排色点、右上角开关、以及窄屏抽屉底部的色点，是<b>同一组选项、同一段状态</b>——点任意一处，三处一起高亮。
-        联动之所以能成立，是因为它们改的都是 <code class="ui-code">&lt;html&gt;</code> 上的 <code class="ui-code">--ui-p-*</code>：
-        <code class="ui-code">--ui-primary / hover / active / weak / border</code> 全部派生自它，于是按钮、开关、进度、标签自动跟随。
-        <b>注意作用域</b>：这些声明必须落在 <code class="ui-code">&lt;html&gt;</code> 上，写到某个后代元素上是不生效的——
-        <code class="ui-code">var()</code> 在声明它的元素上就完成了替换，父级那份早已变成具体色值继承下来。
-        <b>作用域之外还有一个权重坑</b>：两个深色块（<code class="ui-code">:root[data-ui-theme="dark"]</code> 与
-        <code class="ui-code">@media</code> 里那条 <code class="ui-code">auto</code>）都是 0,2,0，
-        它们负责把 <code class="ui-code">hover / active / text</code> 这三个浅色槽位改指到深色槽位。
-        自己的色阶块若也写成 0,2,0 又放在其后，就会把这份覆盖权抢走，深色模式的 hover 会退回浅色档。
-        写成 <code class="ui-code">:root:where([…])</code> 让它只剩 0,1,0 即可 —— 上面代码块与导出的文件都是这么写的。
-        自定义色值会算出完整的 10 档色阶写到 <code class="ui-code">&lt;html&gt;</code> 的行内样式上；
-        若所选色值压白字不足 4.5:1，它<b>先改用墨色文字</b>把色相原样留住，只有连墨字也过不了的中间调窄带，
-        才沿加深方向调整，并<b>明确告诉你改成了什么</b>——不静默改值。
-        深色模式下预设主色不反白：它走 400 档浅色配深字以保住色相，只有墨黑因为无色相可保才整体反白。
-      </div>
-      <div class="doc-note">
-        <b>调色板</b>是自绘的，不是 <code class="ui-code">&lt;input type="color"&gt;</code>——后者的系统对话框
-        拿不到实时预览，样式也不受控。面板里拖动 SV 方块与色相条会<b>边拖边改全站</b>（rAF 节流），
-        松手才落盘并提示；下面两行对比度读数会实时告诉你引擎最终会用白字还是墨字。
-        一处刻意的行为：<b>当前色暗到或灰到看不出色相时，一碰色相条会先把它抬进可辨区间</b>
-        （明度 &lt;35% 抬到 85%，饱和度 &lt;35% 抬到 70%）。否则默认的墨黑明度只有 11%，
-        拖色相条会毫无反应、看着像坏了。深蓝、翠绿这类正常色不受影响。
-      </div>
-    </section>
-
-    <!-- ==================== 组件 · 基础 ==================== -->
-    <section class="doc-section" id="group-basic">
-      <div class="doc-section__head">
-        <div class="doc-section__eyebrow">Components · Basic</div>
-        <h2 class="doc-section__title">基础组件</h2>
-        <p class="doc-section__desc">按钮、图标按钮、徽章标签、头像。它们是所有界面的最小计量单位，也是状态最密集的一批组件。</p>
-      </div>
-
-      <!-- 按钮 -->
-      <div class="doc-comp" id="btn">
-        <div class="doc-comp__title">按钮 <code>.ui-btn</code></div>
-        <p class="doc-comp__desc">
-          四档变体 + 三档尺寸，四个变体对应四种操作优先级：实心（每屏至多一个）、默认（白底描边）、幽灵（工具栏与行内）、链接。
-          任意按钮加 <code class="ui-code">.is-loading</code> 进入加载态，加载时保留原宽度，避免布局跳动。
-        </p>
-
-        <div class="doc-demo">
-          <span class="doc-demo__label">variants</span>
-          <button class="ui-btn ui-btn--primary" type="button">主操作</button>
-          <button class="ui-btn ui-btn--default" type="button">次操作</button>
-          <button class="ui-btn ui-btn--ghost" type="button">幽灵按钮</button>
-          <button class="ui-btn ui-btn--link" type="button">链接按钮</button>
-          <button class="ui-btn ui-btn--danger" type="button">删除</button>
-          <button class="ui-btn ui-btn--danger-outline" type="button">危险描边</button>
-        </div>
-
-        <div class="doc-demo">
-          <span class="doc-demo__label">sizes & composition</span>
-          <button class="ui-btn ui-btn--primary ui-btn--sm" type="button">小</button>
-          <button class="ui-btn ui-btn--primary" type="button">默认</button>
-          <button class="ui-btn ui-btn--primary ui-btn--lg" type="button">大</button>
-          <button class="ui-btn ui-btn--default" type="button">
-            <span class="ui-btn__icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3.5v9M3.5 8h9"/></svg></span>
-            带图标
-          </button>
-          <button class="ui-btn ui-btn--default" type="button" disabled>禁用</button>
-          <div class="ui-btn-group">
-            <button class="ui-btn ui-btn--default" type="button">左</button>
-            <button class="ui-btn ui-btn--default" type="button">中</button>
-            <button class="ui-btn ui-btn--default" type="button">右</button>
-          </div>
-          <button class="ui-btn ui-btn--primary" type="button" style="width: 200px">固定宽度 200px</button>
-        </div>
-
-        <div class="doc-states">
-          <div class="doc-state-cell"><button class="ui-btn ui-btn--primary" type="button">主操作</button><span>default</span></div>
-          <div class="doc-state-cell"><button class="ui-btn ui-btn--primary" type="button" style="background: var(--ui-btn-primary-bg-hover)">主操作</button><span>hover · 底色深一档（墨黑例外：浅一档）</span></div>
-          <div class="doc-state-cell"><button class="ui-btn ui-btn--primary" type="button" style="background: var(--ui-btn-primary-bg-active); transform: scale(.985)">主操作</button><span>active · 再深一档 + 缩放</span></div>
-          <div class="doc-state-cell"><button class="ui-btn ui-btn--primary" type="button" style="outline: var(--ui-focus-width) solid var(--ui-primary); outline-offset: var(--ui-focus-offset)">主操作</button><span>focus-visible</span></div>
-          <div class="doc-state-cell"><button class="ui-btn ui-btn--primary" type="button" disabled>主操作</button><span>disabled</span></div>
-          <div class="doc-state-cell"><button class="ui-btn ui-btn--primary is-loading" type="button">主操作</button><span>loading</span></div>
-          <div class="doc-state-cell"><button class="ui-btn ui-btn--default" type="button" aria-pressed="true">筛选</button><span>selected</span></div>
-        </div>
-
-        <div class="doc-code">
-          <div class="doc-code__head">
-            <span class="doc-code__label">HTML</span>
-            <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ui="copy" data-copy-target="#code-btn">复制</button>
-          </div>
-          <div class="ui-codeblock">
-<pre><code id="code-btn">&lt;button class="ui-btn ui-btn--primary" type="button"&gt;主操作&lt;/button&gt;
-&lt;button class="ui-btn ui-btn--default ui-btn--lg" type="button"&gt;次操作 / 大&lt;/button&gt;
-
-&lt;!-- 加载态：JS 切换 class，宽度不变 --&gt;
-&lt;button class="ui-btn ui-btn--primary is-loading" type="button"&gt;提交中&lt;/button&gt;
-
-&lt;!-- 可切换按钮用 aria-pressed 表达选中态 --&gt;
-&lt;button class="ui-btn ui-btn--default" aria-pressed="true"&gt;已选中&lt;/button&gt;</code></pre>
-          </div>
-        </div>
-
-        <div class="doc-spec">
-          <div class="doc-spec__title">契约</div>
-          <div class="ui-table-wrap">
-            <table class="ui-table ui-table--compact">
-              <thead><tr><th>项</th><th>取值</th><th>说明</th></tr></thead>
-              <tbody>
-                <tr><td>variants</td><td>primary · default · ghost · link · danger · danger-outline</td><td>每屏至多一个 primary</td></tr>
-                <tr><td>sizes</td><td>sm 32 / md 40 / lg 48（高度）</td><td>min-width 44 保证命中区</td></tr>
-                <tr><td>states</td><td>hover · active · focus-visible · disabled · loading · selected</td><td>禁用仍保留命中区与提示</td></tr>
-                <tr><td>stateDirection</td><td>品牌色 hover = --ui-p-700，active = --ui-p-800</td><td>比主色 600 档深一步。中性墨黑是唯一例外（600/500/400 往浅走）：近黑再加深只有 10/255 的差，肉眼不可辨</td></tr>
-                <tr><td>a11y</td><td>原生 button/a；加载态用 aria-busy 更佳</td><td>焦点环 2px 主色，offset 2px</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- 图标按钮 -->
-      <div class="doc-comp" id="icon-btn">
-        <div class="doc-comp__title">图标按钮 <code>.ui-icon-btn</code></div>
-        <p class="doc-comp__desc">视觉 44×44（含 <code class="ui-code">--sm</code> 的 36×36 视觉，命中区用伪元素撑到 44）。必须提供 <code class="ui-code">aria-label</code> 或 <code class="ui-code">data-tooltip</code>。</p>
-        <div class="doc-demo">
-          <span class="doc-demo__label">icon button</span>
-          <button class="ui-icon-btn ui-icon-btn--outline" type="button" aria-label="设置">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="2.6"/><path d="M10 2.8v2M10 15.2v2M2.8 10h2M15.2 10h2M4.9 4.9l1.4 1.4M13.7 13.7l1.4 1.4M15.1 4.9l-1.4 1.4M6.3 13.7l-1.4 1.4"/></svg>
-          </button>
-          <button class="ui-icon-btn" type="button" data-tooltip="无边框幽灵图标按钮" aria-label="信息">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v4.5M10 6.4v.6"/></svg>
-          </button>
-          <button class="ui-icon-btn ui-icon-btn--sm ui-icon-btn--outline" type="button" aria-label="更多">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="5" cy="10" r="1.2"/><circle cx="10" cy="10" r="1.2"/><circle cx="15" cy="10" r="1.2"/></svg>
-          </button>
-          <button class="ui-icon-btn" type="button" aria-pressed="true" aria-label="已收藏">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3l2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4L5.5 16.8l.9-5L2.8 8.3l5-.7L10 3z"/></svg>
-          </button>
-          <button class="ui-icon-btn" type="button" disabled aria-label="禁用">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M6 6l8 8M14 6l-8 8"/></svg>
-          </button>
-        </div>
-        <div class="doc-code">
-          <div class="doc-code__head"><span class="doc-code__label">HTML</span></div>
-          <div class="ui-codeblock">
-<pre><code>&lt;button class="ui-icon-btn" type="button" aria-label="设置" data-tooltip="设置"&gt;…&lt;/button&gt;</code></pre>
-          </div>
-        </div>
-      </div>
-
-      <!-- 徽章与标签 -->
-      <div class="doc-comp" id="badge">
-        <div class="doc-comp__title">徽章、标签与状态点 <code>.ui-badge / .ui-tag / .ui-chip / .ui-status</code></div>
-        <p class="doc-comp__desc">四者分工：badge 表状态与计数，tag 表归类与筛选，chip 是可移除的已选项，status 是带圆点的状态行。状态一律另附文字或形状，不靠颜色单独传达。</p>
-        <div class="doc-demo">
-          <span class="doc-demo__label">badge</span>
-          <span class="ui-badge">默认</span>
-          <span class="ui-badge ui-badge--primary">主要</span>
-          <span class="ui-badge ui-badge--info">信息</span>
-          <span class="ui-badge ui-badge--success">成功</span>
-          <span class="ui-badge ui-badge--warning">警告</span>
-          <span class="ui-badge ui-badge--danger">失败</span>
-          <span class="ui-badge ui-badge--outline ui-badge--pill">描边胶囊</span>
-        </div>
-        <div class="doc-demo">
-          <span class="doc-demo__label">tag / chip / status</span>
-          <span class="ui-tag">全部</span>
-          <span class="ui-tag ui-tag--selected">已选中</span>
-          <span class="ui-chip">已选条件 <span class="ui-chip__close" role="button" tabindex="0" aria-label="移除"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 3l6 6M9 3l-6 6"/></svg></span></span>
-          <span class="ui-status ui-status--success"><span class="ui-dot"></span>运行中</span>
-          <span class="ui-status ui-status--warning"><span class="ui-dot"></span>排队中</span>
-          <span class="ui-status ui-status--danger"><span class="ui-dot"></span>异常</span>
-          <span class="ui-status ui-status--muted"><span class="ui-dot"></span>已归档</span>
-        </div>
-      </div>
-
-      <!-- 头像 -->
-      <div class="doc-comp" id="avatar">
-        <div class="doc-comp__title">头像 <code>.ui-avatar</code></div>
-        <p class="doc-comp__desc">支持图片、文字兜底、方形、三档尺寸、在线状态点与头像组堆叠。图片建议 1:1 且不小于 80px。</p>
-        <div class="doc-demo">
-          <span class="doc-demo__label">avatar</span>
-          <span class="ui-avatar">张</span>
-          <span class="ui-avatar ui-avatar--sm">李</span>
-          <span class="ui-avatar ui-avatar--lg">王</span>
-          <span class="ui-avatar ui-avatar--square">产品</span>
-          <span class="ui-avatar">陈<span class="ui-avatar__status ui-avatar__status--online"></span></span>
-          <div class="ui-avatar-group">
-            <span class="ui-avatar ui-avatar--sm">A</span>
-            <span class="ui-avatar ui-avatar--sm">B</span>
-            <span class="ui-avatar ui-avatar--sm">C</span>
-            <span class="ui-avatar ui-avatar--sm">+5</span>
-          </div>
-        </div>
-        <div class="doc-code">
-          <div class="doc-code__head"><span class="doc-code__label">HTML</span></div>
-          <div class="ui-codeblock">
-<pre><code>&lt;span class="ui-avatar"&gt;&lt;img src="avatar.png" alt="张三"&gt;&lt;/span&gt;
-&lt;span class="ui-avatar"&gt;张&lt;span class="ui-avatar__status ui-avatar__status--online"&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== 组件 · 表单 ==================== -->
-    <section class="doc-section" id="group-form">
-      <div class="doc-section__head">
-        <div class="doc-section__eyebrow">Components · Form</div>
-        <h2 class="doc-section__title">表单组件</h2>
-        <p class="doc-section__desc">表单的一致性最容易腐烂：标签位置、错误位置、必填标记、间距。这里的规则是标签在上、错误在下、间距统一 8px，校验即时触发。</p>
-      </div>
-
-      <!-- 输入框 -->
-      <div class="doc-comp" id="input">
-        <div class="doc-comp__title">输入框与文本域 <code>.ui-input / .ui-textarea</code></div>
-        <p class="doc-comp__desc">三档尺寸，聚焦时主色描边 + 3px 浅色外扩环。校验失败用 <code class="ui-code">.is-invalid</code>，并同时提供文字说明，不只靠红色。</p>
-        <div class="doc-demo doc-demo--grid">
-          <span class="doc-demo__label">input</span>
-          <div class="ui-field">
-            <label class="ui-label" for="demoInput">项目名称 <span class="ui-label__required">*</span></label>
-            <input class="ui-input" id="demoInput" type="text" placeholder="例如：订单中心重构">
-            <div class="ui-help">用于在列表中区分不同项目</div>
-          </div>
-          <div class="ui-field">
-            <label class="ui-label" for="demoInputSm">小尺寸</label>
-            <input class="ui-input ui-input--sm" id="demoInputSm" type="text" placeholder="32px 高">
-          </div>
-          <div class="ui-field">
-            <label class="ui-label" for="demoInputLg">大尺寸</label>
-            <input class="ui-input ui-input--lg" id="demoInputLg" type="text" placeholder="48px 高">
-          </div>
-          <div class="ui-field">
-            <label class="ui-label" for="demoInputDis">禁用</label>
-            <input class="ui-input" id="demoInputDis" type="text" value="不可编辑" disabled>
-          </div>
-          <div class="ui-field">
-            <label class="ui-label" for="demoInputBad">校验失败</label>
-            <input class="ui-input is-invalid" id="demoInputBad" type="text" value="abc" aria-invalid="true">
-            <div class="ui-error">
-              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.6v3M6 8.4v.2"/></svg>
-              仅支持字母、数字与短横线
-            </div>
-          </div>
-          <div class="ui-field">
-            <label class="ui-label" for="demoInputOk">校验通过</label>
-            <input class="ui-input is-valid" id="demoInputOk" type="text" value="order-center">
-          </div>
-        </div>
-        <div class="doc-demo doc-demo--stack">
-          <span class="doc-demo__label">textarea</span>
-          <div class="ui-field">
-            <label class="ui-label" for="demoTextarea">变更说明</label>
-            <textarea class="ui-textarea" id="demoTextarea" placeholder="说明这次变更的内容与影响范围"></textarea>
-            <div class="ui-help">支持 Markdown 语法，最多 500 字</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 输入组与搜索 -->
-      <div class="doc-comp" id="input-group">
-        <div class="doc-comp__title">输入组与搜索框 <code>.ui-input-group / .ui-search</code></div>
-        <p class="doc-comp__desc">前后缀、单位、按钮与输入框拼接成一体，聚焦时整组共享焦点环。</p>
-        <div class="doc-demo doc-demo--grid">
-          <span class="doc-demo__label">input group</span>
-          <div class="ui-field">
-            <label class="ui-label" for="demoUrl">站点地址</label>
-            <div class="ui-input-group">
-              <span class="ui-input-group__addon ui-input-group__addon--prefix">https://</span>
-              <input class="ui-input" id="demoUrl" type="text" placeholder="example.com">
-            </div>
-          </div>
-          <div class="ui-field">
-            <label class="ui-label" for="demoAmount">金额</label>
-            <div class="ui-input-group">
-              <input class="ui-input" id="demoAmount" type="text" placeholder="0.00">
-              <span class="ui-input-group__addon">元</span>
-            </div>
-          </div>
-          <div class="ui-field">
-            <label class="ui-label" for="demoSearch">搜索</label>
-            <div class="ui-search">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="9" r="5.5"/><path d="M13 13l3.5 3.5"/></svg>
-              <input class="ui-input" id="demoSearch" type="search" placeholder="搜索订单号 / 手机号">
-            </div>
-          </div>
-          <div class="ui-field">
-            <label class="ui-label" for="demoSearchBtn">带按钮</label>
-            <div class="ui-input-group">
-              <input class="ui-input" id="demoSearchBtn" type="text" placeholder="输入关键词">
-              <button class="ui-btn ui-btn--primary" type="button" style="border-radius:0">搜索</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 选择控件 -->
-      <div class="doc-comp" id="choice">
-        <div class="doc-comp__title">复选框、单选框与开关 <code>.ui-check / .ui-switch</code></div>
-        <p class="doc-comp__desc">全部基于原生 <code class="ui-code">input</code>，因此键盘、读屏、表单序列化天然可用；视觉层用兄弟节点绘制，支持选中、半选、禁用与聚焦态。</p>
-        <div class="doc-demo doc-demo--grid">
-          <span class="doc-demo__label">checkbox / radio</span>
-          <label class="ui-check">
-            <input type="checkbox" checked>
-            <span class="ui-check__box"></span>
-            <span class="ui-check__label">已选中的复选项</span>
-          </label>
-          <label class="ui-check">
-            <input type="checkbox">
-            <span class="ui-check__box"></span>
-            <span class="ui-check__label">未选中<small>可附加一行说明文字</small></span>
-          </label>
-          <label class="ui-check">
-            <input type="checkbox" id="demoIndeterminate">
-            <span class="ui-check__box"></span>
-            <span class="ui-check__label">半选（父级）</span>
-          </label>
-          <label class="ui-check">
-            <input type="checkbox" disabled>
-            <span class="ui-check__box"></span>
-            <span class="ui-check__label">禁用</span>
-          </label>
-          <label class="ui-check">
-            <input type="radio" name="demoRadio" checked>
-            <span class="ui-check__box ui-radio__box"></span>
-            <span class="ui-check__label">单选项 A</span>
-          </label>
-          <label class="ui-check">
-            <input type="radio" name="demoRadio">
-            <span class="ui-check__box ui-radio__box"></span>
-            <span class="ui-check__label">单选项 B</span>
-          </label>
-        </div>
-        <div class="doc-demo">
-          <span class="doc-demo__label">switch</span>
-          <div class="ui-switch">
-            <input type="checkbox" id="demoSwitchOn" checked>
-            <span class="ui-switch__track"></span>
-            <label class="ui-switch__label" for="demoSwitchOn">开启通知</label>
-          </div>
-          <div class="ui-switch">
-            <input type="checkbox" id="demoSwitchOff">
-            <span class="ui-switch__track"></span>
-            <label class="ui-switch__label" for="demoSwitchOff">关闭状态</label>
-          </div>
-          <div class="ui-switch ui-switch--sm">
-            <input type="checkbox" id="demoSwitchSm" checked>
-            <span class="ui-switch__track"></span>
-            <label class="ui-switch__label" for="demoSwitchSm">紧凑尺寸</label>
-          </div>
-          <div class="ui-switch">
-            <input type="checkbox" id="demoSwitchDis" disabled>
-            <span class="ui-switch__track"></span>
-            <label class="ui-switch__label" for="demoSwitchDis">禁用</label>
-          </div>
-        </div>
-        <div class="doc-code">
-          <div class="doc-code__head"><span class="doc-code__label">HTML</span><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ui="copy" data-copy-target="#code-choice">复制</button></div>
-          <div class="ui-codeblock">
-<pre><code id="code-choice">&lt;label class="ui-check"&gt;
-  &lt;input type="checkbox" checked&gt;
-  &lt;span class="ui-check__box"&gt;&lt;/span&gt;
-  &lt;span class="ui-check__label"&gt;选项文字&lt;/span&gt;
-&lt;/label&gt;
-
-&lt;div class="ui-switch"&gt;
-  &lt;input type="checkbox" id="sw"&gt;
-  &lt;span class="ui-switch__track"&gt;&lt;/span&gt;
-  &lt;label class="ui-switch__label" for="sw"&gt;开关文字&lt;/label&gt;
-&lt;/div&gt;</code></pre>
-          </div>
-        </div>
-      </div>
-
-      <!-- 上传 -->
-      <div class="doc-comp" id="upload">
-        <div class="doc-comp__title">上传与文件列表 <code>.ui-dropzone / .ui-file</code></div>
-        <p class="doc-comp__desc">支持点击选择与拖拽投放，拖入时高亮为 <code class="ui-code">.is-dragover</code>；选中的文件通过 <code class="ui-code">ui:file</code> 事件抛出，文件列表由库自动渲染。</p>
-        <div class="doc-demo doc-demo--stack">
-          <div class="ui-stack ui-stack--4" data-doc-dropzone>
-            <div class="ui-dropzone" data-ui="dropzone" tabindex="0" role="button" aria-label="上传文件">
-              <input type="file" multiple hidden>
-              <span class="ui-dropzone__icon">
-                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14V4M6 8l4-4 4 4"/><path d="M3.5 14v2a1 1 0 001 1h11a1 1 0 001-1v-2"/></svg>
-              </span>
-              <div class="ui-dropzone__title">点击选择，或把文件拖到这里</div>
-              <div class="ui-dropzone__hint">支持 PNG、JPG、PDF，单个文件不超过 10 MB</div>
-            </div>
-            <div class="ui-file-list" data-ui-file-list>
-              <div class="ui-file">
-                <span class="ui-file__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2h5l3 3v9a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M9 2v3h3"/></svg></span>
-                <span class="ui-file__name">spec-v2.pdf</span>
-                <span class="ui-file__meta">2.4 MB</span>
-                <button class="ui-file__remove" type="button" aria-label="移除文件"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7"/></svg></button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="doc-code">
-          <div class="doc-code__head"><span class="doc-code__label">HTML + JS</span><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ui="copy" data-copy-target="#code-upload">复制</button></div>
-          <div class="ui-codeblock">
-<pre><code id="code-upload">&lt;div class="ui-dropzone" data-ui="dropzone" tabindex="0" role="button"&gt;
-  &lt;input type="file" multiple hidden&gt;
-  &lt;div class="ui-dropzone__title"&gt;点击选择，或把文件拖到这里&lt;/div&gt;
-  &lt;div class="ui-dropzone__hint"&gt;支持 PNG、JPG、PDF，单个不超过 10 MB&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="ui-file-list" data-ui-file-list&gt;&lt;/div&gt;
-
-&lt;script&gt;
-  document.querySelector('.ui-dropzone').addEventListener('ui:file', function (e) {
-    console.log(e.detail.files);   // FileList 数组，交给你的上传逻辑
-  });
-&lt;/script&gt;</code></pre>
-          </div>
-        </div>
-      </div>
-
-      <!-- 表单与校验 -->
-      <div class="doc-comp" id="form">
-        <div class="doc-comp__title">表单布局与即时校验 <code>.ui-form / .ui-form-row / data-ui="validate"</code></div>
-        <p class="doc-comp__desc">
-          校验规则写在 <code class="ui-code">data-validate</code> 上：<code class="ui-code">required | email | phone | min:6 | max:20 | code</code>。
-          失焦即校验、输入中实时修正；校验失败会同步 <code class="ui-code">aria-invalid</code> 与 <code class="ui-code">aria-describedby</code>，读屏可感知。
-          试一下：输入非法手机号后移开焦点。
-        </p>
-        <div class="doc-demo doc-demo--stack">
-          <form class="ui-form" data-ui="validate" data-doc-form novalidate>
-            <div class="ui-form-grid">
-              <div class="ui-field">
-                <label class="ui-label" for="fName">联系人 <span class="ui-label__required">*</span></label>
-                <input class="ui-input" id="fName" name="name" type="text" data-validate="required" placeholder="请输入姓名">
-                <div class="ui-error" id="err-fName" hidden>
-                  <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.6v3M6 8.4v.2"/></svg>
-                  <span data-error-text>此项为必填</span>
-                </div>
-              </div>
-              <div class="ui-field">
-                <label class="ui-label" for="fPhone">手机号 <span class="ui-label__required">*</span></label>
-                <input class="ui-input" id="fPhone" name="phone" type="tel" data-validate="required|phone" placeholder="11 位手机号">
-                <div class="ui-error" id="err-fPhone" hidden>
-                  <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.6v3M6 8.4v.2"/></svg>
-                  <span data-error-text>手机号应为 11 位数字</span>
-                </div>
-              </div>
-              <div class="ui-field">
-                <label class="ui-label" for="fEmail">邮箱</label>
-                <input class="ui-input" id="fEmail" name="email" type="email" data-validate="email" placeholder="name@company.com">
-                <div class="ui-error" id="err-fEmail" hidden>
-                  <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.6v3M6 8.4v.2"/></svg>
-                  <span data-error-text>邮箱格式不正确</span>
-                </div>
-              </div>
-              <div class="ui-field">
-                <label class="ui-label" for="fCode">项目代号 <span class="ui-label__optional">（选填）</span></label>
-                <input class="ui-input" id="fCode" name="code" type="text" data-validate="code" placeholder="order-center">
-                <div class="ui-error" id="err-fCode" hidden>
-                  <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.6v3M6 8.4v.2"/></svg>
-                  <span data-error-text>仅支持字母、数字与短横线</span>
-                </div>
-              </div>
-            </div>
-            <div class="ui-form-actions">
-              <button class="ui-btn ui-btn--primary" type="submit">提交申请</button>
-              <button class="ui-btn ui-btn--default" type="reset">重置</button>
-            </div>
-          </form>
-        </div>
-        <div class="doc-spec">
-          <div class="doc-spec__title">校验规则</div>
-          <div class="ui-table-wrap">
-            <table class="ui-table ui-table--compact">
-              <thead><tr><th>规则</th><th>含义</th><th>触发时机</th></tr></thead>
-              <tbody>
-                <tr><td>required</td><td>不能为空</td><td>失焦 / 提交</td></tr>
-                <tr><td>email</td><td>邮箱格式</td><td>失焦 / 提交</td></tr>
-                <tr><td>phone</td><td>11 位手机号</td><td>失焦 / 提交</td></tr>
-                <tr><td>min:6 / max:20</td><td>长度区间</td><td>失焦 / 提交</td></tr>
-                <tr><td>code</td><td>字母数字与短横线</td><td>失焦 / 提交</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== 组件 · 反馈 ==================== -->
-    <section class="doc-section" id="group-feedback">
-      <div class="doc-section__head">
-        <div class="doc-section__eyebrow">Components · Feedback</div>
-        <h2 class="doc-section__title">反馈组件</h2>
-        <p class="doc-section__desc">
-          反馈的层级由「打扰程度」决定：提示条留在页面里，Toast 自动消失，模态框打断操作，抽屉保留上下文。
-          但凡涉及删除、覆盖等破坏性动作，一律要二次确认，且确认按钮用危险色。
-        </p>
-      </div>
-
-      <!-- Alert -->
-      <div class="doc-comp" id="alert">
-        <div class="doc-comp__title">提示条 <code>.ui-alert / .ui-banner</code></div>
-        <p class="doc-comp__desc">四色语义 + 中性、描边两种低调变体。文案公式：发生了什么 + 为什么 + 下一步做什么。</p>
-        <div class="doc-demo doc-demo--stack">
-          <div class="ui-alert ui-alert--info">
-            <span class="ui-alert__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v4.5M10 6.4v.6"/></svg></span>
-            <div class="ui-alert__body">
-              <div class="ui-alert__title">数据已同步至最新版本</div>
-              <div class="ui-alert__desc">同步发生于 3 分钟前，如需强制刷新请点击列表右上角的刷新按钮。</div>
-            </div>
-          </div>
-          <div class="ui-alert ui-alert--success">
-            <span class="ui-alert__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.5"/><path d="M6.6 10.3l2.4 2.4 4.4-4.8"/></svg></span>
-            <div class="ui-alert__body"><div class="ui-alert__title">9 条记录已保存</div></div>
-          </div>
-          <div class="ui-alert ui-alert--warning">
-            <span class="ui-alert__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.2l7 12.3H3L10 3.2z"/><path d="M10 8.4v3.2M10 13.6v.4"/></svg></span>
-            <div class="ui-alert__body">
-              <div class="ui-alert__title">本月剩余额度不足 10%</div>
-              <div class="ui-alert__desc">额度用尽后接口将返回 429，建议提前升级套餐或调整调用频率。</div>
-            </div>
-            <button class="ui-alert__close" type="button" aria-label="关闭"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg></button>
-          </div>
-          <div class="ui-alert ui-alert--danger">
-            <span class="ui-alert__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.5"/><path d="M7.4 7.4l5.2 5.2M12.6 7.4l-5.2 5.2"/></svg></span>
-            <div class="ui-alert__body">
-              <div class="ui-alert__title">接口调用失败：签名校验未通过。[签名密钥可能已轮换]。[请在控制台重新复制密钥后重试]。错误码：SIGN_INVALID</div>
-            </div>
-            <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ui="copy" data-copy="SIGN_INVALID">复制错误码</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Toast -->
-      <div class="doc-comp" id="toast">
-        <div class="doc-comp__title">轻提示 <code>UI.toast()</code></div>
-        <p class="doc-comp__desc">默认 3 秒自动消失，鼠标悬停暂停计时；区域内 <code class="ui-code">aria-live="polite"</code>，读屏会朗读。四色语义 + 可选描述行与关闭按钮。</p>
-        <div class="doc-demo">
-          <span class="doc-demo__label">试一下</span>
-          <button class="ui-btn ui-btn--default" type="button" onclick="UI.toast('已复制到剪贴板')">默认</button>
-          <button class="ui-btn ui-btn--default" type="button" onclick="UI.toast({ message: '保存成功', description: '本次共更新 3 个字段', type: 'success' })">成功 + 描述</button>
-          <button class="ui-btn ui-btn--default" type="button" onclick="UI.toast({ message: '网络异常，请检查连接', type: 'danger' })">失败</button>
-          <button class="ui-btn ui-btn--default" type="button" onclick="UI.toast({ message: '额度即将用尽', type: 'warning' })">警告</button>
-          <button class="ui-btn ui-btn--default" type="button" onclick="UI.toast({ message: '这条不会自动消失', duration: 0 })">不自动关闭</button>
-          <button class="ui-btn ui-btn--default" type="button" onclick="UI.toast({ message: '从底部弹出', position: 'bottom' })">底部位置</button>
-        </div>
-        <div class="doc-code">
-          <div class="doc-code__head"><span class="doc-code__label">JS</span><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ui="copy" data-copy-target="#code-toast">复制</button></div>
-          <div class="ui-codeblock">
-<pre><code id="code-toast">UI.toast('已复制到剪贴板');
-UI.toast({ message: '保存成功', description: '更新了 3 个字段', type: 'success' });
-UI.toast({ message: '这条不会自动消失', duration: 0, position: 'bottom' });
-// type: info | success | warning | danger</code></pre>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal -->
-      <div class="doc-comp" id="modal">
-        <div class="doc-comp__title">模态框 <code>.ui-modal</code></div>
-        <p class="doc-comp__desc">
-          打开时锁滚动（补偿滚动条宽度避免抖动）、陷阱焦点、ESC 与遮罩可关闭、关闭后焦点归还给触发元素。
-          四档宽度：<code class="ui-code">--sm / 默认 / --lg / --full</code>。
-        </p>
-        <div class="doc-demo">
-          <span class="doc-demo__label">弹层</span>
-          <button class="ui-btn ui-btn--primary" type="button" data-ui="modal" data-target="#demoModal">打开模态框</button>
-          <button class="ui-btn ui-btn--default" type="button" data-ui="modal" data-target="#demoModalLg">大号模态框</button>
-          <button class="ui-btn ui-btn--default" type="button" data-ui="modal" data-target="#demoModalNoMask">禁用遮罩关闭</button>
-        </div>
-
-        <div class="ui-modal" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="demoModalTitle" aria-hidden="true">
-          <div class="ui-modal__dialog">
-            <div class="ui-modal__header">
-              <div class="ui-modal__title" id="demoModalTitle">邀请成员加入项目</div>
-              <button class="ui-icon-btn ui-icon-btn--sm" type="button" data-ui-close aria-label="关闭">
-                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg>
-              </button>
-            </div>
-            <div class="ui-modal__body ui-stack ui-stack--4">
-              <div class="ui-field">
-                <label class="ui-label" for="modalEmail">成员邮箱 <span class="ui-label__required">*</span></label>
-                <input class="ui-input" id="modalEmail" type="email" placeholder="name@company.com">
-                <div class="ui-help">受邀者将收到一封含 24 小时有效链接的邮件</div>
-              </div>
-              <div class="ui-field">
-                <label class="ui-label" for="modalRole">角色</label>
-                <select class="ui-select" id="modalRole">
-                  <option>只读成员</option>
-                  <option>开发者</option>
-                  <option>管理员</option>
-                </select>
-              </div>
-            </div>
-            <div class="ui-modal__footer">
-              <button class="ui-btn ui-btn--default" type="button" data-ui-close>取消</button>
-              <button class="ui-btn ui-btn--primary" type="button" onclick="UI.toast({ message: '邀请已发送', type: 'success' }); UI.modal.close('#demoModal');">发送邀请</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="ui-modal ui-modal--lg" id="demoModalLg" role="dialog" aria-modal="true" aria-labelledby="demoModalLgTitle" aria-hidden="true">
-          <div class="ui-modal__dialog">
-            <div class="ui-modal__header">
-              <div class="ui-modal__title" id="demoModalLgTitle">接口调用明细</div>
-              <button class="ui-icon-btn ui-icon-btn--sm" type="button" data-ui-close aria-label="关闭">
-                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg>
-              </button>
-            </div>
-            <div class="ui-modal__body">
-              <div class="ui-table-wrap">
-                <table class="ui-table ui-table--compact">
-                  <thead><tr><th>时间</th><th>接口</th><th class="ui-table__cell-num">耗时</th><th>状态</th></tr></thead>
-                  <tbody>
-                    <tr><td>22:31:02</td><td>/v1/order/create</td><td class="ui-table__cell-num">128 ms</td><td><span class="ui-badge ui-badge--success">200</span></td></tr>
-                    <tr><td>22:30:58</td><td>/v1/order/query</td><td class="ui-table__cell-num">64 ms</td><td><span class="ui-badge ui-badge--success">200</span></td></tr>
-                    <tr><td>22:30:51</td><td>/v1/stock/lock</td><td class="ui-table__cell-num">412 ms</td><td><span class="ui-badge ui-badge--warning">重试</span></td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="ui-modal__footer">
-              <button class="ui-btn ui-btn--primary" type="button" data-ui-close>知道了</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="ui-modal" id="demoModalNoMask" role="dialog" aria-modal="true" aria-labelledby="demoModalNmTitle" aria-hidden="true" data-mask-closable="false">
-          <div class="ui-modal__dialog ui-modal--sm">
-            <div class="ui-modal__header"><div class="ui-modal__title" id="demoModalNmTitle">遮罩点击不关闭</div></div>
-            <div class="ui-modal__body">适合填写了内容、不希望误触丢失输入的场景。仍需提供显式的关闭按钮。</div>
-            <div class="ui-modal__footer"><button class="ui-btn ui-btn--primary" type="button" data-ui-close>关闭</button></div>
-          </div>
-        </div>
-
-        <div class="doc-code">
-          <div class="doc-code__head"><span class="doc-code__label">HTML + JS</span><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ui="copy" data-copy-target="#code-modal">复制</button></div>
-          <div class="ui-codeblock">
-<pre><code id="code-modal">&lt;button class="ui-btn ui-btn--primary" data-ui="modal" data-target="#myModal"&gt;打开&lt;/button&gt;
-
-&lt;div class="ui-modal" id="myModal" role="dialog" aria-modal="true" aria-labelledby="t"&gt;
-  &lt;div class="ui-modal__dialog"&gt;
-    &lt;div class="ui-modal__header"&gt;
-      &lt;div class="ui-modal__title" id="t"&gt;标题&lt;/div&gt;
-      &lt;button class="ui-icon-btn ui-icon-btn--sm" data-ui-close&gt;×&lt;/button&gt;
-    &lt;/div&gt;
-    &lt;div class="ui-modal__body"&gt;内容&lt;/div&gt;
-    &lt;div class="ui-modal__footer"&gt;
-      &lt;button class="ui-btn ui-btn--default" data-ui-close&gt;取消&lt;/button&gt;
-      &lt;button class="ui-btn ui-btn--primary"&gt;确定&lt;/button&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;!-- 命令式 --&gt;
-UI.modal.open('#myModal'); UI.modal.close('#myModal');</code></pre>
-          </div>
-        </div>
-      </div>
-
-      <!-- Drawer -->
-      <div class="doc-comp" id="drawer">
-        <div class="doc-comp__title">抽屉 <code>.ui-drawer</code></div>
-        <p class="doc-comp__desc">从右、左、底三个方向滑入，同样具备焦点陷阱与 ESC 关闭。移动端的目录、筛选面板、详情预览常用它。</p>
-        <div class="doc-demo">
-          <span class="doc-demo__label">drawer</span>
-          <button class="ui-btn ui-btn--default" type="button" data-ui="drawer" data-target="#demoDrawerRight">右侧抽屉</button>
-          <button class="ui-btn ui-btn--default" type="button" data-ui="drawer" data-target="#demoDrawerLeft">左侧抽屉</button>
-          <button class="ui-btn ui-btn--default" type="button" data-ui="drawer" data-target="#demoDrawerBottom">底部抽屉</button>
-        </div>
-
-        <div class="ui-drawer" id="demoDrawerRight" role="dialog" aria-modal="true" aria-label="筛选" aria-hidden="true">
-          <div class="ui-drawer__panel">
-            <div class="ui-drawer__header">
-              <div class="ui-drawer__title">筛选条件</div>
-              <button class="ui-icon-btn ui-icon-btn--sm" type="button" data-ui-close aria-label="关闭"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg></button>
-            </div>
-            <div class="ui-drawer__body ui-stack ui-stack--5">
-              <div class="ui-field">
-                <div class="ui-label">状态</div>
-                <div class="ui-stack ui-stack--2">
-                  <label class="ui-check"><input type="checkbox" checked><span class="ui-check__box"></span><span class="ui-check__label">进行中</span></label>
-                  <label class="ui-check"><input type="checkbox"><span class="ui-check__box"></span><span class="ui-check__label">已完成</span></label>
-                  <label class="ui-check"><input type="checkbox"><span class="ui-check__box"></span><span class="ui-check__label">已取消</span></label>
-                </div>
-              </div>
-              <div class="ui-field">
-                <label class="ui-label" for="drawerDate">创建时间</label>
-                <input class="ui-input" id="drawerDate" type="date">
-              </div>
-            </div>
-            <div class="ui-drawer__footer">
-              <button class="ui-btn ui-btn--default" type="button" data-ui-close>重置</button>
-              <button class="ui-btn ui-btn--primary" type="button" data-ui-close onclick="UI.toast({ message: '筛选条件已应用', type: 'success' })">应用筛选</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="ui-drawer ui-drawer--left" id="demoDrawerLeft" role="dialog" aria-modal="true" aria-label="菜单" aria-hidden="true">
-          <div class="ui-drawer__panel">
-            <div class="ui-drawer__header">
-              <div class="ui-drawer__title">导航菜单</div>
-              <button class="ui-icon-btn ui-icon-btn--sm" type="button" data-ui-close aria-label="关闭"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg></button>
-            </div>
-            <div class="ui-drawer__body">
-              <nav class="ui-sidenav">
-                <a class="ui-sidenav__item is-active" href="#drawer">概览</a>
-                <a class="ui-sidenav__item" href="#drawer">订单</a>
-                <a class="ui-sidenav__item" href="#drawer">结算</a>
-                <a class="ui-sidenav__item" href="#drawer">设置</a>
-              </nav>
-            </div>
-          </div>
-        </div>
-
-        <div class="ui-drawer ui-drawer--bottom" id="demoDrawerBottom" role="dialog" aria-modal="true" aria-label="分享" aria-hidden="true">
-          <div class="ui-drawer__panel">
-            <div class="ui-drawer__header">
-              <div class="ui-drawer__title">分享到</div>
-              <button class="ui-icon-btn ui-icon-btn--sm" type="button" data-ui-close aria-label="关闭"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg></button>
-            </div>
-            <div class="ui-drawer__body">
-              <div class="ui-grid ui-grid--4 ui-grid--tight">
-                <button class="ui-btn ui-btn--default" type="button" style="height:72px; flex-direction:column; gap:6px;">复制链接</button>
-                <button class="ui-btn ui-btn--default" type="button" style="height:72px; flex-direction:column; gap:6px;">生成图片</button>
-                <button class="ui-btn ui-btn--default" type="button" style="height:72px; flex-direction:column; gap:6px;">导出 PDF</button>
-                <button class="ui-btn ui-btn--default" type="button" style="height:72px; flex-direction:column; gap:6px;">发送邮件</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tooltip & Popconfirm -->
-      <div class="doc-comp" id="tooltip">
-        <div class="doc-comp__title">气泡提示与二次确认 <code>data-tooltip / .ui-popconfirm</code></div>
-        <p class="doc-comp__desc">
-          气泡提示作用于 hover 与 focus 两个时机（键盘用户也能看到），自动避让视口边界。
-          破坏性操作必须走二次确认，确认按钮用危险色，描述里写清后果。
-        </p>
-        <div class="doc-demo">
-          <span class="doc-demo__label">hover / focus 我</span>
-          <button class="ui-btn ui-btn--default" type="button" data-tooltip="顶部气泡，自动避让边界">顶部提示</button>
-          <button class="ui-btn ui-btn--default" type="button" data-tooltip="右侧气泡" data-tooltip-placement="right">右侧提示</button>
-          <button class="ui-icon-btn ui-icon-btn--outline" type="button" aria-label="数量说明" data-tooltip="本季度新增 1,284 条" data-tooltip-placement="bottom">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v4.5M10 6.4v.6"/></svg>
-          </button>
-          <span style="width: var(--ui-space-4)"></span>
-          <span class="ui-popconfirm-host" data-ui="popconfirm" data-popconfirm-title="确认删除该 API 密钥？" data-popconfirm-desc="删除后使用该密钥的调用会立即失败，且无法恢复。" data-popconfirm-ok="删除">
-            <button class="ui-btn ui-btn--danger-outline" type="button" data-ui="popconfirm-trigger">删除密钥</button>
-          </span>
-          <span class="ui-popconfirm-host" data-ui="popconfirm" data-popconfirm-title="确认下线该版本？" data-popconfirm-desc="已接入的调用方将收到 404，建议先通知对接方。" data-popconfirm-ok="确认下线">
-            <button class="ui-btn ui-btn--default" type="button" data-ui="popconfirm-trigger">下线版本</button>
-          </span>
-        </div>
-        <div class="doc-code">
-          <div class="doc-code__head"><span class="doc-code__label">HTML</span><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ui="copy" data-copy-target="#code-tip">复制</button></div>
-          <div class="ui-codeblock">
-<pre><code id="code-tip">&lt;!-- 气泡提示：鼠标与键盘都能触发 --&gt;
-&lt;button class="ui-btn ui-btn--default" data-tooltip="提示文字" data-tooltip-placement="top"&gt;…&lt;/button&gt;
-
-&lt;!-- 二次确认 --&gt;
-&lt;span class="ui-popconfirm-host" data-ui="popconfirm"
-      data-popconfirm-title="确认删除该密钥？"
-      data-popconfirm-desc="删除后调用会立即失败，且无法恢复。"
-      data-popconfirm-ok="删除"&gt;
-  &lt;button class="ui-btn ui-btn--danger-outline" data-ui="popconfirm-trigger"&gt;删除密钥&lt;/button&gt;
-&lt;/span&gt;
-
-&lt;!-- 或命令式：await UI.confirm({ title, description, confirmText }) --&gt;</code></pre>
-          </div>
-        </div>
-      </div>
-
-      <!-- 进度 -->
-      <div class="doc-comp" id="progress">
-        <div class="doc-comp__title">进度 <code>.ui-progress / .ui-ring</code></div>
-        <p class="doc-comp__desc">线性、环形、不确定三种形态。确定进度必须带上具体数值或 <code class="ui-code">n/m</code>，不要让用户只看转圈。</p>
-        <div class="doc-demo doc-demo--stack">
-          <div class="ui-stack ui-stack--4">
-            <div class="ui-progress-row">
-              <div class="ui-progress"><div class="ui-progress__bar" style="width: 24%"></div></div>
-              <span class="ui-progress-row__value">24%</span>
-            </div>
-            <div class="ui-progress-row">
-              <div class="ui-progress ui-progress--lg"><div class="ui-progress__bar" style="width: 68%"></div></div>
-              <span class="ui-progress-row__value">68%</span>
-            </div>
-            <div class="ui-progress-row">
-              <div class="ui-progress ui-progress--success"><div class="ui-progress__bar" style="width: 100%"></div></div>
-              <span class="ui-progress-row__value">完成</span>
-            </div>
-            <div class="ui-progress-row">
-              <div class="ui-progress ui-progress--danger is-indeterminate"><div class="ui-progress__bar"></div></div>
-              <span class="ui-progress-row__value">重试中</span>
-            </div>
-          </div>
-          <div class="ui-row ui-gap-6" style="margin-top: var(--ui-space-4)">
-            <div class="ui-ring" style="--ui-ring-value: 72"><span class="ui-ring__value">72%</span></div>
-            <div class="ui-ring" style="--ui-ring-value: 100"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--ui-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 10.5l3 3 6-7"/></svg></div>
-            <div class="ui-ring" style="--ui-ring-value: 35"><span class="ui-ring__value">35%</span></div>
-          </div>
-        </div>
-        <div class="doc-code">
-          <div class="doc-code__head"><span class="doc-code__label">HTML</span></div>
-          <div class="ui-codeblock">
-<pre><code>&lt;div class="ui-progress"&gt;&lt;div class="ui-progress__bar" style="width: 68%"&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class="ui-progress is-indeterminate"&gt;&lt;div class="ui-progress__bar"&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class="ui-ring" style="--ui-ring-value: 72"&gt;&lt;span class="ui-ring__value"&gt;72%&lt;/span&gt;&lt;/div&gt;</code></pre>
-          </div>
-        </div>
-      </div>
-
-      <!-- 加载与骨架 -->
-      <div class="doc-comp" id="loading">
-        <div class="doc-comp__title">加载态与骨架屏 <code>.ui-spinner / .ui-skeleton / .ui-loading-veil</code></div>
-        <p class="doc-comp__desc">
-          <strong>骨架屏优于转圈</strong>：骨架告诉用户「这里将出现什么」，转圈只告诉他「在等」。
-          局部刷新用 <code class="ui-code">.ui-loading-veil</code> 蒙层，整页首次加载用骨架屏。
-        </p>
-        <div class="doc-demo doc-demo--grid">
-          <span class="doc-demo__label">spinner</span>
-          <div class="ui-row ui-gap-4">
-            <span class="ui-spinner ui-spinner--sm"></span>
-            <span class="ui-spinner"></span>
-            <span class="ui-spinner ui-spinner--lg"></span>
-            <span class="ui-spinner" style="background: var(--ui-surface-invert); padding: 6px; box-sizing: content-box;"></span>
-          </div>
-          <div class="ui-loading">
-            <span class="ui-spinner"></span>
-            <span>正在加载第 3 页，共 12 页</span>
-          </div>
-        </div>
-        <div class="doc-demo doc-demo--stack">
-          <span class="doc-demo__label">skeleton</span>
-          <div class="ui-card">
-            <div class="ui-card__body ui-row ui-row--top ui-gap-4" style="flex-wrap: nowrap">
-              <span class="ui-skeleton ui-skeleton--avatar"></span>
-              <div class="ui-skeleton-stack u-flex-1">
-                <span class="ui-skeleton ui-skeleton--title"></span>
-                <span class="ui-skeleton ui-skeleton--text" style="width: 92%"></span>
-                <span class="ui-skeleton ui-skeleton--text" style="width: 76%"></span>
-                <span class="ui-skeleton ui-skeleton--text" style="width: 40%"></span>
-              </div>
-            </div>
-          </div>
-          <div class="ui-card" style="position: relative; min-height: 120px">
-            <div class="ui-card__body">
-              <div class="ui-h4">局部刷新：内容保留，蒙层提示</div>
-              <p class="ui-text-sm ui-muted u-mt-2">适用于表格翻页、卡片重新拉取等场景，避免整块内容消失造成位置跳动。</p>
-            </div>
-            <div class="ui-loading-veil"><span class="ui-spinner ui-spinner--sm"></span>正在更新…</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 空状态与结果页 -->
-      <div class="doc-comp" id="empty">
-        <div class="doc-comp__title">空状态与结果页 <code>.ui-empty / .ui-result</code></div>
-        <p class="doc-comp__desc">
-          空状态要回答两件事：<strong>这里为什么是空的</strong>、<strong>我该做什么</strong>，所以必须有行动按钮，且主行动用主色。
-          结果页用于任务结束后的收尾：成功给下一步，失败给原因与重试。
-        </p>
-        <div class="doc-demo doc-demo--flush">
-          <div class="ui-empty">
-            <span class="ui-empty__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5h16M4 12h16M4 16.5h10"/></svg>
-            </span>
-            <div class="ui-empty__title">还没有创建任何项目</div>
-            <p class="ui-empty__desc">创建项目后可以分配成员、配置密钥并查看调用统计。</p>
-            <div class="ui-empty__actions">
-              <button class="ui-btn ui-btn--primary" type="button" onclick="UI.toast({ message: '打开新建项目向导（演示）' })">创建第一个项目</button>
-              <button class="ui-btn ui-btn--default" type="button" data-tooltip="查看 3 分钟快速上手指引">了解如何开始</button>
-            </div>
-          </div>
-        </div>
-        <div class="doc-demo doc-demo--grid" style="margin-top: var(--ui-space-4)">
-          <div class="ui-result ui-result--success">
-            <span class="ui-result__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
-            <div class="ui-result__title">提交成功</div>
-            <p class="ui-result__desc">申请编号 AP-20260924-013，审核结果将在 1 个工作日内发送到你的邮箱。</p>
-            <div class="ui-result__actions">
-              <button class="ui-btn ui-btn--primary" type="button">查看详情</button>
-              <button class="ui-btn ui-btn--default" type="button">返回列表</button>
-            </div>
-          </div>
-          <div class="ui-result ui-result--danger">
-            <span class="ui-result__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5M12 15.8v.4"/></svg></span>
-            <div class="ui-result__title">上传失败</div>
-            <p class="ui-result__desc">文件超过大小限制。[请更换文件或压缩后重试]。[原文件不受影响，可放心重试]。</p>
-            <div class="ui-result__detail">
-              <div class="ui-row ui-row--between">
-                <span class="ui-text-sm ui-muted">错误码</span>
-                <span class="ui-row ui-gap-2">
-                  <code class="ui-code">FILE_SIZE_LIMIT</code>
-                  <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ui="copy" data-copy="FILE_SIZE_LIMIT">复制</button>
-                </span>
-              </div>
-            </div>
-            <div class="ui-result__actions">
-              <button class="ui-btn ui-btn--primary" type="button">重新上传</button>
-              <button class="ui-btn ui-btn--default" type="button">联系支持</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== 组件 · 导航 ==================== -->
-    <section class="doc-section" id="group-nav">
-      <div class="doc-section__head">
-        <div class="doc-section__eyebrow">Components · Navigation</div>
-        <h2 class="doc-section__title">导航组件</h2>
-        <p class="doc-section__desc">层级上限三层：主 Tab → 列表 → 详情。每个页面都要有明确的返回路径，不允许死路页面。</p>
-      </div>
-
-      <!-- 侧栏导航 -->
-      <div class="doc-comp" id="sidenav">
-        <div class="doc-comp__title">侧栏导航 <code>.ui-sidenav</code></div>
-        <p class="doc-comp__desc">支持分组标题、当前项高亮与右侧徽标。当前项同时改变底色、字重并加一条左侧色轨——不只靠颜色传达状态，色觉障碍下也能定位。</p>
-        <div class="doc-demo doc-demo--flush" style="padding: var(--ui-space-5)">
-          <nav class="ui-sidenav" style="max-width: 260px">
-            <div class="ui-sidenav__label">控制台</div>
-            <a class="ui-sidenav__item is-active" href="#sidenav">
-              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6" rx="1.6"/><rect x="11" y="3" width="6" height="6" rx="1.6"/><rect x="3" y="11" width="6" height="6" rx="1.6"/><rect x="11" y="11" width="6" height="6" rx="1.6"/></svg>
-              概览
-            </a>
-            <a class="ui-sidenav__item" href="#sidenav">
-              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12M4 10h12M4 15h8"/></svg>
-              订单管理
-              <span class="ui-badge ui-badge--primary ui-sidenav__badge">12</span>
-            </a>
-            <a class="ui-sidenav__item" href="#sidenav">
-              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 6.5V10l2.5 1.5"/></svg>
-              调用记录
-            </a>
-            <div class="ui-sidenav__label">设置</div>
-            <a class="ui-sidenav__item" href="#sidenav">密钥与权限</a>
-            <a class="ui-sidenav__item" href="#sidenav">Webhook</a>
-          </nav>
-        </div>
-      </div>
-
-      <!-- 标签页 -->
-      <div class="doc-comp" id="tabs">
-        <div class="doc-comp__title">标签页 <code>.ui-tabs</code></div>
-        <p class="doc-comp__desc">切换时同步 <code class="ui-code">aria-selected</code> 与面板 <code class="ui-code">hidden</code>，支持左右方向键与 Home/End 键切换（无障碍要求）。另有胶囊变体。</p>
-        <div class="doc-demo doc-demo--stack">
-          <div class="ui-tabs" data-ui="tabs">
-            <div class="ui-tabs__list" role="tablist" aria-label="订单状态">
-              <button class="ui-tab" role="tab" id="tab1" aria-controls="panel1" aria-selected="true" type="button">全部 <span class="ui-badge ui-badge--pill">128</span></button>
-              <button class="ui-tab" role="tab" id="tab2" aria-controls="panel2" aria-selected="false" type="button">处理中</button>
-              <button class="ui-tab" role="tab" id="tab3" aria-controls="panel3" aria-selected="false" type="button">已完成</button>
-              <button class="ui-tab" role="tab" id="tab4" aria-controls="panel4" aria-selected="false" type="button">已取消</button>
-            </div>
-            <div class="ui-tabpanel" role="tabpanel" id="panel1" aria-labelledby="tab1" tabindex="0">
-              <p class="ui-text-sm ui-muted">共 128 条记录，按创建时间倒序排列。方向键可切换标签，无需鼠标。</p>
-            </div>
-            <div class="ui-tabpanel" role="tabpanel" id="panel2" aria-labelledby="tab2" tabindex="0" hidden>
-              <p class="ui-text-sm ui-muted">处理中 12 条：其中 3 条等待支付、9 条等待发货。</p>
-            </div>
-            <div class="ui-tabpanel" role="tabpanel" id="panel3" aria-labelledby="tab3" tabindex="0" hidden>
-              <p class="ui-text-sm ui-muted">已完成 109 条，平均履约时长 1.4 小时。</p>
-            </div>
-            <div class="ui-tabpanel" role="tabpanel" id="panel4" aria-labelledby="tab4" tabindex="0" hidden>
-              <p class="ui-text-sm ui-muted">已取消 7 条，取消原因以「用户主动取消」为主。</p>
-            </div>
-          </div>
-          <div class="ui-tabs ui-tabs--pill" data-ui="tabs">
-            <div class="ui-tabs__list" role="tablist" aria-label="视图切换">
-              <button class="ui-tab" role="tab" aria-controls="pv1" aria-selected="true" type="button">列表视图</button>
-              <button class="ui-tab" role="tab" aria-controls="pv2" aria-selected="false" type="button">卡片视图</button>
-              <button class="ui-tab" role="tab" aria-controls="pv3" aria-selected="false" type="button">看板视图</button>
-            </div>
-            <div class="ui-tabpanel" role="tabpanel" id="pv1" tabindex="0"><p class="ui-text-sm ui-muted">列表视图面板</p></div>
-            <div class="ui-tabpanel" role="tabpanel" id="pv2" tabindex="0" hidden><p class="ui-text-sm ui-muted">卡片视图面板</p></div>
-            <div class="ui-tabpanel" role="tabpanel" id="pv3" tabindex="0" hidden><p class="ui-text-sm ui-muted">看板视图面板</p></div>
-          </div>
-        </div>
-        <div class="doc-code">
-          <div class="doc-code__head"><span class="doc-code__label">HTML</span><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ui="copy" data-copy-target="#code-tabs">复制</button></div>
-          <div class="ui-codeblock">
-<pre><code id="code-tabs">&lt;div class="ui-tabs" data-ui="tabs"&gt;
-  &lt;div class="ui-tabs__list" role="tablist"&gt;
-    &lt;button class="ui-tab" role="tab" id="t1" aria-controls="p1" aria-selected="true"&gt;全部&lt;/button&gt;
-    &lt;button class="ui-tab" role="tab" id="t2" aria-controls="p2" aria-selected="false"&gt;处理中&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;div class="ui-tabpanel" role="tabpanel" id="p1" aria-labelledby="t1" tabindex="0"&gt;…&lt;/div&gt;
-  &lt;div class="ui-tabpanel" role="tabpanel" id="p2" aria-labelledby="t2" tabindex="0" hidden&gt;…&lt;/div&gt;
-&lt;/div&gt;</code></pre>
-          </div>
-        </div>
-      </div>
-
-      <!-- 分段控件 -->
-      <div class="doc-comp" id="segmented">
-        <div class="doc-comp__title">分段控件 <code>.ui-segmented</code></div>
-        <p class="doc-comp__desc">用于 2–5 个互斥选项的轻量切换（时间范围、视图粒度、币种）。等宽变体加 <code class="ui-code">--block</code>。</p>
-        <div class="doc-demo doc-demo--stack">
-          <div class="ui-segmented" data-ui="segmented" role="radiogroup" aria-label="时间范围" style="align-self: flex-start">
-            <button class="ui-segment" role="radio" aria-selected="true" type="button">今日</button>
-            <button class="ui-segment" role="radio" aria-selected="false" type="button">近 7 天</button>
-            <button class="ui-segment" role="radio" aria-selected="false" type="button">近 30 天</button>
-            <button class="ui-segment" role="radio" aria-selected="false" type="button">自定义</button>
-          </div>
-          <div class="ui-segmented ui-segmented--block" data-ui="segmented" role="radiogroup" aria-label="数据粒度">
-            <button class="ui-segment" role="radio" aria-selected="true" type="button">按小时</button>
-            <button class="ui-segment" role="radio" aria-selected="false" type="button">按天</button>
-            <button class="ui-segment" role="radio" aria-selected="false" type="button">按周</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 面包屑 -->
-      <div class="doc-comp" id="breadcrumb">
-        <div class="doc-comp__title">面包屑 <code>.ui-breadcrumb</code></div>
-        <p class="doc-comp__desc">当前位置用 <code class="ui-code">aria-current="page"</code> 标记，末项不可点击。</p>
-        <div class="doc-demo">
-          <span class="doc-demo__label">breadcrumb</span>
-          <nav class="ui-breadcrumb" aria-label="面包屑">
-            <span class="ui-breadcrumb__item"><a href="#breadcrumb">控制台</a></span>
-            <span class="ui-breadcrumb__sep"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"/></svg></span>
-            <span class="ui-breadcrumb__item"><a href="#breadcrumb">订单管理</a></span>
-            <span class="ui-breadcrumb__sep"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"/></svg></span>
-            <span class="ui-breadcrumb__item" aria-current="page">订单详情</span>
-          </nav>
-        </div>
-      </div>
-
-      <!-- 分页 -->
-      <div class="doc-comp" id="pagination">
-        <div class="doc-comp__title">分页 <code>.ui-pagination</code></div>
-        <p class="doc-comp__desc">当前页同时用底色与 <code class="ui-code">aria-current</code> 表达；首末页按钮禁用而非隐藏，避免宽度跳动。点一下试试（当前页信息会更新）。</p>
-        <div class="doc-demo doc-demo--stack">
-          <div class="ui-row ui-row--between">
-            <div class="ui-pagination" data-ui="pagination" data-doc-pagination>
-              <span class="ui-pagination__info" data-pagination-info>第 2 页</span>
-              <button class="ui-pagination__item" type="button" data-page="1" aria-label="上一页"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5L7.5 10l4.5 4.5"/></svg></button>
-              <button class="ui-pagination__item" type="button" data-page="1">1</button>
-              <button class="ui-pagination__item" type="button" data-page="2" aria-current="page">2</button>
-              <button class="ui-pagination__item" type="button" data-page="3">3</button>
-              <button class="ui-pagination__item" type="button" data-page="4">4</button>
-              <span class="ui-pagination__ellipsis">…</span>
-              <button class="ui-pagination__item" type="button" data-page="12">12</button>
-              <button class="ui-pagination__item" type="button" data-page="3" aria-label="下一页"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5.5L12.5 10 8 14.5"/></svg></button>
-            </div>
-          </div>
-          <div class="ui-row ui-gap-2" style="margin-top: var(--ui-space-2)">
-            <span class="ui-text-sm ui-muted">简洁模式：</span>
-            <div class="ui-pagination">
-              <button class="ui-pagination__item" type="button" disabled aria-label="上一页"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5L7.5 10l4.5 4.5"/></svg></button>
-              <span class="ui-text-sm ui-muted num" style="padding: 0 var(--ui-space-2)">第 1 / 12 页</span>
-              <button class="ui-pagination__item" type="button" aria-label="下一页"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5.5L12.5 10 8 14.5"/></svg></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 步骤条 -->
-      <div class="doc-comp" id="steps">
-        <div class="doc-comp__title">步骤条 <code>.ui-steps</code></div>
-        <p class="doc-comp__desc">横向用于短流程（≤5 步），纵向用于带说明的长流程。移动端加 <code class="ui-code">--responsive</code> 自动转纵向并保持骨架一致。</p>
-        <div class="doc-demo doc-demo--stack">
-          <span class="doc-demo__label">horizontal</span>
-          <div class="ui-steps ui-steps--responsive">
-            <div class="ui-step ui-step--done">
-              <div class="ui-step__rail"><span class="ui-step__marker"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.5l2.2 2L9.5 3.5"/></svg></span><span class="ui-step__line"></span></div>
-              <div class="ui-step__body"><div class="ui-step__title">提交申请</div><div class="ui-step__desc">填写基础信息</div></div>
-            </div>
-            <div class="ui-step ui-step--done">
-              <div class="ui-step__rail"><span class="ui-step__marker"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.5l2.2 2L9.5 3.5"/></svg></span><span class="ui-step__line"></span></div>
-              <div class="ui-step__body"><div class="ui-step__title">资质审核</div><div class="ui-step__desc">预计 1 个工作日</div></div>
-            </div>
-            <div class="ui-step ui-step--active">
-              <div class="ui-step__rail"><span class="ui-step__marker">3</span><span class="ui-step__line"></span></div>
-              <div class="ui-step__body"><div class="ui-step__title">配置密钥</div><div class="ui-step__desc">当前步骤</div></div>
-            </div>
-            <div class="ui-step">
-              <div class="ui-step__rail"><span class="ui-step__marker">4</span></div>
-              <div class="ui-step__body"><div class="ui-step__title">联调上线</div><div class="ui-step__desc">沙箱 → 生产</div></div>
-            </div>
-          </div>
-          <div class="ui-steps ui-steps--vertical" style="margin-top: var(--ui-space-4)">
-            <div class="ui-step ui-step--done">
-              <div class="ui-step__rail"><span class="ui-step__marker"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.5l2.2 2L9.5 3.5"/></svg></span><span class="ui-step__line"></span></div>
-              <div class="ui-step__body"><div class="ui-step__title">需求沟通</div><div class="ui-step__desc">资源匹配 · 方案报价</div></div>
-            </div>
-            <div class="ui-step ui-step--active">
-              <div class="ui-step__rail"><span class="ui-step__marker">2</span><span class="ui-step__line"></span></div>
-              <div class="ui-step__body"><div class="ui-step__title">演示体验</div><div class="ui-step__desc">样例试跑 · 路径确认</div></div>
-            </div>
-            <div class="ui-step">
-              <div class="ui-step__rail"><span class="ui-step__marker">3</span></div>
-              <div class="ui-step__body"><div class="ui-step__title">商务签约</div><div class="ui-step__desc">合同签署 · 结算方式</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 下拉菜单 -->
-      <div class="doc-comp" id="menu">
-        <div class="doc-comp__title">下拉菜单 <code>.ui-menu</code></div>
-        <p class="doc-comp__desc">支持分组标签、分隔线、勾选项、快捷键提示与危险项。点击外部或按 ESC 关闭，方向键进入菜单项。</p>
-        <div class="doc-demo" style="overflow: visible">
-          <span class="doc-demo__label">menu</span>
-          <div class="ui-dropdown-wrap" data-ui="dropdown">
-            <button class="ui-btn ui-btn--default" type="button" data-ui="dropdown-trigger">
-              更多操作
-              <span class="ui-btn__icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5l4 4 4-4"/></svg></span>
-            </button>
-            <div class="ui-menu" role="menu">
-              <div class="ui-menu__label">导出</div>
-              <button class="ui-menu__item" role="menuitem" type="button" data-value="csv">
-                <span class="ui-menu__icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8M5 7l3 3 3-3M3 13h10"/></svg></span>
-                导出 CSV
-                <span class="ui-menu__shortcut">⌘E</span>
-              </button>
-              <button class="ui-menu__item" role="menuitem" type="button" data-value="pdf">
-                <span class="ui-menu__icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2h5l3 3v9a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M9 2v3h3"/></svg></span>
-                导出 PDF
-              </button>
-              <div class="ui-menu__divider"></div>
-              <div class="ui-menu__label">显示</div>
-              <button class="ui-menu__item" role="menuitemcheckbox" type="button" aria-checked="true" data-value="density">
-                <span class="ui-menu__icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h11M2.5 12h11"/></svg></span>
-                紧凑模式
-                <span class="ui-menu__check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4"/></svg></span>
-              </button>
-              <button class="ui-menu__item" role="menuitem" type="button" data-value="columns">
-                <span class="ui-menu__icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M2.5 3.5h11v9h-11zM6.5 3.5v9"/></svg></span>
-                列设置
-              </button>
-              <div class="ui-menu__divider"></div>
-              <button class="ui-menu__item ui-menu__item--danger" role="menuitem" type="button" data-value="delete">
-                <span class="ui-menu__icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h10M6.5 5V3.5h3V5M5 5l.6 8h4.8L11 5"/></svg></span>
-                删除该视图
-              </button>
-            </div>
-          </div>
-          <div class="ui-dropdown-wrap" data-ui="dropdown">
-            <button class="ui-btn ui-btn--default" type="button" data-ui="dropdown-trigger">
-              <span class="ui-avatar ui-avatar--sm">张</span>
-              张明
-            </button>
-            <div class="ui-menu ui-menu--right" role="menu">
-              <button class="ui-menu__item" role="menuitem" type="button">账号设置</button>
-              <button class="ui-menu__item" role="menuitem" type="button">切换团队</button>
-              <div class="ui-menu__divider"></div>
-              <button class="ui-menu__item ui-menu__item--danger" role="menuitem" type="button">退出登录</button>
-            </div>
-          </div>
-          <span class="ui-text-sm ui-muted">选中项会派发 <code class="ui-code">ui:select</code> 事件</span>
-        </div>
-      </div>
-
-      <!-- 页脚 -->
-      <div class="doc-comp" id="footer">
-        <div class="doc-comp__title">页脚 <code>.ui-footer</code></div>
-        <p class="doc-comp__desc">四列布局（品牌 + 三组链接），移动端收成两列。底部法律信息行与主内容用分割线隔开。</p>
-        <div class="doc-demo doc-demo--flush" style="border-radius: var(--ui-radius-card); overflow: hidden">
-          <footer class="ui-footer" style="background: var(--ui-surface)">
-            <div class="ui-container ui-container--wide">
-              <div class="ui-footer__grid">
-                <div class="ui-footer__brand">
-                  <div class="ui-navbar__brand"><span class="ui-navbar__logo" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.4 5.9 8.4 3.6v8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.2" y="11.45" width="9.6" height="1.9" rx="0.95" fill="currentColor"/></svg></span>OneUI</div>
-                  <p class="ui-text-sm ui-muted">框架无关的通用 UI 组件库，中性配色打底，主色一处可换。</p>
-                </div>
-                <div class="ui-footer__col">
-                  <div class="ui-footer__title">产品</div>
-                  <a class="ui-footer__link" href="#footer">组件总览</a>
-                  <a class="ui-footer__link" href="#footer">设计 Token</a>
-                  <a class="ui-footer__link" href="#footer">更新日志</a>
-                </div>
-                <div class="ui-footer__col">
-                  <div class="ui-footer__title">资源</div>
-                  <a class="ui-footer__link" href="#footer">快速开始</a>
-                  <a class="ui-footer__link" href="#footer">无障碍指南</a>
-                  <a class="ui-footer__link" href="#footer">常见问题</a>
-                </div>
-                <div class="ui-footer__col">
-                  <div class="ui-footer__title">关于</div>
-                  <a class="ui-footer__link" href="#footer">设计原则</a>
-                  <a class="ui-footer__link" href="#footer">许可协议</a>
-                  <a class="ui-footer__link" href="#footer">联系我们</a>
-                </div>
-              </div>
-              <div class="ui-footer__bottom">
-                <span>© 2026 OneUI · 内部设计系统示例</span>
-                <span class="ui-cluster ui-cluster--3">
-                  <a class="ui-footer__link" href="#footer">隐私政策</a>
-                  <a class="ui-footer__link" href="#footer">服务条款</a>
-                </span>
-              </div>
-            </div>
-          </footer>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== 组件 · 数据展示 ==================== -->
-    <section class="doc-section" id="group-data">
-      <div class="doc-section__head">
-        <div class="doc-section__eyebrow">Components · Data display</div>
-        <h2 class="doc-section__title">数据展示</h2>
-        <p class="doc-section__desc">数字用等宽字形（<code class="ui-code">tabular-nums</code>）避免跳动；表格单元格默认不换行，容器负责横向滚动。</p>
-      </div>
-
-      <!-- 卡片 -->
-      <div class="doc-comp" id="card">
-        <div class="doc-comp__title">卡片 <code>.ui-card</code></div>
-        <p class="doc-comp__desc">可组合头部、主体、底部；交互卡加 <code class="ui-code">--interactive</code>（悬停上浮 2px + 阴影），选中加 <code class="ui-code">--selected</code>（主色描边 + 1px 外环）。</p>
-        <div class="doc-demo doc-demo--grid" style="align-items: stretch">
-          <div class="ui-card">
-            <div class="ui-card__header">
-              <div>
-                <div class="ui-card__title">基础卡片</div>
-                <p class="ui-card__desc">头部 + 主体 + 底部三区可自由取舍</p>
-              </div>
-              <span class="ui-badge ui-badge--primary">新增</span>
-            </div>
-            <div class="ui-card__body">
-              <p class="ui-text-sm ui-muted">主体区域承载主要内容。卡片之间用 24px 间距，内部用 12px 节奏。</p>
-            </div>
-            <div class="ui-card__footer">
-              <button class="ui-btn ui-btn--default ui-btn--sm" type="button">次要</button>
-              <button class="ui-btn ui-btn--primary ui-btn--sm" type="button">主要</button>
-            </div>
-          </div>
-          <div class="ui-card ui-card--interactive" tabindex="0">
-            <div class="ui-card__body ui-feature">
-              <span class="ui-feature__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12M4 10h12M4 15h8"/></svg></span>
-              <div class="ui-card__title">可点击卡片</div>
-              <p class="ui-card__desc">整卡即命中区，悬停有位移反馈，键盘可聚焦</p>
-            </div>
-          </div>
-          <div class="ui-card ui-card--selected">
-            <div class="ui-card__body ui-stack ui-stack--3">
-              <div class="ui-row ui-row--between">
-                <div class="ui-card__title">已选中卡片</div>
-                <span class="ui-status ui-status--success"><span class="ui-dot"></span>选中</span>
-              </div>
-              <p class="ui-text-sm ui-muted">主色描边 + 1px 外环，同时叠加状态文字，不靠颜色单独传达。</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 统计卡 -->
-      <div class="doc-comp" id="stat">
-        <div class="doc-comp__title">统计卡 <code>.ui-stat</code></div>
-        <p class="doc-comp__desc">指标名在上、数值在中、趋势在下。数值用 32px 粗体等宽数字，趋势用箭头 + 文字双重表达，不靠颜色单独传达。<br>
-          <code class="ui-code">.ui-stat__trend--up</code> 表示<b>向好</b>（绿）、<code class="ui-code">--down</code> 表示<b>转差</b>（红）——是"好坏"而非"涨跌"。
-          做金融/行情类产品时按本地惯例把两者反过来（涨用红、跌用绿）即可，只改这两个类的颜色，不动结构。</p>
-        <div class="doc-demo doc-demo--grid">
-          <div class="ui-stat">
-            <div class="ui-stat__label">今日调用次数</div>
-            <div class="ui-stat__value">18,204</div>
-            <div class="ui-stat__trend ui-stat__trend--up">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5L6 5l3.5 3.5"/></svg>
-              较昨日 +12.4%
-            </div>
-          </div>
-          <div class="ui-stat">
-            <div class="ui-stat__label">成功率</div>
-            <div class="ui-stat__value">99.6<span class="ui-stat__unit">%</span></div>
-            <div class="ui-stat__trend ui-stat__trend--down">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5l3.5 3.5L9.5 5"/></svg>
-              较昨日 -0.3%
-            </div>
-          </div>
-          <div class="ui-stat">
-            <div class="ui-stat__label">平均耗时</div>
-            <div class="ui-stat__value">128<span class="ui-stat__unit">ms</span></div>
-            <div class="ui-stat__trend">近 7 天无明显波动</div>
-          </div>
-          <div class="ui-stat">
-            <div class="ui-stat__label" style="justify-content: space-between">
-              剩余额度
-              <span class="ui-stat__icon" style="width:28px;height:28px">
-                <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v4.5M10 6.4v.6"/></svg>
-              </span>
-            </div>
-            <div class="ui-stat__value">1.2<span class="ui-stat__unit">万次</span></div>
-            <div class="ui-stat__trend">本月 30 日重置</div>
-          </div>
-        </div>
-        <div class="doc-code">
-          <div class="doc-code__head"><span class="doc-code__label">HTML</span><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ui="copy" data-copy-target="#code-stat">复制</button></div>
-          <div class="ui-codeblock">
-<pre><code id="code-stat">&lt;div class="ui-stat"&gt;
-  &lt;div class="ui-stat__label"&gt;今日调用次数&lt;/div&gt;
-  &lt;div class="ui-stat__value"&gt;18,204&lt;/div&gt;
-  &lt;div class="ui-stat__trend ui-stat__trend--up"&gt;较昨日 +12.4%&lt;/div&gt;
-&lt;/div&gt;</code></pre>
-          </div>
-        </div>
-      </div>
-
-      <!-- 特性卡 -->
-      <div class="doc-comp" id="feature">
-        <div class="doc-comp__title">特性卡 <code>.ui-feature</code></div>
-        <p class="doc-comp__desc">「图标 + 标题 + 说明」的标准组合，用于能力介绍、接入方式、服务保障等并列信息。图标底色跟随主色，换肤自动生效。</p>
-        <div class="doc-demo doc-demo--grid">
-          <div class="ui-feature">
-            <span class="ui-feature__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v12M13 4v12M4 8h12M4 13h12"/></svg></span>
-            <div class="ui-feature__title">接口对接</div>
-            <p class="ui-feature__desc">完整商品、订单与状态接口，附 SDK 与沙箱环境。</p>
-          </div>
-          <div class="ui-feature">
-            <span class="ui-feature__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="12" rx="2"/><path d="M3 8h14"/></svg></span>
-            <div class="ui-feature__title">成品页面</div>
-            <p class="ui-feature__desc">免开发接入，可直接嵌入现有业务入口。</p>
-          </div>
-          <div class="ui-feature">
-            <span class="ui-feature__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.8l7 12.4H3L10 2.8z"/><path d="M10 8v3.2"/></svg></span>
-            <div class="ui-feature__title">服务保障</div>
-            <p class="ui-feature__desc">7×24 响应，专属服务群直连对接人。</p>
-          </div>
-          <div class="ui-feature">
-            <span class="ui-feature__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.5"/><path d="M10 6.5V10l3 2"/></svg></span>
-            <div class="ui-feature__title">极速开通</div>
-            <p class="ui-feature__desc">专人对接，最快 1 天内完成上线。</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- 表格 -->
-      <div class="doc-comp" id="table">
-        <div class="doc-comp__title">表格 <code>.ui-table</code></div>
-        <p class="doc-comp__desc">
-          表头吸顶、行悬停高亮、可选斑马纹与紧凑模式；数字列右对齐并用等宽字形。
-          表头按钮加 <code class="ui-code">data-sort="列号"</code> 即可排序（点表头试试，会派发 <code class="ui-code">ui:sort</code>）。
-        </p>
-        <div class="doc-demo doc-demo--flush" data-doc-table>
-          <div class="ui-table-wrap" data-ui="table-sort" style="border: none; border-radius: 0">
-            <table class="ui-table">
-              <caption class="u-sr-only">订单列表，支持按列排序</caption>
-              <thead>
-                <tr>
-                  <th><button class="ui-table__sort" type="button" data-sort="0" aria-sort="none">订单号<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 4.5L6 2l2.5 2.5M3.5 7.5L6 10l2.5-2.5"/></svg></button></th>
-                  <th>客户</th>
-                  <th><button class="ui-table__sort" type="button" data-sort="2" aria-sort="none">金额<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 4.5L6 2l2.5 2.5M3.5 7.5L6 10l2.5-2.5"/></svg></button></th>
-                  <th>状态</th>
-                  <th>创建时间</th>
-                  <th class="ui-table__actions">操作</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="ui-mono">#A-20260924-018</td>
-                  <td>星野科技</td>
-                  <td class="ui-table__cell-num" data-value="12800">¥ 12,800.00</td>
-                  <td><span class="ui-badge ui-badge--success">已完成</span></td>
-                  <td class="ui-muted">09-24 14:22</td>
-                  <td class="ui-table__actions"><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" onclick="UI.toast('查看订单详情（演示）')">详情</button></td>
-                </tr>
-                <tr>
-                  <td class="ui-mono">#A-20260924-017</td>
-                  <td>云图网络</td>
-                  <td class="ui-table__cell-num" data-value="3600">¥ 3,600.00</td>
-                  <td><span class="ui-badge ui-badge--warning">处理中</span></td>
-                  <td class="ui-muted">09-24 11:08</td>
-                  <td class="ui-table__actions"><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" onclick="UI.toast('查看订单详情（演示）')">详情</button></td>
-                </tr>
-                <tr>
-                  <td class="ui-mono">#A-20260923-142</td>
-                  <td>恒睿实业</td>
-                  <td class="ui-table__cell-num" data-value="48600">¥ 48,600.00</td>
-                  <td><span class="ui-badge ui-badge--success">已完成</span></td>
-                  <td class="ui-muted">09-23 17:41</td>
-                  <td class="ui-table__actions"><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" onclick="UI.toast('查看订单详情（演示）')">详情</button></td>
-                </tr>
-                <tr>
-                  <td class="ui-mono">#A-20260923-121</td>
-                  <td>锐驰传媒</td>
-                  <td class="ui-table__cell-num" data-value="900">¥ 900.00</td>
-                  <td><span class="ui-badge ui-badge--danger">已取消</span></td>
-                  <td class="ui-muted">09-23 09:15</td>
-                  <td class="ui-table__actions"><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" onclick="UI.toast('查看订单详情（演示）')">详情</button></td>
-                </tr>
-                <tr>
-                  <td class="ui-mono">#A-20260922-097</td>
-                  <td>百川物流</td>
-                  <td class="ui-table__cell-num" data-value="24500">¥ 24,500.00</td>
-                  <td><span class="ui-badge ui-badge--success">已完成</span></td>
-                  <td class="ui-muted">09-22 16:03</td>
-                  <td class="ui-table__actions"><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" onclick="UI.toast('查看订单详情（演示）')">详情</button></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="doc-code">
-          <div class="doc-code__head"><span class="doc-code__label">HTML</span><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ui="copy" data-copy-target="#code-table">复制</button></div>
-          <div class="ui-codeblock">
-<pre><code id="code-table">&lt;div class="ui-table-wrap" data-ui="table-sort"&gt;
-  &lt;table class="ui-table ui-table--striped"&gt;
-    &lt;thead&gt;
-      &lt;tr&gt;
-        &lt;th&gt;&lt;button class="ui-table__sort" data-sort="0" aria-sort="none"&gt;订单号&lt;/button&gt;&lt;/th&gt;
-        &lt;th class="ui-table__cell-num"&gt;金额&lt;/th&gt;
-      &lt;/tr&gt;
-    &lt;/thead&gt;
-    &lt;tbody&gt;
-      &lt;tr&gt;&lt;td&gt;#A-018&lt;/td&gt;&lt;td class="ui-table__cell-num" data-value="12800"&gt;¥ 12,800&lt;/td&gt;&lt;/tr&gt;
-    &lt;/tbody&gt;
-  &lt;/table&gt;
-&lt;/div&gt;
-
-&lt;script&gt;
-  document.querySelector('[data-ui="table-sort"]').addEventListener('ui:sort', function (e) {
-    // 需要服务端排序时在这里发请求；纯前端排序库已内置
-    console.log(e.detail.index, e.detail.direction);
-  });
-&lt;/script&gt;</code></pre>
-          </div>
-        </div>
-      </div>
-
-      <!-- 描述列表与列表 -->
-      <div class="doc-comp" id="desc">
-        <div class="doc-comp__title">描述列表与列表 <code>.ui-desc / .ui-list</code></div>
-        <p class="doc-comp__desc">详情页用描述列表（键值对齐），横向列表用于条目管理，交互项悬停变色、命中区 ≥44。</p>
-        <div class="doc-demo doc-demo--grid">
-          <div class="ui-card">
-            <div class="ui-card__body">
-              <div class="ui-card__title u-mb-4">接口详情</div>
-              <dl class="ui-desc">
-                <dt>接口路径</dt><dd class="ui-mono">POST /v1/order/create</dd>
-                <dt>鉴权方式</dt><dd>HMAC-SHA256 签名</dd>
-                <dt>限流</dt><dd>1000 次 / 分钟</dd>
-                <dt>状态</dt><dd><span class="ui-status ui-status--success"><span class="ui-dot"></span>已上线</span></dd>
-                <dt>最近更新</dt><dd>2026-09-20 10:24</dd>
-              </dl>
-            </div>
-          </div>
-          <div class="ui-card ui-card--flush">
-            <ul class="ui-list">
-              <li class="ui-list__item ui-list__item--interactive">
-                <span class="ui-avatar ui-avatar--sm">李</span>
-                <span class="ui-list__main">
-                  <span class="ui-list__title">李工 <span class="ui-badge ui-badge--outline" style="margin-left:4px">管理员</span></span>
-                  <span class="ui-list__sub">最近登录 2 小时前</span>
-                </span>
-                <button class="ui-icon-btn ui-icon-btn--sm" type="button" aria-label="更多操作">
-                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="5" cy="10" r="1.2"/><circle cx="10" cy="10" r="1.2"/><circle cx="15" cy="10" r="1.2"/></svg>
-                </button>
-              </li>
-              <li class="ui-list__item ui-list__item--interactive">
-                <span class="ui-avatar ui-avatar--sm">王</span>
-                <span class="ui-list__main">
-                  <span class="ui-list__title">王工</span>
-                  <span class="ui-list__sub">最近登录 3 天前</span>
-                </span>
-                <button class="ui-icon-btn ui-icon-btn--sm" type="button" aria-label="更多操作">
-                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="5" cy="10" r="1.2"/><circle cx="10" cy="10" r="1.2"/><circle cx="15" cy="10" r="1.2"/></svg>
-                </button>
-              </li>
-              <li class="ui-list__item ui-list__item--interactive">
-                <span class="ui-avatar ui-avatar--sm">陈</span>
-                <span class="ui-list__main">
-                  <span class="ui-list__title">陈工</span>
-                  <span class="ui-list__sub">尚未登录</span>
-                </span>
-                <span class="ui-badge ui-badge--warning">待激活</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- 时间线 -->
-      <div class="doc-comp" id="timeline">
-        <div class="doc-comp__title">时间线 <code>.ui-timeline</code></div>
-        <p class="doc-comp__desc">已完成节点用主色实心点 + 主色连线，进行中为空心主色环，未开始为中性描边；状态同时由文字表达。</p>
-        <div class="doc-demo doc-demo--stack">
-          <div class="ui-timeline">
-            <div class="ui-timeline__item ui-timeline__item--done">
-              <div class="ui-timeline__rail"><span class="ui-timeline__dot"></span></div>
-              <div class="ui-timeline__body">
-                <div class="ui-timeline__title">创建应用 <span class="ui-timeline__time">09-22 09:14</span></div>
-                <p class="ui-timeline__desc">由 张明 创建，默认开启沙箱环境</p>
-              </div>
-            </div>
-            <div class="ui-timeline__item ui-timeline__item--done">
-              <div class="ui-timeline__rail"><span class="ui-timeline__dot"></span></div>
-              <div class="ui-timeline__body">
-                <div class="ui-timeline__title">生成生产密钥 <span class="ui-timeline__time">09-23 11:02</span></div>
-                <p class="ui-timeline__desc">密钥仅在创建时展示一次，已确认保存</p>
-              </div>
-            </div>
-            <div class="ui-timeline__item ui-timeline__item--active">
-              <div class="ui-timeline__rail"><span class="ui-timeline__dot"></span></div>
-              <div class="ui-timeline__body">
-                <div class="ui-timeline__title">接口联调中 <span class="ui-timeline__time">进行中</span></div>
-                <p class="ui-timeline__desc">已完成 8/12 个接口的联通性验证</p>
-              </div>
-            </div>
-            <div class="ui-timeline__item">
-              <div class="ui-timeline__rail"><span class="ui-timeline__dot"></span></div>
-              <div class="ui-timeline__body">
-                <div class="ui-timeline__title">正式上线 <span class="ui-timeline__time">未开始</span></div>
-                <p class="ui-timeline__desc">需完成全部接口验收后触发</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 折叠面板 -->
-      <div class="doc-comp" id="collapse">
-        <div class="doc-comp__title">折叠面板 <code>.ui-collapse</code></div>
-        <p class="doc-comp__desc">加 <code class="ui-code">data-accordion</code> 变为手风琴（同时只开一项）。头部高度 52px，键盘可操作。</p>
-        <div class="doc-demo doc-demo--stack">
-          <div class="ui-collapse" data-ui="collapse">
-            <div class="ui-collapse__item">
-              <button class="ui-collapse__header" type="button" aria-expanded="true" aria-controls="cp1">
-                签名校验失败怎么排查？
-                <span class="ui-collapse__chevron"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8l4.5 4.5L14.5 8"/></svg></span>
-              </button>
-              <div class="ui-collapse__panel" id="cp1">
-                先确认时间戳与服务器时间差不超过 5 分钟，再核对签名串是否对参数名做了字典序排序。错误码 <code class="ui-code">SIGN_INVALID</code> 会返回期望签名前 8 位，便于比对。
-              </div>
-            </div>
-            <div class="ui-collapse__item">
-              <button class="ui-collapse__header" type="button" aria-expanded="false" aria-controls="cp2">
-                沙箱环境与生产环境有什么区别？
-                <span class="ui-collapse__chevron"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8l4.5 4.5L14.5 8"/></svg></span>
-              </button>
-              <div class="ui-collapse__panel" id="cp2" hidden>
-                沙箱使用独立域名与假数据，订单不会真实发货；生产环境所有调用都会计入额度。建议先用沙箱跑通全链路再切生产。
-              </div>
-            </div>
-            <div class="ui-collapse__item">
-              <button class="ui-collapse__header" type="button" aria-expanded="false" aria-controls="cp3">
-                额度用尽后会发生什么？
-                <span class="ui-collapse__chevron"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8l4.5 4.5L14.5 8"/></svg></span>
-              </button>
-              <div class="ui-collapse__panel" id="cp3" hidden>
-                接口将返回 429 与错误码 <code class="ui-code">QUOTA_EXCEEDED</code>，超出部分不会计费，也不会自动降级为异步队列。可在控制台开启额度预警。
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="doc-code">
-          <div class="doc-code__head"><span class="doc-code__label">HTML</span></div>
-          <div class="ui-codeblock">
-<pre><code>&lt;div class="ui-collapse" data-ui="collapse"&gt;   &lt;!-- 加 data-accordion 变手风琴 --&gt;
-  &lt;div class="ui-collapse__item"&gt;
-    &lt;button class="ui-collapse__header" aria-expanded="true" aria-controls="p1"&gt;问题&lt;/button&gt;
-    &lt;div class="ui-collapse__panel" id="p1"&gt;答案&lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
-          </div>
-        </div>
-      </div>
-
-      <!-- 代码块 -->
-      <div class="doc-comp" id="codeblock">
-        <div class="doc-comp__title">代码块 <code>.ui-codeblock</code></div>
-        <p class="doc-comp__desc">深色 / 浅色两版，配合 <code class="ui-code">data-ui="copy"</code> 提供一键复制。长代码自动横向滚动。</p>
-        <div class="doc-demo doc-demo--stack">
-          <div class="ui-codeblock">
-<pre><code>curl -X POST https://api.example.com/v1/order/create \
-  -H "Authorization: Bearer $TOKEN" \
-  -d '{"skuId":"1001","quantity":1}'</code></pre>
-          </div>
+      <div class="ui-grid ui-grid--2 ui-grid--tight">
+        <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-stack ui-stack--3">
+          <div class="ui-h4">四份文件，各管一段</div>
+          <div class="ui-stack ui-stack--3">
+            <div class="doc-ai-file">
+              <code class="ui-code">llms.txt</code>
+              <span class="ui-caption ui-muted">索引：这是什么、关键文件在哪</span>
+            </div>
+            <div class="doc-ai-file">
+              <code class="ui-code">AGENTS.md</code>
+              <span class="ui-caption ui-muted">规则与禁止清单，AI 会自动读到</span>
+            </div>
+            <div class="doc-ai-file">
+              <code class="ui-code">oneui.spec.json</code>
+              <span class="ui-caption ui-muted">每个组件的准确写法与代码片段</span>
+            </div>
+            <div class="doc-ai-file">
+              <code class="ui-code">golden.html</code>
+              <span class="ui-caption ui-muted">一页完整样板，照抄改比读规则有效</span>
+            </div>
+          </div>
+          <div class="ui-cluster ui-cluster--3">
+            <a class="ui-btn ui-btn--primary ui-btn--sm" href="ai.html">看完整规范</a>
+            <a class="ui-btn ui-btn--default ui-btn--sm" href="check.html">粘贴 HTML 自检</a>
+          </div>
+        </div></div>
+
+        <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-stack ui-stack--3">
+          <div class="ui-h4">禁止清单（节选）</div>
+          <p class="ui-caption ui-muted">AI 的默认先验在这套库里全是错的，必须明说。</p>
           <div class="ui-codeblock ui-codeblock--light">
-<pre><code>const res = await fetch('/v1/order/create', {
-  method: 'POST',
-  headers: { Authorization: `Bearer ${token}` },
-  body: JSON.stringify({ skuId: '1001' })
-});</code></pre>
+<pre><code>不存在 container / row / col-* / d-flex
+         btn / btn-primary / el-button
+
+不写裸色值  #2563EB / rgb(...)
+不写非字阶字号  13px / 15px
+不写 !important
+不自己写 position:fixed 做弹层</code></pre>
           </div>
-        </div>
+        </div></div>
+      </div>
+
+      <div class="doc-note">
+        规范不是手抄的：<code class="ui-code">oneui.spec.js</code> 是唯一数据源，构建脚本从它生成
+        <code class="ui-code">llms.txt</code> 与 <code class="ui-code">oneui.spec.json</code>，
+        并<b>反向校验</b><code class="ui-code">components.css</code> 里的真实类名——
+        声明了却没有、有却没收录，两个方向都会报。这样规范不会悄悄过期。
       </div>
     </section>
 
-    <!-- ==================== 组件 · 布局与区块 ==================== -->
-    <section class="doc-section" id="group-layout">
-      <div class="doc-section__head">
-        <div class="doc-section__eyebrow">Components · Layout</div>
-        <h2 class="doc-section__title">布局与区块</h2>
-        <p class="doc-section__desc">区间距用 stack/grid，页面级用 container + section。<code class="ui-code">--ui-container</code> 是唯一的内容宽度来源。</p>
-      </div>
-
-      <div class="doc-comp" id="layout">
-        <div class="doc-comp__title">容器与栅格 <code>.ui-container / .ui-grid / .ui-stack</code></div>
-        <p class="doc-comp__desc">栅格提供 2/3/4 列与自适应两档，列数随 1024、768 断点自动降级；<code class="ui-code">--sidebar</code> 是「侧栏 + 主内容」的两栏模板。</p>
-        <div class="doc-demo doc-demo--stack">
-          <span class="doc-demo__label">grid</span>
-          <div class="ui-grid ui-grid--4">
-            <div class="u-surface u-border u-rounded ui-text-sm" style="padding: var(--ui-space-4); text-align: center">1</div>
-            <div class="u-surface u-border u-rounded" style="padding: var(--ui-space-4); text-align: center">2</div>
-            <div class="u-surface u-border u-rounded" style="padding: var(--ui-space-4); text-align: center">3</div>
-            <div class="u-surface u-border u-rounded" style="padding: var(--ui-space-4); text-align: center">4</div>
-          </div>
-          <div class="ui-grid ui-grid--sidebar">
-            <div class="u-surface-2 u-border u-rounded" style="padding: var(--ui-space-4)">侧栏 260px</div>
-            <div class="u-surface u-border u-rounded" style="padding: var(--ui-space-4)">主内容自适应 · 1024 断点下自动堆叠</div>
-          </div>
-        </div>
-        <div class="doc-code">
-          <div class="doc-code__head"><span class="doc-code__label">HTML</span><button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-ui="copy" data-copy-target="#code-layout">复制</button></div>
-          <div class="ui-codeblock">
-<pre><code id="code-layout">&lt;div class="ui-container"&gt;…&lt;/div&gt;              &lt;!-- max-width 1200 + 24 边距 --&gt;
-&lt;div class="ui-container ui-container--wide"&gt;…&lt;/div&gt;
-
-&lt;div class="ui-grid ui-grid--3"&gt;…&lt;/div&gt;          &lt;!-- 3 列，1024 降 2 列，768 降 1 列 --&gt;
-&lt;div class="ui-grid ui-grid--auto"&gt;…&lt;/div&gt;       &lt;!-- 自动填充，最小 240px --&gt;
-&lt;div class="ui-grid ui-grid--sidebar"&gt;…&lt;/div&gt;    &lt;!-- 260px + 自适应 --&gt;
-
-&lt;div class="ui-stack ui-stack--4"&gt;…&lt;/div&gt;       &lt;!-- 纵向 16px 节奏 --&gt;
-&lt;div class="ui-row ui-row--between"&gt;…&lt;/div&gt;      &lt;!-- 横向两端对齐 --&gt;</code></pre>
-          </div>
-        </div>
-      </div>
-
-      <div class="doc-comp" id="hero-block">
-        <div class="doc-comp__title">Hero 与区块标题 <code>.ui-hero / .ui-section-header</code></div>
-        <p class="doc-comp__desc">Hero 支持左右分栏（<code class="ui-code">--split</code>），标题最大 20 字一行；区块标题右侧可挂操作区。</p>
-        <div class="doc-demo doc-demo--flush" style="padding: var(--ui-space-6)">
-          <div class="ui-hero ui-hero--split" style="padding: 0">
-            <div>
-              <div class="ui-hero__eyebrow"><span class="ui-overline ui-muted">Open platform</span></div>
-              <h3 class="ui-hero__title">把权益接入，做到一行代码</h3>
-              <p class="ui-hero__desc">统一接口、统一对账、统一售后。自营供应链直供，覆盖点餐、影票、卡券与实物四类福利场景。</p>
-              <div class="ui-hero__actions">
-                <button class="ui-btn ui-btn--primary ui-btn--lg" type="button">申请接入</button>
-                <button class="ui-btn ui-btn--default ui-btn--lg" type="button">查看文档</button>
-              </div>
-            </div>
-            <div class="ui-card ui-card--pad-lg">
-              <div class="ui-card__body ui-grid ui-grid--2 ui-grid--tight">
-                <div class="ui-stat"><div class="ui-stat__label">接口可用性</div><div class="ui-stat__value">99.98<span class="ui-stat__unit">%</span></div></div>
-                <div class="ui-stat"><div class="ui-stat__label">平均响应</div><div class="ui-stat__value">128<span class="ui-stat__unit">ms</span></div></div>
-                <div class="ui-stat"><div class="ui-stat__label">覆盖场景</div><div class="ui-stat__value">4<span class="ui-stat__unit">类</span></div></div>
-                <div class="ui-stat"><div class="ui-stat__label">合作方</div><div class="ui-stat__value">50<span class="ui-stat__unit">+</span></div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="doc-demo doc-demo--stack" style="margin-top: var(--ui-space-4)">
-          <div class="ui-section-header">
-            <div>
-              <div class="ui-section-header__title">常用工具</div>
-              <p class="ui-section-header__desc">按使用频次排序，最近使用的排在最前。</p>
-            </div>
-            <button class="ui-btn ui-btn--default ui-btn--sm" type="button">全部工具</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="doc-comp" id="blocks">
-        <div class="doc-comp__title">指标条、工具条与 CTA <code>.ui-metrics / .ui-toolbar / .ui-cta</code></div>
-        <p class="doc-comp__desc">
-          指标条用于四指标并列；工具条承载筛选与批量操作；CTA 是反色区块，内部按钮自动适配反色语境，无需额外类名。
-        </p>
-        <div class="doc-demo doc-demo--flush" style="padding: var(--ui-space-6)">
-          <div class="ui-metrics">
-            <div class="ui-stat"><div class="ui-stat__label">今日订单</div><div class="ui-stat__value">1,284</div><div class="ui-stat__trend ui-stat__trend--up">+8.2%</div></div>
-            <div class="ui-stat"><div class="ui-stat__label">成功率</div><div class="ui-stat__value">99.6<span class="ui-stat__unit">%</span></div><div class="ui-stat__trend">持平</div></div>
-            <div class="ui-stat"><div class="ui-stat__label">平均耗时</div><div class="ui-stat__value">128<span class="ui-stat__unit">ms</span></div><div class="ui-stat__trend ui-stat__trend--up">较上周 -12 ms</div></div>
-            <div class="ui-stat"><div class="ui-stat__label">告警</div><div class="ui-stat__value">2</div><div class="ui-stat__trend">待处理</div></div>
-          </div>
-          <hr class="ui-divider u-mb-6">
-          <div class="ui-toolbar">
-            <div class="ui-search" style="max-width: 280px">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="9" r="5.5"/><path d="M13 13l3.5 3.5"/></svg>
-              <input class="ui-input ui-input--sm" type="search" placeholder="搜索订单号" aria-label="搜索订单号">
-            </div>
-            <div class="ui-segmented" data-ui="segmented" role="radiogroup" aria-label="状态筛选">
-              <button class="ui-segment" role="radio" aria-selected="true" type="button">全部</button>
-              <button class="ui-segment" role="radio" aria-selected="false" type="button">处理中</button>
-              <button class="ui-segment" role="radio" aria-selected="false" type="button">已完成</button>
-            </div>
-            <div class="ui-toolbar__spacer"></div>
-            <button class="ui-btn ui-btn--default ui-btn--sm" type="button">导出</button>
-            <button class="ui-btn ui-btn--primary ui-btn--sm" type="button">新建订单</button>
-          </div>
-          <div class="ui-cta" style="margin-top: var(--ui-space-6)">
-            <div>
-              <div class="ui-cta__title">准备好开始了吗？</div>
-              <p class="ui-cta__desc">提交接入申请后，我们会安排专人对接，最快 1 天内完成上线。</p>
-            </div>
-            <div class="ui-cta__actions">
-              <button class="ui-btn ui-btn--primary ui-btn--lg" type="button">获取报价</button>
-              <button class="ui-btn ui-btn--default ui-btn--lg" type="button">预约演示</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== 组合示例 ==================== -->
-    <section class="doc-section" id="group-patterns">
-      <div class="doc-section__head">
-        <div class="doc-section__eyebrow">Patterns</div>
-        <h2 class="doc-section__title">组合示例</h2>
-        <p class="doc-section__desc">组件库的价值在于组合。以下三个区块全部由上面的组件拼成，没有一行业务专属样式。</p>
-      </div>
-
-      <div class="doc-comp" id="pattern-dashboard">
-        <div class="doc-comp__title">数据看板区块</div>
-        <p class="doc-comp__desc">区间标题 + 四指标 + 筛选工具条 + 表格 + 分页。骨架从上到下依次是「标题区 → 指标区 → 操作区 → 数据区 → 分页区」。</p>
-        <div class="doc-demo doc-demo--flush">
-          <div class="ui-container ui-container--wide" style="padding: var(--ui-space-8) var(--ui-page-gutter)">
-            <div class="ui-section-header">
-              <div>
-                <div class="ui-section-header__title">经营看板</div>
-                <p class="ui-section-header__desc">数据每 5 分钟更新一次，最后更新 22:30。</p>
-              </div>
-              <div class="ui-cluster ui-cluster--2">
-                <button class="ui-btn ui-btn--default ui-btn--sm" type="button">导出报表</button>
-                <button class="ui-btn ui-btn--primary ui-btn--sm" type="button">新建活动</button>
-              </div>
-            </div>
-            <div class="ui-metrics u-mb-8">
-              <div class="ui-stat"><div class="ui-stat__label">GMV</div><div class="ui-stat__value">¥ 328<span class="ui-stat__unit">万</span></div><div class="ui-stat__trend ui-stat__trend--up">+14.2%</div></div>
-              <div class="ui-stat"><div class="ui-stat__label">订单量</div><div class="ui-stat__value">42,180</div><div class="ui-stat__trend ui-stat__trend--up">+6.8%</div></div>
-              <div class="ui-stat"><div class="ui-stat__label">客单价</div><div class="ui-stat__value">¥ 77.8</div><div class="ui-stat__trend ui-stat__trend--down">-1.2%</div></div>
-              <div class="ui-stat"><div class="ui-stat__label">退款率</div><div class="ui-stat__value">0.42<span class="ui-stat__unit">%</span></div><div class="ui-stat__trend">持平</div></div>
-            </div>
-            <div class="ui-toolbar u-mb-4">
-              <div class="ui-segmented" data-ui="segmented" role="radiogroup" aria-label="时间范围">
-                <button class="ui-segment" role="radio" aria-selected="true" type="button">今日</button>
-                <button class="ui-segment" role="radio" aria-selected="false" type="button">近 7 天</button>
-                <button class="ui-segment" role="radio" aria-selected="false" type="button">近 30 天</button>
-              </div>
-              <div class="ui-toolbar__spacer"></div>
-              <button class="ui-btn ui-btn--default ui-btn--sm" type="button">
-                <span class="ui-btn__icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M6.5 12h3"/></svg></span>
-                筛选
-              </button>
-            </div>
-            <div class="ui-table-wrap">
-              <table class="ui-table ui-table--compact">
-                <thead><tr><th>渠道</th><th class="ui-table__cell-num">订单</th><th class="ui-table__cell-num">GMV</th><th class="ui-table__cell-num">转化率</th><th>状态</th></tr></thead>
-                <tbody>
-                  <tr><td>小程序</td><td class="ui-table__cell-num">18,240</td><td class="ui-table__cell-num">¥ 142.6 万</td><td class="ui-table__cell-num">3.8%</td><td><span class="ui-badge ui-badge--success">正常</span></td></tr>
-                  <tr><td>H5 活动页</td><td class="ui-table__cell-num">12,880</td><td class="ui-table__cell-num">¥ 98.2 万</td><td class="ui-table__cell-num">2.9%</td><td><span class="ui-badge ui-badge--success">正常</span></td></tr>
-                  <tr><td>公众号</td><td class="ui-table__cell-num">7,420</td><td class="ui-table__cell-num">¥ 54.1 万</td><td class="ui-table__cell-num">2.1%</td><td><span class="ui-badge ui-badge--warning">低于预期</span></td></tr>
-                  <tr><td>线下扫码</td><td class="ui-table__cell-num">3,640</td><td class="ui-table__cell-num">¥ 33.5 万</td><td class="ui-table__cell-num">4.6%</td><td><span class="ui-badge ui-badge--success">正常</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="ui-row ui-row--between" style="margin-top: var(--ui-space-4)">
-              <span class="ui-caption ui-muted">共 42,180 条记录</span>
-              <div class="ui-pagination">
-                <button class="ui-pagination__item" type="button" disabled aria-label="上一页"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5L7.5 10l4.5 4.5"/></svg></button>
-                <button class="ui-pagination__item" type="button" aria-current="page">1</button>
-                <button class="ui-pagination__item" type="button">2</button>
-                <button class="ui-pagination__item" type="button">3</button>
-                <button class="ui-pagination__item" type="button" aria-label="下一页"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5.5L12.5 10 8 14.5"/></svg></button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="doc-comp" id="pattern-plans">
-        <div class="doc-comp__title">方案对比区</div>
-        <p class="doc-comp__desc">三档方案并列，中间档用 <code class="ui-code">--selected</code> 突出但仍只保留一个实心主按钮——推荐档用实心，其余用描边。</p>
-        <div class="doc-demo doc-demo--flush">
-          <div class="ui-container" style="padding: var(--ui-space-8) var(--ui-page-gutter)">
-            <div class="ui-section-header ui-section-header--center">
-              <div>
-                <div class="ui-section-header__title">按调用量选择方案</div>
-                <p class="ui-section-header__desc">所有方案均含沙箱环境、签名鉴权与 7×24 技术支持。</p>
-              </div>
-            </div>
-            <div class="ui-grid ui-grid--3">
-              <div class="ui-card ui-card--pad-lg">
-                <div class="ui-card__body ui-stack ui-stack--5">
-                  <div>
-                    <div class="ui-badge ui-badge--outline">基础版</div>
-                    <div class="ui-stat__value" style="margin-top: var(--ui-space-3)">¥ 2,980<span class="ui-stat__unit">/ 月</span></div>
-                  </div>
-                  <ul class="ui-list ui-list--divided-none ui-stack ui-stack--2">
-                    <li class="ui-text-sm ui-muted">月调用 10 万次</li>
-                    <li class="ui-text-sm ui-muted">4 类权益场景</li>
-                    <li class="ui-text-sm ui-muted">工单支持</li>
-                  </ul>
-                  <button class="ui-btn ui-btn--default ui-btn--block" type="button">选择基础版</button>
-                </div>
-              </div>
-              <div class="ui-card ui-card--pad-lg ui-card--selected">
-                <div class="ui-card__body ui-stack ui-stack--5">
-                  <div>
-                    <div class="ui-badge ui-badge--primary">推荐 · 专业版</div>
-                    <div class="ui-stat__value" style="margin-top: var(--ui-space-3)">¥ 9,800<span class="ui-stat__unit">/ 月</span></div>
-                  </div>
-                  <ul class="ui-list ui-list--divided-none ui-stack ui-stack--2">
-                    <li class="ui-text-sm">月调用 50 万次</li>
-                    <li class="ui-text-sm">全部权益场景 + OEM 白标</li>
-                    <li class="ui-text-sm">专属服务群 + 定时对账</li>
-                  </ul>
-                  <button class="ui-btn ui-btn--primary ui-btn--block" type="button">选择专业版</button>
-                </div>
-              </div>
-              <div class="ui-card ui-card--pad-lg">
-                <div class="ui-card__body ui-stack ui-stack--5">
-                  <div>
-                    <div class="ui-badge ui-badge--outline">旗舰版</div>
-                    <div class="ui-stat__value" style="margin-top: var(--ui-space-3)">按需报价</div>
-                  </div>
-                  <ul class="ui-list ui-list--divided-none ui-stack ui-stack--2">
-                    <li class="ui-text-sm ui-muted">不限调用量</li>
-                    <li class="ui-text-sm ui-muted">私有化部署可选</li>
-                    <li class="ui-text-sm ui-muted">驻场技术对接</li>
-                  </ul>
-                  <button class="ui-btn ui-btn--default ui-btn--block" type="button">联系商务</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="doc-comp" id="pattern-flow">
-        <div class="doc-comp__title">流程协作区</div>
-        <p class="doc-comp__desc">步骤条负责「全局进度」，时间线负责「单点动态」，CTA 负责「下一步入口」。三者纵向排列即可构成完整的流程页。</p>
-        <div class="doc-demo doc-demo--flush">
-          <div class="ui-container" style="padding: var(--ui-space-8) var(--ui-page-gutter)">
-            <div class="ui-section-header">
-              <div>
-                <div class="ui-section-header__title">接入进度</div>
-                <p class="ui-section-header__desc">当前处于第 2 步，预计还需 1 个工作日。</p>
-              </div>
-              <span class="ui-badge ui-badge--info">进行中</span>
-            </div>
-            <div class="ui-steps ui-steps--responsive u-mb-8">
-              <div class="ui-step ui-step--done">
-                <div class="ui-step__rail"><span class="ui-step__marker"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.5l2.2 2L9.5 3.5"/></svg></span><span class="ui-step__line"></span></div>
-                <div class="ui-step__body"><div class="ui-step__title">提交申请</div><div class="ui-step__desc">09-22 完成</div></div>
-              </div>
-              <div class="ui-step ui-step--active">
-                <div class="ui-step__rail"><span class="ui-step__marker">2</span><span class="ui-step__line"></span></div>
-                <div class="ui-step__body"><div class="ui-step__title">资质审核</div><div class="ui-step__desc">预计 1 个工作日</div></div>
-              </div>
-              <div class="ui-step">
-                <div class="ui-step__rail"><span class="ui-step__marker">3</span><span class="ui-step__line"></span></div>
-                <div class="ui-step__body"><div class="ui-step__title">配置密钥</div><div class="ui-step__desc">待开始</div></div>
-              </div>
-              <div class="ui-step">
-                <div class="ui-step__rail"><span class="ui-step__marker">4</span></div>
-                <div class="ui-step__body"><div class="ui-step__title">联调上线</div><div class="ui-step__desc">待开始</div></div>
-              </div>
-            </div>
-            <div class="ui-grid ui-grid--sidebar">
-              <div class="ui-card u-shadow-sm">
-                <div class="ui-card__body u-stack u-stack--4">
-                  <div class="ui-card__title">对接人</div>
-                  <div class="ui-row ui-gap-3">
-                    <span class="ui-avatar">李</span>
-                    <div>
-                      <div class="ui-text-sm">李工 · 解决方案顾问</div>
-                      <div class="ui-caption ui-muted">响应时段 09:00 – 21:00</div>
-                    </div>
-                  </div>
-                  <button class="ui-btn ui-btn--default ui-btn--sm ui-btn--block" type="button">发起沟通</button>
-                </div>
-              </div>
-              <div class="ui-card">
-                <div class="ui-card__body">
-                  <div class="ui-card__title u-mb-6">最近动态</div>
-                  <div class="ui-timeline">
-                    <div class="ui-timeline__item ui-timeline__item--done">
-                      <div class="ui-timeline__rail"><span class="ui-timeline__dot"></span></div>
-                      <div class="ui-timeline__body"><div class="ui-timeline__title">材料提交成功 <span class="ui-timeline__time">09-22 09:14</span></div><p class="ui-timeline__desc">营业执照、法人身份证明已上传</p></div>
-                    </div>
-                    <div class="ui-timeline__item ui-timeline__item--active">
-                      <div class="ui-timeline__rail"><span class="ui-timeline__dot"></span></div>
-                      <div class="ui-timeline__body"><div class="ui-timeline__title">审核中 <span class="ui-timeline__time">进行中</span></div><p class="ui-timeline__desc">通常 1 个工作日内完成，结果通过短信与邮件通知</p></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="ui-cta" style="margin-top: var(--ui-space-8)">
-              <div>
-                <div class="ui-cta__title">审核通过后即可生成密钥</div>
-                <p class="ui-cta__desc">密钥仅在创建时展示一次，建议先配置好密钥管理方案。</p>
-              </div>
-              <div class="ui-cta__actions">
-                <button class="ui-btn ui-btn--primary ui-btn--lg" type="button">查看密钥规范</button>
-                <button class="ui-btn ui-btn--default ui-btn--lg" type="button">联系对接人</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== 质量清单 ==================== -->
-    <section class="doc-section" id="a11y">
-      <div class="doc-section__head">
-        <div class="doc-section__eyebrow">Quality</div>
-        <h2 class="doc-section__title">无障碍与质量清单</h2>
-        <p class="doc-section__desc">每个组件合并前都要过这份清单；未达标的项不允许进入发布物。</p>
-      </div>
-      <div class="ui-grid ui-grid--3 ui-grid--tight">
-        <div class="ui-card"><div class="ui-card__body ui-row ui-row--top u-gap-3">
-          <span class="ui-badge ui-badge--success ui-badge--pill" style="flex:none">✓</span>
-          <div><div class="ui-h4">四态齐全</div><p class="ui-text-sm ui-muted">空 / 加载 / 成功 / 失败，且骨架一致</p></div>
-        </div></div>
-        <div class="ui-card"><div class="ui-card__body ui-row ui-row--top u-gap-3">
-          <span class="ui-badge ui-badge--success ui-badge--pill" style="flex:none">✓</span>
-          <div><div class="ui-h4">单一主操作</div><p class="ui-text-sm ui-muted">每屏至多一个实心按钮</p></div>
-        </div></div>
-        <div class="ui-card"><div class="ui-card__body ui-row ui-row--top u-gap-3">
-          <span class="ui-badge ui-badge--success ui-badge--pill" style="flex:none">✓</span>
-          <div><div class="ui-h4">七态齐全</div><p class="ui-text-sm ui-muted">hover / active / focus / disabled / loading / selected，且状态方向可辨</p></div>
-        </div></div>
-        <div class="ui-card"><div class="ui-card__body ui-row ui-row--top u-gap-3">
-          <span class="ui-badge ui-badge--success ui-badge--pill" style="flex:none">✓</span>
-          <div><div class="ui-h4">无硬编码</div><p class="ui-text-sm ui-muted">颜色 / 字号 / 间距全部来自 tokens.css；灰面与反白块也走语义层，深色模式不会漏出亮块</p></div>
-        </div></div>
-        <div class="ui-card"><div class="ui-card__body ui-row ui-row--top u-gap-3">
-          <span class="ui-badge ui-badge--success ui-badge--pill" style="flex:none">✓</span>
-          <div><div class="ui-h4">对比度达标</div><p class="ui-text-sm ui-muted">正文 ≥ 4.5:1，#71717A 在白底约 4.8:1</p></div>
-        </div></div>
-        <div class="ui-card"><div class="ui-card__body ui-row ui-row--top u-gap-3">
-          <span class="ui-badge ui-badge--success ui-badge--pill" style="flex:none">✓</span>
-          <div><div class="ui-h4">命中区 ≥ 44×44</div><p class="ui-text-sm ui-muted">小尺寸按钮用伪元素撑开触控区</p></div>
-        </div></div>
-        <div class="ui-card"><div class="ui-card__body ui-row ui-row--top u-gap-3">
-          <span class="ui-badge ui-badge--success ui-badge--pill" style="flex:none">✓</span>
-          <div><div class="ui-h4">焦点永远可见</div><p class="ui-text-sm ui-muted">2px 主色 outline，全局禁止 outline:none</p></div>
-        </div></div>
-        <div class="ui-card"><div class="ui-card__body ui-row ui-row--top u-gap-3">
-          <span class="ui-badge ui-badge--success ui-badge--pill" style="flex:none">✓</span>
-          <div><div class="ui-h4">状态不只靠颜色</div><p class="ui-text-sm ui-muted">同时叠加文字、图标或形状</p></div>
-        </div></div>
-        <div class="ui-card"><div class="ui-card__body ui-row ui-row--top u-gap-3">
-          <span class="ui-badge ui-badge--success ui-badge--pill" style="flex:none">✓</span>
-          <div><div class="ui-h4">键盘可达</div><p class="ui-text-sm ui-muted">Tabs 方向键、菜单 Esc、弹层焦点陷阱</p></div>
-        </div></div>
-        <div class="ui-card"><div class="ui-card__body ui-row ui-row--top u-gap-3">
-          <span class="ui-badge ui-badge--success ui-badge--pill" style="flex:none">✓</span>
-          <div><div class="ui-h4">动效可降级</div><p class="ui-text-sm ui-muted">prefers-reduced-motion 下瞬间切换</p></div>
-        </div></div>
-        <div class="ui-card"><div class="ui-card__body ui-row ui-row--top u-gap-3">
-          <span class="ui-badge ui-badge--success ui-badge--pill" style="flex:none">✓</span>
-          <div><div class="ui-h4">响应式无破版</div><p class="ui-text-sm ui-muted">480 / 768 / 1024 / 1440 均验证</p></div>
-        </div></div>
-        <div class="ui-card"><div class="ui-card__body ui-row ui-row--top u-gap-3">
-          <span class="ui-badge ui-badge--success ui-badge--pill" style="flex:none">✓</span>
-          <div><div class="ui-h4">读屏有语义</div><p class="ui-text-sm ui-muted">角色、label、aria-* 与动态播报齐全</p></div>
-        </div></div>
-      </div>
-
-      <h3 class="doc-subhead">交付物清单</h3>
-      <div class="ui-table-wrap">
-        <table class="ui-table">
-          <thead><tr><th>文件</th><th>作用</th><th>是否可选</th></tr></thead>
-          <tbody>
-            <tr><td class="ui-mono">library/tokens.css</td><td>三层设计 Token，唯一的取色来源</td><td>必需</td></tr>
-            <tr><td class="ui-mono">library/base.css</td><td>重置、排版、布局、工具类</td><td>必需</td></tr>
-            <tr><td class="ui-mono">library/components.css</td><td>全部 40+ 组件样式</td><td>必需</td></tr>
-            <tr><td class="ui-mono">library/components.js</td><td>弹层、提示、标签页等行为层，零依赖</td><td>用到交互组件时必需</td></tr>
-            <tr><td class="ui-mono">library/tokens.json</td><td>Token 导出，供设计工具与跨端对齐</td><td>可选</td></tr>
-            <tr><td class="ui-mono">docs/index.html</td><td>本页：组件文档与在线实例</td><td>可选（不发布可删）</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-  </main>
-</div>
+  </div>
+</main>
 
 <footer class="doc-footer">
   <div class="ui-container ui-container--wide" style="padding-block: var(--ui-space-8)">
@@ -2598,9 +394,10 @@ UI.modal.open('#myModal'); UI.modal.close('#myModal');</code></pre>
         <div class="ui-caption ui-muted">框架无关的通用 UI 组件库 · v1.0.0 · 中性无色主题 + 单一可配置主色</div>
       </div>
       <div class="ui-cluster ui-cluster--4">
-        <a class="ui-footer__link" href="#start">快速开始</a>
-        <a class="ui-footer__link" href="#tokens">Token</a>
-        <a class="ui-footer__link" href="#a11y">质量清单</a>
+        <a class="ui-footer__link" href="index.html">首页</a>
+        <a class="ui-footer__link" href="docs.html">文档</a>
+        <a class="ui-footer__link" href="ai.html">AI 规范</a>
+        <a class="ui-footer__link" href="check.html">自检</a>
       </div>
     </div>
   </div>
@@ -2611,6 +408,8 @@ UI.modal.open('#myModal'); UI.modal.close('#myModal');</code></pre>
 </button>
 
 <script src="../library/components.js"></script>
+<script src="oneui.spec.js"></script>
+<script src="oneui.ai.js"></script>
 <script src="docs.js"></script>
 </body>
 </html>
