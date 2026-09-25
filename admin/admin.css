@@ -1,0 +1,416 @@
+/* ============================================================
+   OwnUI Admin · 后台管理模板样式（admin/admin.css）
+   ------------------------------------------------------------
+   定位：OwnUI 组件库之上的「布局层」。组件本身（按钮、表格、弹层…）
+   全部来自 library/，这里只做三件事：
+
+   1. 经典后台骨架：深色侧栏 + 顶栏 + 内容区（.adm-*）
+   2. 深色侧栏主题：ui-sidenav 结构在深色底上的配色覆盖
+   3. 少量模板专有件：图表卡、登录页、统计栅格
+
+   铁律与库一致：颜色只用语义 Token，间距 4pt，圆角六档，
+   组件行为靠 data-ui 声明，JS 只补布局层自己的开关与记忆。
+   ============================================================ */
+
+/* ---------- 骨架变量 ---------- */
+:root {
+  --adm-side-w: 240px;        /* 侧栏宽 */
+  --adm-side-w-folded: 68px;  /* 折叠后只留图标 */
+  --adm-top-h: 56px;
+  --adm-side-bg: var(--ui-n-950);
+  --adm-side-bg-hover: var(--ui-n-900);
+  --adm-side-text: var(--ui-n-300);
+  --adm-side-text-strong: var(--ui-n-100);
+  --adm-side-label: var(--ui-n-500);
+  --adm-side-active-bg: var(--ui-n-900);
+}
+
+* { box-sizing: border-box; }
+
+.adm {
+  min-height: 100vh;
+  background: var(--ui-bg);
+}
+
+/* ============================================================
+   侧栏
+   ============================================================ */
+.adm-side {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--adm-side-w);
+  z-index: var(--ui-z-sticky);
+  background: var(--adm-side-bg);
+  color: var(--adm-side-text);
+  display: flex;
+  flex-direction: column;
+  transition: width var(--ui-dur-2) var(--ui-ease-out),
+              transform var(--ui-dur-2) var(--ui-ease-out);
+}
+
+/* 品牌：与顶栏同高，上下边对齐 */
+.adm-side__brand {
+  flex: none;
+  height: var(--adm-top-h);
+  padding: 0 var(--ui-space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  border-bottom: 1px solid var(--ui-n-900);
+  color: var(--ui-n-50);
+  text-decoration: none;
+  font-weight: var(--ui-fw-semibold);
+  font-size: var(--ui-fs-15);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.adm-side__brand .ui-navbar__logo {
+  background: var(--ui-primary);
+  color: var(--ui-n-50);
+  flex: none;
+}
+
+/* 菜单滚动区 */
+.adm-side__menu {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--ui-space-4) var(--ui-space-3) var(--ui-space-6);
+  /* 深底滚动条 */
+  scrollbar-color: var(--ui-n-700) transparent;
+}
+
+/* 深色侧栏里的 ui-sidenav 配色覆盖：
+   结构不动，只换颜色——组件语义还是 ui-sidenav 的 */
+.adm-side .ui-sidenav__label {
+  color: var(--adm-side-label);
+  font-size: var(--ui-fs-11);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: var(--ui-space-4) var(--ui-space-3) var(--ui-space-2);
+}
+.adm-side .ui-sidenav__item {
+  color: var(--adm-side-text);
+  min-height: 36px; /* 4pt 刻度 */
+  border-radius: var(--ui-radius-control);
+  padding: 0 var(--ui-space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  text-decoration: none;
+  white-space: nowrap;
+  position: relative;
+  transition: background var(--ui-dur-1) var(--ui-ease-out),
+              color var(--ui-dur-1) var(--ui-ease-out);
+}
+.adm-side .ui-sidenav__item:hover {
+  background: var(--adm-side-bg-hover);
+  color: var(--adm-side-text-strong);
+}
+.adm-side .ui-sidenav__item[aria-current="page"] {
+  background: var(--adm-side-active-bg);
+  color: var(--ui-n-50);
+}
+.adm-side .ui-sidenav__item[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--ui-primary);
+}
+.adm-side .ui-sidenav__badge {
+  margin-left: auto;
+}
+
+/* 菜单图标 */
+.adm-ico {
+  flex: none;
+  color: currentColor;
+}
+
+/* 子菜单：手风琴展开 */
+.adm-sub {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height var(--ui-dur-2) var(--ui-ease-out);
+}
+.adm-menu__item.is-open .adm-sub { max-height: 320px; }
+.adm-sub .ui-sidenav__item {
+  padding-left: var(--ui-space-8); /* 缩进一级 */
+  min-height: 32px;
+  font-size: var(--ui-fs-13);
+}
+/* 展开箭头 */
+.adm-caret {
+  margin-left: auto;
+  transition: transform var(--ui-dur-2) var(--ui-ease-out);
+}
+.adm-menu__item.is-open .adm-caret { transform: rotate(180deg); }
+
+/* 底部：折叠开关 + 版本 */
+.adm-side__foot {
+  flex: none;
+  border-top: 1px solid var(--ui-n-900);
+  padding: var(--ui-space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.adm-side__ver { color: var(--adm-side-label); font-size: var(--ui-fs-11); }
+
+/* ---------- 折叠态（只留图标） ---------- */
+.adm.is-folded .adm-side { width: var(--adm-side-w-folded); }
+.adm.is-folded .adm-side .adm-side__brand { padding: 0 var(--ui-space-4); justify-content: center; }
+.adm.is-folded .adm-brand-text,
+.adm.is-folded .adm-side .ui-sidenav__label,
+.adm.is-folded .adm-side .ui-sidenav__item span,
+.adm.is-folded .adm-side .ui-sidenav__badge,
+.adm.is-folded .adm-caret,
+.adm.is-folded .adm-side__ver,
+.adm.is-folded .adm-side__foot .ui-btn { display: none; }
+.adm.is-folded .adm-side .ui-sidenav__item { justify-content: center; padding: 0; }
+.adm.is-folded .adm-sub .ui-sidenav__item { padding: 0; }
+.adm.is-folded .adm-side__foot { justify-content: center; }
+.adm.is-folded .adm-main { margin-left: var(--adm-side-w-folded); }
+
+/* ============================================================
+   主区
+   ============================================================ */
+.adm-main {
+  margin-left: var(--adm-side-w);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left var(--ui-dur-2) var(--ui-ease-out);
+}
+
+/* ---------- 顶栏 ---------- */
+.adm-top {
+  position: sticky;
+  top: 0;
+  z-index: calc(var(--ui-z-sticky) - 1);
+  height: var(--adm-top-h);
+  background: var(--ui-surface);
+  border-bottom: 1px solid var(--ui-border);
+  padding: 0 var(--ui-space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-4);
+}
+.adm-top__spacer { flex: 1; }
+.adm-top__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+
+/* 桌面折叠钮 / 窄屏汉堡：同一位置二选一 */
+.adm-burger { display: none; }
+@media (max-width: 1023px) {
+  .adm-fold-btn { display: none; }
+  .adm-burger { display: inline-flex; }
+}
+
+/* 顶栏动作按钮：统一成无描边图标钮，hover 才有底 */
+.adm-top__actions .ui-icon-btn { color: var(--ui-text-2); }
+
+/* 用户条目（头像 + 名字 + 职位），窄屏只留头像 */
+.adm-user {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-1) var(--ui-space-2);
+  border-radius: var(--ui-radius-control);
+  cursor: pointer;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+.adm-user:hover { background: var(--ui-surface-2); }
+.adm-user__meta { text-align: left; line-height: 1.3; white-space: nowrap; }
+.adm-user__name { font-size: var(--ui-fs-13); font-weight: var(--ui-fw-medium); color: var(--ui-text); }
+.adm-user__role { font-size: var(--ui-fs-11); color: var(--ui-text-3); }
+
+/* ---------- 内容区 ---------- */
+.adm-content {
+  flex: 1;
+  padding: var(--ui-space-5) var(--ui-space-6) var(--ui-space-8);
+  width: 100%;
+  max-width: 1440px;
+}
+.adm-content__head {
+  margin-bottom: var(--ui-space-5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--ui-space-3);
+}
+.adm-content__title { font-size: var(--ui-type-h3); font-weight: var(--ui-fw-semibold); color: var(--ui-text); }
+.adm-content__desc { margin-top: var(--ui-space-1); font-size: var(--ui-type-caption); color: var(--ui-text-3); }
+
+.adm-footer {
+  padding: var(--ui-space-4) var(--ui-space-6);
+  border-top: 1px solid var(--ui-border);
+  color: var(--ui-text-3);
+  font-size: var(--ui-type-caption);
+  text-align: center;
+}
+
+/* ---------- 侧栏遮罩（窄屏抽屉态用） ---------- */
+.adm-veil {
+  position: fixed;
+  inset: 0;
+  background: var(--ui-veil-bg);
+  z-index: calc(var(--ui-z-sticky) - 2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--ui-dur-2) var(--ui-ease-out);
+}
+.adm.is-drawer-open .adm-veil { opacity: 1; pointer-events: auto; }
+
+/* ============================================================
+   响应式：窄屏侧栏变抽屉
+   ============================================================ */
+@media (max-width: 1023px) {
+  .adm-side { transform: translateX(-100%); }
+  .adm.is-drawer-open .adm-side { transform: translateX(0); }
+  .adm-main, .adm.is-folded .adm-main { margin-left: 0; }
+  .adm-user__meta, .adm-search--top { display: none; }
+  .adm-content { padding: var(--ui-space-4) var(--ui-space-4) var(--ui-space-8); }
+}
+
+/* ============================================================
+   模板专有件
+   ============================================================ */
+
+/* 统计栅格 */
+.adm-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--ui-space-4);
+}
+@media (max-width: 1279px) { .adm-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 639px)  { .adm-stats { grid-template-columns: minmax(0, 1fr); } }
+.adm-stats .ui-stat__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--ui-radius-block);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ui-primary-weak, var(--ui-surface-3));
+  color: var(--ui-primary);
+}
+
+/* 双栏工作区 */
+.adm-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--ui-space-4);
+  margin-top: var(--ui-space-4);
+}
+@media (max-width: 1023px) { .adm-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* 图表卡 */
+.adm-chart { width: 100%; height: auto; display: block; }
+.adm-chart .line {
+  fill: none;
+  stroke: var(--ui-primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.adm-chart .area { fill: var(--ui-primary); opacity: .08; }
+.adm-chart .grid { stroke: var(--ui-border-weak); stroke-width: 1; }
+.adm-chart .axis { fill: var(--ui-text-3); font-size: 10px; }
+.adm-chart .bar { fill: var(--ui-primary); opacity: .85; rx: 3; }
+.adm-chart .bar--muted { fill: var(--ui-surface-3); }
+.adm-chart__legend {
+  display: flex;
+  gap: var(--ui-space-4);
+  color: var(--ui-text-3);
+  font-size: var(--ui-type-caption);
+}
+.adm-chart__legend i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--ui-primary);
+  margin-right: var(--ui-space-1);
+}
+.adm-chart__legend i.is-muted { background: var(--ui-surface-3); }
+
+/* 表格行内头像 + 双行文本 */
+.adm-cell-user {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+}
+.adm-cell-user__name { font-weight: var(--ui-fw-medium); color: var(--ui-text); }
+.adm-cell-user__mail { font-size: var(--ui-fs-12); color: var(--ui-text-3); }
+
+/* 工具条与表格之间 */
+.adm-tablebar { margin-bottom: var(--ui-space-4); }
+
+/* ============================================================
+   登录页（独立布局，无侧栏）
+   ============================================================ */
+.adm-auth {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+@media (max-width: 899px) {
+  .adm-auth { grid-template-columns: minmax(0, 1fr); }
+  .adm-auth__hero { display: none; }
+}
+.adm-auth__hero {
+  background: var(--adm-side-bg);
+  color: var(--ui-n-200);
+  padding: var(--ui-space-8);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.adm-auth__hero-title {
+  color: var(--ui-n-50);
+  font-size: var(--ui-type-h2);
+  font-weight: var(--ui-fw-semibold);
+  line-height: 1.35;
+  max-width: 16ch;
+}
+.adm-auth__panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ui-space-6);
+  background: var(--ui-bg);
+}
+.adm-auth__card { width: min(400px, 100%); }
+.adm-auth__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  font-weight: var(--ui-fw-semibold);
+  color: var(--ui-text);
+}
+.adm-auth__foot {
+  margin-top: var(--ui-space-6);
+  text-align: center;
+  color: var(--ui-text-3);
+  font-size: var(--ui-type-caption);
+}
+
+/* 打印不打印导航 */
+@media print {
+  .adm-side, .adm-top, .adm-veil { display: none !important; }
+  .adm-main { margin-left: 0 !important; }
+}

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-ui-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>用户管理 · OwnUI Admin</title>
+<link rel="stylesheet" href="../library/tokens.css">
+<link rel="stylesheet" href="../library/base.css">
+<link rel="stylesheet" href="../library/components.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="adm">
+<div class="adm-veil"></div>
+
+<!-- ==================== 侧栏（与 index.html 一致） ==================== -->
+<aside class="adm-side" aria-label="管理侧栏">
+  <a class="adm-side__brand" href="index.html">
+    <span class="ui-navbar__logo" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.55" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+    </span>
+    <span class="adm-brand-text">OwnUI Admin</span>
+  </a>
+
+  <div class="adm-side__menu">
+    <nav class="ui-sidenav" aria-label="功能菜单">
+      <div class="ui-sidenav__group">
+        <div class="ui-sidenav__label">总览</div>
+        <a class="ui-sidenav__item" href="index.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6" rx="1.2"/><rect x="11" y="3" width="6" height="6" rx="1.2"/><rect x="3" y="11" width="6" height="6" rx="1.2"/><rect x="11" y="11" width="6" height="6" rx="1.2"/></svg>
+          <span>仪表盘</span>
+        </a>
+      </div>
+
+      <div class="ui-sidenav__group">
+        <div class="ui-sidenav__label">业务</div>
+        <a class="ui-sidenav__item" href="users.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="6.5" r="3.2"/><path d="M3.8 16.8c.9-3 3.3-4.6 6.2-4.6s5.3 1.6 6.2 4.6"/></svg>
+          <span>用户管理</span>
+          <span class="ui-sidenav__badge ui-badge ui-badge--primary ui-badge--pill">12</span>
+        </a>
+        <a class="ui-sidenav__item" href="forms.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2.8" width="12" height="14.4" rx="1.6"/><path d="M7 7h6M7 10h6M7 13h3.5"/></svg>
+          <span>表单页</span>
+        </a>
+      </div>
+
+      <div class="ui-sidenav__group adm-menu__item">
+        <button class="ui-sidenav__item" type="button" data-sub aria-expanded="false">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 6h14M3 10h14M3 14h14"/><circle cx="7" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="13" cy="10" r="1.6" fill="currentColor" stroke="none"/><circle cx="8" cy="14" r="1.6" fill="currentColor" stroke="none"/></svg>
+          <span>系统设置</span>
+          <svg class="adm-caret" width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8l4.5 4.5L14.5 8"/></svg>
+        </button>
+        <div class="adm-sub">
+          <a class="ui-sidenav__item" href="forms.html#basic"><span>常规设置</span></a>
+          <a class="ui-sidenav__item" href="forms.html#advanced"><span>安全设置</span></a>
+        </div>
+      </div>
+
+      <div class="ui-sidenav__group">
+        <div class="ui-sidenav__label">页面</div>
+        <a class="ui-sidenav__item" href="404.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.5L18 16.5H2z"/><path d="M10 8.5v3.6M10 14.4v.2"/></svg>
+          <span>404 示例</span>
+        </a>
+        <a class="ui-sidenav__item" href="login.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 3H16a1 1 0 011 1v12a1 1 0 01-1 1h-3.5"/><path d="M3 10h9M9.5 6.5L13 10l-3.5 3.5"/></svg>
+          <span>登录页</span>
+        </a>
+      </div>
+
+      <div class="ui-sidenav__group">
+        <div class="ui-sidenav__label">资源</div>
+        <a class="ui-sidenav__item" href="../docs/docs.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4.5C8.6 3.4 6.7 3 4 3v12c2.7 0 4.6.4 6 1.5 1.4-1.1 3.3-1.5 6-1.5V3c-2.7 0-4.6.4-6 1.5z"/><path d="M10 4.5v12"/></svg>
+          <span>组件文档</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="adm-side__foot">
+    <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-adm-fold>
+      <svg class="adm-ico" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M8 3v14"/></svg>
+      收起侧栏
+    </button>
+    <span class="adm-side__ver">v1.0.0 · MIT</span>
+  </div>
+</aside>
+
+<!-- ==================== 主区 ==================== -->
+<div class="adm-main">
+
+  <header class="adm-top">
+    <button class="ui-icon-btn adm-fold-btn" type="button" data-adm-fold aria-label="折叠侧栏">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 5.5h14M3 10h14M3 14.5h14"/></svg>
+    </button>
+    <button class="ui-icon-btn adm-burger" type="button" data-adm-drawer aria-label="打开侧栏" aria-expanded="false">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 5.5h14M3 10h14M3 14.5h14"/></svg>
+    </button>
+
+    <nav class="ui-breadcrumb" aria-label="面包屑">
+      <span class="ui-breadcrumb__item"><a href="index.html">首页</a></span>
+      <span class="ui-breadcrumb__sep">/</span>
+      <span class="ui-breadcrumb__item" aria-current="page">用户管理</span>
+    </nav>
+
+    <div class="adm-top__spacer"></div>
+
+    <div class="ui-search adm-search--top">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="9" r="5.5"/><path d="M13 13l3.5 3.5"/></svg>
+      <input class="ui-input ui-input--sm" type="search" placeholder="搜索…" aria-label="全局搜索" style="width: 180px">
+    </div>
+
+    <div class="adm-top__actions">
+      <button class="ui-icon-btn" type="button" data-adm-theme="light" aria-pressed="false" aria-label="切换浅色" data-tooltip="浅色">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="10" cy="10" r="3.5"/><path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.7 4.7l1.4 1.4M13.9 13.9l1.4 1.4M15.3 4.7l-1.4 1.4M6.1 13.9l-1.4 1.4"/></svg>
+      </button>
+      <button class="ui-icon-btn" type="button" data-adm-theme="dark" aria-pressed="false" aria-label="切换深色" data-tooltip="深色">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 12.2A7 7 0 017.8 3.5a7 7 0 108.7 8.7z"/></svg>
+      </button>
+
+      <div class="ui-dropdown-wrap" data-ui="dropdown">
+        <button class="ui-icon-btn" type="button" data-ui="dropdown-trigger" aria-label="切换主色" data-tooltip="主色">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17a7 7 0 110-14c3.9 0 7 2.6 7 5.8 0 2-1.6 3.2-3.4 3.2h-1.4c-1 0-1.8.8-1.8 1.8 0 .5.2.9.4 1.3.2.3-.1.9-.8.9z"/><circle cx="7" cy="8" r=".9" fill="currentColor" stroke="none"/><circle cx="10.5" cy="5.8" r=".9" fill="currentColor" stroke="none"/><circle cx="14" cy="7.8" r=".9" fill="currentColor" stroke="none"/></svg>
+        </button>
+        <div class="ui-menu" role="menu" aria-label="主色预设">
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="true" type="button" data-adm-accent="brand" data-adm-label="墨黑"><span class="ui-dot" style="background:#18181B"></span>墨黑</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="blue" data-adm-label="品蓝"><span class="ui-dot" style="background:#2563EB"></span>品蓝</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="indigo" data-adm-label="靛蓝"><span class="ui-dot" style="background:#4F46E5"></span>靛蓝</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="emerald" data-adm-label="翠绿"><span class="ui-dot" style="background:#047857"></span>翠绿</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="orange" data-adm-label="橙"><span class="ui-dot" style="background:#C2410C"></span>橙</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="violet" data-adm-label="紫罗兰"><span class="ui-dot" style="background:#7C3AED"></span>紫罗兰</button>
+        </div>
+      </div>
+
+      <div class="ui-dropdown-wrap" data-ui="dropdown">
+        <button class="ui-icon-btn" type="button" data-ui="dropdown-trigger" aria-label="消息通知" data-tooltip="消息">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3a5 5 0 015 5v3l1.5 2.5H3.5L5 11V8a5 5 0 015-5z"/><path d="M8.5 16a1.5 1.5 0 003 0"/></svg>
+          <span class="ui-badge ui-badge--danger ui-badge--pill" style="position:absolute; top:4px; right:4px; min-width:16px; height:16px; font-size:10px; line-height:16px; padding:0">3</span>
+        </button>
+        <div class="ui-menu" role="menu" aria-label="消息通知" style="min-width: 260px">
+          <button class="ui-menu__item" role="menuitem" type="button"><span class="ui-status ui-status--success"><span class="ui-dot"></span></span>订单 #20481 已支付</button>
+          <button class="ui-menu__item" role="menuitem" type="button"><span class="ui-status ui-status--warning"><span class="ui-dot"></span></span>服务器 CPU 82%，请关注</button>
+          <button class="ui-menu__item" role="menuitem" type="button"><span class="ui-status ui-status--info"><span class="ui-dot"></span></span>新用户「李清照」已注册</button>
+          <div role="separator"></div>
+          <button class="ui-menu__item" role="menuitem" type="button">查看全部消息</button>
+        </div>
+      </div>
+
+      <div class="ui-dropdown-wrap" data-ui="dropdown">
+        <button class="adm-user" type="button" data-ui="dropdown-trigger" aria-label="账户菜单">
+          <span class="ui-avatar ui-avatar--sm" aria-hidden="true">林</span>
+          <span class="adm-user__meta">
+            <span class="adm-user__name">林晚</span><br>
+            <span class="adm-user__role">管理员</span>
+          </span>
+        </button>
+        <div class="ui-menu" role="menu" aria-label="账户菜单">
+          <button class="ui-menu__item" role="menuitem" type="button">个人资料</button>
+          <button class="ui-menu__item" role="menuitem" type="button">账户设置</button>
+          <div role="separator"></div>
+          <button class="ui-menu__item" role="menuitem" type="button" data-adm-logout>退出登录</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 内容 -->
+  <main class="adm-content">
+    <div class="adm-content__head">
+      <div>
+        <h1 class="adm-content__title">用户管理</h1>
+        <p class="adm-content__desc">共 12 位用户 · 演示数据，刷新即恢复</p>
+      </div>
+      <button class="ui-btn ui-btn--primary ui-btn--sm" type="button" data-ui="modal" data-target="#userModal">
+        <svg class="ui-btn__icon" width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg>
+        新增用户
+      </button>
+    </div>
+
+    <!-- 工具栏 + 表格 -->
+    <div class="ui-card">
+      <div class="ui-card__body">
+        <div class="ui-toolbar adm-tablebar">
+          <div class="ui-toolbar__group">
+            <div class="ui-search">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="9" r="5.5"/><path d="M13 13l3.5 3.5"/></svg>
+              <input class="ui-input ui-input--sm" type="search" id="uq" placeholder="搜索姓名或邮箱…" aria-label="搜索用户" style="width: 220px">
+            </div>
+            <select class="ui-select ui-select--sm" id="urole" aria-label="按角色筛选">
+              <option value="">全部角色</option>
+              <option>管理员</option>
+              <option>运营</option>
+              <option>成员</option>
+            </select>
+          </div>
+          <div class="ui-toolbar__spacer"></div>
+          <div class="ui-segmented" data-ui="segmented" role="radiogroup" aria-label="按状态筛选" id="ustatus">
+            <button class="ui-segment" role="radio" aria-selected="true" type="button" data-v="">全部</button>
+            <button class="ui-segment" role="radio" aria-selected="false" type="button" data-v="启用">启用</button>
+            <button class="ui-segment" role="radio" aria-selected="false" type="button" data-v="禁用">禁用</button>
+          </div>
+        </div>
+
+        <div class="ui-table-wrap">
+          <table class="ui-table ui-table--compact" id="utable">
+            <thead><tr>
+              <th style="width: 44px"><input type="checkbox" class="ui-check__input" id="uall" aria-label="全选"></th>
+              <th><button class="ui-table__sort" type="button" data-sortkey="name" aria-sort="none">用户</button></th>
+              <th><button class="ui-table__sort" type="button" data-sortkey="role" aria-sort="none">角色</button></th>
+              <th><button class="ui-table__sort" type="button" data-sortkey="status" aria-sort="none">状态</button></th>
+              <th><button class="ui-table__sort" type="button" data-sortkey="created" aria-sort="none">注册时间</button></th>
+              <th style="width: 120px">操作</th>
+            </tr></thead>
+            <tbody id="ubody"></tbody>
+          </table>
+        </div>
+
+        <div class="ui-row ui-row--between" style="margin-top: var(--ui-space-4)">
+          <span class="ui-caption ui-muted" id="ucount"></span>
+          <div class="ui-pagination" id="upager" data-ui="pagination" aria-label="用户分页"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="adm-footer">OwnUI Admin · 基于 OwnUI 组件库 · MIT License</footer>
+</div>
+
+<!-- 新增 / 编辑用户 -->
+<div class="ui-modal" id="userModal" aria-hidden="true" role="dialog" aria-labelledby="umTitle">
+  <div class="ui-modal__panel" style="max-width: 460px">
+    <div class="ui-modal__header">
+      <div class="ui-modal__title" id="umTitle">新增用户</div>
+      <button class="ui-modal__close" type="button" data-ui-close aria-label="关闭">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg>
+      </button>
+    </div>
+    <div class="ui-modal__body">
+      <form id="uform" data-ui="validate" novalidate>
+        <input type="hidden" id="uf-id">
+        <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
+          <label class="ui-field__label" for="uf-name">姓名 <b aria-hidden="true">*</b></label>
+          <input class="ui-input" id="uf-name" name="name" type="text" placeholder="例如：王小明" data-validate="required">
+          <div class="ui-field__help">成员可见的显示名</div>
+        </div>
+        <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
+          <label class="ui-field__label" for="uf-email">邮箱 <b aria-hidden="true">*</b></label>
+          <input class="ui-input" id="uf-email" name="email" type="email" placeholder="name@example.com" data-validate="required|email">
+          <div class="ui-field__help">用于登录与通知</div>
+        </div>
+        <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
+          <label class="ui-field__label" for="uf-role">角色</label>
+          <select class="ui-select" id="uf-role" name="role">
+            <option>成员</option><option>运营</option><option>管理员</option>
+          </select>
+        </div>
+        <div class="ui-field" style="margin-bottom: var(--ui-space-2)">
+          <span class="ui-field__label">启用账户</span>
+          <div class="ui-switch">
+            <input type="checkbox" id="uf-active" checked>
+            <span class="ui-switch__track"></span>
+            <label class="ui-switch__label" for="uf-active">允许登录</label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="ui-modal__footer">
+      <button class="ui-btn ui-btn--default" type="button" data-ui-close>取消</button>
+      <button class="ui-btn ui-btn--primary" type="button" id="usave">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 用户详情抽屉 -->
+<div class="ui-drawer" id="userDrawer" aria-hidden="true" role="dialog" aria-labelledby="udTitle">
+  <div class="ui-drawer__panel" style="width: 380px">
+    <div class="ui-drawer__header">
+      <div class="ui-modal__title" id="udTitle">用户详情</div>
+      <button class="ui-modal__close" type="button" data-ui-close aria-label="关闭">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg>
+      </button>
+    </div>
+    <div class="ui-drawer__body" id="udBody"><!-- JS 渲染 --></div>
+    <div class="ui-drawer__footer">
+      <button class="ui-btn ui-btn--default" type="button" data-ui-close>关闭</button>
+    </div>
+  </div>
+</div>
+
+<script src="../library/components.js"></script>
+<script src="admin.js"></script>
+<script>
+/* ---------- 用户管理：演示数据 + 前端内存 CRUD ----------
+   真实项目把 render 换成 fetch 分页接口即可，控件结构不变。 */
+(function () {
+  'use strict';
+  var USERS = [
+    { id: 1,  name: '林晚',   email: 'wan.lin@example.com',    role: '管理员', status: '启用', created: '2026-01-12', last: '今天 09:20' },
+    { id: 2,  name: '陈默',   email: 'mo.chen@example.com',    role: '运营',   status: '启用', created: '2026-02-03', last: '今天 08:47' },
+    { id: 3,  name: '苏叶',   email: 'ye.su@example.com',      role: '成员',   status: '启用', created: '2026-02-18', last: '昨天 21:05' },
+    { id: 4,  name: '赵拾光', email: 'shiguang.zhao@example.com', role: '成员', status: '禁用', created: '2026-03-01', last: '03-02 14:12' },
+    { id: 5,  name: '周野',   email: 'ye.zhou@example.com',    role: '运营',   status: '启用', created: '2026-03-15', last: '昨天 18:33' },
+    { id: 6,  name: '李清照', email: 'qz.li@example.com',      role: '成员',   status: '启用', created: '2026-04-02', last: '今天 07:58' },
+    { id: 7,  name: '顾北',   email: 'bei.gu@example.com',     role: '成员',   status: '禁用', created: '2026-04-20', last: '04-21 10:40' },
+    { id: 8,  name: '沈书',   email: 'shu.shen@example.com',   role: '运营',   status: '启用', created: '2026-05-08', last: '今天 10:02' },
+    { id: 9,  name: '白鹭',   email: 'lu.bai@example.com',     role: '成员',   status: '启用', created: '2026-06-01', last: '昨天 23:11' },
+    { id: 10, name: '江离',   email: 'li.jiang@example.com',   role: '成员',   status: '禁用', created: '2026-07-14', last: '07-15 09:26' },
+    { id: 11, name: '温叙',   email: 'xu.wen@example.com',     role: '管理员', status: '启用', created: '2026-08-05', last: '今天 11:15' },
+    { id: 12, name: '祁风',   email: 'feng.qi@example.com',    role: '成员',   status: '启用', created: '2026-09-10', last: '今天 12:41' }
+  ];
+  var PER = 5;
+  var state = { q: '', role: '', status: '', page: 1, sortKey: '', sortDir: 1, editing: null };
+
+  var tbody = document.getElementById('ubody');
+  var pager = document.getElementById('upager');
+  var countEl = document.getElementById('ucount');
+
+  function filtered() {
+    var rows = USERS.filter(function (u) {
+      var hit = !state.q || u.name.indexOf(state.q) > -1 || u.email.toLowerCase().indexOf(state.q.toLowerCase()) > -1;
+      var roleOk = !state.role || u.role === state.role;
+      var stOk = !state.status || u.status === state.status;
+      return hit && roleOk && stOk;
+    });
+    if (state.sortKey) {
+      rows = rows.slice().sort(function (a, b) {
+        return a[state.sortKey] > b[state.sortKey] ? state.sortDir : a[state.sortKey] < b[state.sortKey] ? -state.sortDir : 0;
+      });
+    }
+    return rows;
+  }
+
+  function statusHtml(s) {
+    var cls = s === '启用' ? 'success' : 'danger';
+    return '<span class="ui-status ui-status--' + cls + '"><span class="ui-dot"></span>' + s + '</span>';
+  }
+
+  function renderPager(total) {
+    var pages = Math.max(1, Math.ceil(total / PER));
+    if (state.page > pages) state.page = pages;
+    var h = '<span class="ui-pagination__info">第 ' + state.page + ' / ' + pages + ' 页</span>';
+    h += '<button class="ui-pagination__item" type="button" data-page="' + Math.max(1, state.page - 1) + '" aria-label="上一页"' + (state.page === 1 ? ' disabled' : '') + '>‹</button>';
+    for (var i = 1; i <= pages; i++) {
+      h += '<button class="ui-pagination__item" type="button" data-page="' + i + '"' + (i === state.page ? ' aria-current="page"' : '') + '>' + i + '</button>';
+    }
+    h += '<button class="ui-pagination__item" type="button" data-page="' + Math.min(pages, state.page + 1) + '" aria-label="下一页"' + (state.page === pages ? ' disabled' : '') + '>›</button>';
+    pager.innerHTML = h;
+  }
+
+  function render() {
+    var rows = filtered();
+    var start = (state.page - 1) * PER;
+    var slice = rows.slice(start, start + PER);
+    countEl.textContent = '共 ' + rows.length + ' 条';
+    if (!slice.length) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="ui-empty"><div class="ui-empty__title">没有匹配的用户</div><div class="ui-empty__desc">换个关键词或清空筛选条件试试</div></div></td></tr>';
+    } else {
+      tbody.innerHTML = slice.map(function (u) {
+        return '<tr data-id="' + u.id + '">' +
+          '<td><input type="checkbox" class="ui-check__input u-row-check" aria-label="选择 ' + u.name + '"></td>' +
+          '<td><div class="adm-cell-user"><span class="ui-avatar ui-avatar--sm" aria-hidden="true">' + u.name.charAt(0) + '</span>' +
+            '<div><div class="adm-cell-user__name">' + u.name + '</div><div class="adm-cell-user__mail">' + u.email + '</div></div></div></td>' +
+          '<td>' + (u.role === '管理员' ? '<span class="ui-badge ui-badge--primary">' + u.role + '</span>' : u.role === '运营' ? '<span class="ui-badge">' + u.role + '</span>' : '<span class="ui-text-2">' + u.role + '</span>') + '</td>' +
+          '<td>' + statusHtml(u.status) + '</td>' +
+          '<td>' + u.created + '</td>' +
+          '<td><div class="ui-row" style="gap: 4px">' +
+            '<button class="ui-icon-btn ui-icon-btn--sm" type="button" data-act="view" aria-label="查看详情" data-tooltip="详情">' +
+              '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 10S5.5 4.8 10 4.8 17.5 10 17.5 10 14.5 15.2 10 15.2 2.5 10 2.5 10z"/><circle cx="10" cy="10" r="2.2"/></svg></button>' +
+            '<button class="ui-icon-btn ui-icon-btn--sm" type="button" data-act="edit" aria-label="编辑" data-tooltip="编辑">' +
+              '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.8 3.6l2.6 2.6L7 15.6l-3.4.8.8-3.4z"/></svg></button>' +
+            '<span class="ui-popconfirm-host">' +
+              '<button class="ui-icon-btn ui-icon-btn--sm" type="button" data-act="del" aria-label="删除" data-tooltip="删除">' +
+                '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h12M8 6V4h4v2M6.5 6l.8 10h5.4l.8-10"/></svg></button>' +
+              '<span class="ui-popconfirm" data-popconfirm hidden><span class="ui-popconfirm__text">确定删除「' + u.name + '」？</span>' +
+                '<button class="ui-btn ui-btn--sm" type="button" data-popcancel>取消</button>' +
+                '<button class="ui-btn ui-btn--danger ui-btn--sm" type="button" data-pok>删除</button></span>' +
+            '</span>' +
+          '</div></td></tr>';
+      }).join('');
+    }
+    renderPager(rows.length);
+  }
+
+  /* 工具栏 */
+  document.getElementById('uq').addEventListener('input', function () { state.q = this.value.trim(); state.page = 1; render(); });
+  document.getElementById('urole').addEventListener('change', function () { state.role = this.value; state.page = 1; render(); });
+  document.getElementById('ustatus').addEventListener('ui:change', function (e) {
+    var seg = e.target.querySelector('[aria-selected="true"]');
+    state.status = seg ? seg.getAttribute('data-v') : '';
+    state.page = 1; render();
+  });
+
+  /* 分页：ui-pagination 组件点击后在此同步页码重渲染 */
+  pager.addEventListener('ui:change', function (e) { state.page = e.detail.page; render(); });
+
+  /* 全选 */
+  document.getElementById('uall').addEventListener('change', function () {
+    tbody.querySelectorAll('.u-row-check').forEach(function (c) { c.checked = this.checked; }, this);
+  });
+
+  /* 排序 */
+  document.querySelectorAll('#utable .ui-table__sort').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var key = btn.getAttribute('data-sortkey');
+      state.sortDir = state.sortKey === key ? -state.sortDir : 1;
+      state.sortKey = key;
+      document.querySelectorAll('#utable .ui-table__sort').forEach(function (b) { b.setAttribute('aria-sort', 'none'); });
+      btn.setAttribute('aria-sort', state.sortDir === 1 ? 'ascending' : 'descending');
+      render();
+    });
+  });
+
+  /* 行内操作（委托 + 就地删除确认） */
+  tbody.addEventListener('click', function (e) {
+    var actBtn = e.target.closest('[data-act]');
+    if (actBtn) {
+      var id = +actBtn.closest('tr').getAttribute('data-id');
+      var u = USERS.find(function (x) { return x.id === id; });
+      if (actBtn.getAttribute('data-act') === 'view') return openDrawer(u);
+      if (actBtn.getAttribute('data-act') === 'edit') return openModal(u);
+      if (actBtn.getAttribute('data-act') === 'del') {
+        var pop = actBtn.parentNode.querySelector('[data-popconfirm]');
+        pop.hidden = false;
+        pop.querySelector('[data-popcancel]').addEventListener('click', function () { pop.hidden = true; }, { once: true });
+        pop.querySelector('[data-pok]').addEventListener('click', function () {
+          USERS.splice(USERS.indexOf(u), 1);
+          pop.hidden = true;
+          render();
+          if (window.UI) UI.toast({ message: '已删除用户「' + u.name + '」', type: 'success' });
+        }, { once: true });
+      }
+    }
+  });
+
+  /* 新增 / 编辑弹窗 */
+  var modal = document.getElementById('userModal');
+  function openModal(u) {
+    state.editing = u ? u.id : null;
+    document.getElementById('umTitle').textContent = u ? '编辑用户' : '新增用户';
+    document.getElementById('uf-id').value = u ? u.id : '';
+    document.getElementById('uf-name').value = u ? u.name : '';
+    document.getElementById('uf-email').value = u ? u.email : '';
+    document.getElementById('uf-role').value = u ? u.role : '成员';
+    document.getElementById('uf-active').checked = u ? u.status === '启用' : true;
+    if (window.UI && UI.modal) UI.modal.open('#userModal');
+  }
+  document.querySelector('[data-ui="modal"][data-target="#userModal"]').addEventListener('click', function () { openModal(null); });
+  document.getElementById('usave').addEventListener('click', function () {
+    var name = document.getElementById('uf-name').value.trim();
+    var email = document.getElementById('uf-email').value.trim();
+    if (!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      if (window.UI) UI.toast({ message: '请补全姓名与合法邮箱', type: 'warning' });
+      return;
+    }
+    var active = document.getElementById('uf-active').checked ? '启用' : '禁用';
+    var role = document.getElementById('uf-role').value;
+    var today = new Date();
+    var day = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    if (state.editing) {
+      var u = USERS.find(function (x) { return x.id === state.editing; });
+      u.name = name; u.email = email; u.role = role; u.status = active;
+      if (window.UI) UI.toast({ message: '已保存「' + name + '」的资料', type: 'success' });
+    } else {
+      USERS.unshift({ id: Date.now(), name: name, email: email, role: role, status: active, created: day, last: '刚刚' });
+      if (window.UI) UI.toast({ message: '已创建用户「' + name + '」', type: 'success' });
+    }
+    if (window.UI && UI.modal) UI.modal.close('#userModal');
+    state.page = 1; render();
+  });
+
+  /* 详情抽屉 */
+  function openDrawer(u) {
+    document.getElementById('udBody').innerHTML =
+      '<div class="ui-row" style="gap: var(--ui-space-3); margin-bottom: var(--ui-space-5)">' +
+        '<span class="ui-avatar" aria-hidden="true">' + u.name.charAt(0) + '</span>' +
+        '<div><div class="adm-cell-user__name" style="font-size: var(--ui-fs-15)">' + u.name + '</div>' +
+        '<div class="adm-cell-user__mail">' + u.email + '</div></div></div>' +
+      '<div class="ui-desc">' +
+        '<div class="ui-desc__item"><span class="ui-desc__label">角色</span><span class="ui-desc__value">' + u.role + '</span></div>' +
+        '<div class="ui-desc__item"><span class="ui-desc__label">状态</span><span class="ui-desc__value">' + statusHtml(u.status) + '</span></div>' +
+        '<div class="ui-desc__item"><span class="ui-desc__label">注册时间</span><span class="ui-desc__value">' + u.created + '</span></div>' +
+        '<div class="ui-desc__item"><span class="ui-desc__label">最近登录</span><span class="ui-desc__value">' + u.last + '</span></div>' +
+        '<div class="ui-desc__item"><span class="ui-desc__label">用户 ID</span><span class="ui-desc__value"><code class="ui-code">' + u.id + '</code></span></div>' +
+      '</div>';
+    if (window.UI && UI.drawer) UI.drawer.open('#userDrawer');
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

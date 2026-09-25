@@ -109,9 +109,15 @@ const SITE_FILES = [
   'llms.txt', 'llms-full.txt', 'ownui.spec.json',
 ];
 
+const ADMIN_FILES = [
+  'index.html', 'users.html', 'forms.html', 'login.html', '404.html',
+  'admin.css', 'admin.js',
+];
+
 function buildSite() {
   rmSync(SITE, { recursive: true, force: true });
   mkdirSync(join(SITE, 'library'), { recursive: true });
+  mkdirSync(join(SITE, 'admin'), { recursive: true });
 
   // library/ 原样拷贝
   for (const f of readdirSync(LIB)) copyFileSync(join(LIB, f), join(SITE, 'library', f));
@@ -125,6 +131,15 @@ function buildSite() {
     writeFileSync(join(SITE, f), text);
   }
 
+  // admin/ 模板整目录进 admin/ 子目录，../library/ 同样重写
+  for (const f of ADMIN_FILES) {
+    const src = join(P, 'admin', f);
+    if (!existsSync(src)) { console.warn('跳过（不存在）：admin/' + f); continue; }
+    let text = readFileSync(src, 'utf8');
+    if (/\.(html|js)$/.test(f)) text = text.replaceAll('../library/', 'library/');
+    writeFileSync(join(SITE, 'admin', f), text);
+  }
+
   // 防呆：页面里不该再剩 ../ 引用
   for (const f of SITE_FILES) {
     if (!f.endsWith('.html')) continue;
@@ -133,7 +148,13 @@ function buildSite() {
       throw new Error(f + ' 仍有 ../ 引用未重写');
     }
   }
-  console.log('写出 dist/site/（' + SITE_FILES.length + ' 个页面/资源 + library/ 5 个文件，入口 index.html）');
+  for (const f of ADMIN_FILES) {
+    if (!f.endsWith('.html')) continue;
+    const t = readFileSync(join(SITE, 'admin', f), 'utf8');
+    if (t.includes('"../library')) throw new Error('admin/' + f + ' 仍有 ../library 引用未重写');
+  }
+  console.log('写出 dist/site/（文档站 ' + SITE_FILES.length + ' 个文件 + admin 模板 '
+    + ADMIN_FILES.length + ' 个文件 + library/ 5 个文件，入口 index.html）');
 }
 
 mkdirSync(DIST, { recursive: true });

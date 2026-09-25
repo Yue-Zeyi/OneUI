@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-ui-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>登录 · OwnUI Admin</title>
+<link rel="stylesheet" href="../library/tokens.css">
+<link rel="stylesheet" href="../library/base.css">
+<link rel="stylesheet" href="../library/components.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="adm">
+<div class="adm-auth">
+
+  <!-- 左侧品牌区（窄屏隐藏） -->
+  <div class="adm-auth__hero">
+    <div class="adm-auth__brand" style="color: var(--ui-n-100)">
+      <span class="ui-navbar__logo" aria-hidden="true" style="background: var(--ui-primary); color: var(--ui-n-50)">
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.55" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+      </span>
+      OwnUI Admin
+    </div>
+    <div>
+      <div class="adm-auth__hero-title">把界面的一致性，<br>交给一套组件来完成。</div>
+      <p style="color: var(--ui-n-400); font-size: var(--ui-fs-14); line-height: 1.7; max-width: 34ch">
+        基于 OwnUI 组件库的后台管理模板。零依赖、零构建，全部组件实现七态与无障碍底线。
+      </p>
+    </div>
+    <div style="color: var(--ui-n-500); font-size: var(--ui-fs-12)">© 2026 OwnUI · MIT License</div>
+  </div>
+
+  <!-- 右侧登录表单 -->
+  <div class="adm-auth__panel">
+    <div class="adm-auth__card">
+      <div class="adm-auth__brand" style="margin-bottom: var(--ui-space-2)">
+        <span class="ui-navbar__logo" aria-hidden="true" style="background: var(--ui-primary); color: var(--ui-n-50)">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.55" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+        </span>
+        OwnUI Admin
+      </div>
+      <h1 class="ui-h3" style="margin: 0 0 var(--ui-space-2)">欢迎回来</h1>
+      <p class="ui-caption ui-muted" style="margin: 0 0 var(--ui-space-5)">登录管理后台，继续你的工作。</p>
+
+      <div class="ui-alert ui-alert--info" style="margin-bottom: var(--ui-space-4)">
+        <span class="ui-alert__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v4.5M10 6.4v.6"/></svg></span>
+        <div class="ui-alert__body">
+          <div class="ui-alert__desc">演示环境：任意邮箱格式正确 + 任意密码即可登录。</div>
+        </div>
+      </div>
+
+      <form id="loginForm" data-ui="validate" novalidate>
+        <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
+          <label class="ui-field__label" for="lg-mail">邮箱 <b aria-hidden="true">*</b></label>
+          <input class="ui-input" id="lg-mail" name="email" type="email" placeholder="you@example.com" autocomplete="username" data-validate="required|email">
+        </div>
+        <div class="ui-field" style="margin-bottom: var(--ui-space-3)">
+          <label class="ui-field__label" for="lg-pwd">密码 <b aria-hidden="true">*</b></label>
+          <input class="ui-input" id="lg-pwd" name="password" type="password" placeholder="输入密码" autocomplete="current-password" data-validate="required">
+          <div class="ui-field__help"><a href="#" style="color: var(--ui-primary)">忘记密码？</a></div>
+        </div>
+        <div class="ui-switch" style="margin-bottom: var(--ui-space-5)">
+          <input type="checkbox" id="lg-remember" checked>
+          <span class="ui-switch__track"></span>
+          <label class="ui-switch__label" for="lg-remember">7 天内记住我</label>
+        </div>
+        <button class="ui-btn ui-btn--primary" type="submit" id="lg-btn" style="width: 100%">登 录</button>
+      </form>
+
+      <p class="ui-caption ui-muted" style="margin-top: var(--ui-space-5); text-align: center">
+        还没有账户？<a href="#" style="color: var(--ui-primary)">联系管理员开通</a>
+      </p>
+      <p class="adm-auth__foot">← <a href="index.html" style="color: inherit">返回仪表盘</a></p>
+    </div>
+  </div>
+</div>
+
+<script src="../library/components.js"></script>
+<script src="admin.js"></script>
+<script>
+/* 登录演示：校验通过后按钮进入 loading，2 秒后提示成功（不真的跳转） */
+document.getElementById('loginForm').addEventListener('submit', function () {
+  var btn = document.getElementById('lg-btn');
+  btn.classList.add('is-loading');
+  btn.disabled = true;
+  setTimeout(function () {
+    btn.classList.remove('is-loading');
+    btn.disabled = false;
+    if (window.UI) UI.toast({ message: '登录成功，正在进入后台…', type: 'success' });
+    setTimeout(function () { location.href = 'index.html'; }, 900);
+  }, 1600);
+});
+</script>
+</body>
+</html>
