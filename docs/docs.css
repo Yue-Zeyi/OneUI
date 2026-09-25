@@ -1,0 +1,306 @@
+/* ============================================================
+   OneUI · 文档站样式（docs.css）
+   本文件只服务文档站，不属于组件库发布物。
+   ============================================================ */
+
+body { background: var(--ui-bg); }
+
+/* ---------- 顶部栏 ---------- */
+.doc-navbar .ui-navbar__inner { height: 60px; }
+.doc-brand-sub {
+  font-size: var(--ui-type-caption);
+  color: var(--ui-text-3);
+  padding-left: var(--ui-space-2);
+  border-left: 1px solid var(--ui-border);
+  margin-left: var(--ui-space-2);
+}
+@media (max-width: 640px) { .doc-brand-sub { display: none; } }
+
+/* ---------- 外壳 ---------- */
+.doc-shell {
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  gap: var(--ui-space-10);
+  max-width: var(--ui-container-wide);
+  margin: 0 auto;
+  padding: 0 var(--ui-page-gutter);
+  align-items: start;
+}
+@media (max-width: 1024px) {
+  .doc-shell { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
+
+/* ---------- 侧栏 ---------- */
+.doc-side {
+  position: sticky;
+  top: 76px;
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--ui-space-4) var(--ui-space-2) var(--ui-space-8) 0;
+  /* 原生 thin 在 Windows 上是一条 10px 的实心深色条，紧贴正文非常抢眼。
+     这里换成"透明轨 + 内缩胶囊滑块"：常态极淡，hover 侧栏时加深，指到滑块才变实。 */
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border) transparent;
+}
+.doc-side:hover { scrollbar-color: var(--ui-border-strong) transparent; }
+.doc-side::-webkit-scrollbar { width: 10px; }
+.doc-side::-webkit-scrollbar-track { background: transparent; }
+.doc-side::-webkit-scrollbar-thumb {
+  background: var(--ui-border);
+  border: 3px solid transparent;
+  border-radius: var(--ui-radius-pill);
+  background-clip: content-box;
+}
+.doc-side:hover::-webkit-scrollbar-thumb { background: var(--ui-border-strong); background-clip: content-box; }
+.doc-side::-webkit-scrollbar-thumb:hover { background: var(--ui-text-3); background-clip: content-box; }
+@media (max-width: 1024px) { .doc-side { display: none; } }
+
+/* 分组标题吸附在侧栏顶部：滚动长目录时始终知道自己在哪个分区。
+   底色必须不透明，否则滚动的内容会从标题底下透出来。 */
+.doc-side .ui-sidenav__label {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding-top: var(--ui-space-2);
+  padding-bottom: var(--ui-space-2);
+  background: var(--ui-bg);
+}
+
+.doc-side__search { margin-bottom: var(--ui-space-4); }
+.doc-side__inner { padding-right: 0; }
+.doc-side__empty {
+  font-size: var(--ui-type-body-sm);
+  color: var(--ui-text-3);
+  padding: var(--ui-space-3);
+  display: none;
+}
+.doc-side__empty.is-show { display: block; }
+
+/* 移动端抽屉里的侧栏 */
+.doc-drawer .ui-drawer__panel { width: min(88vw, 320px); }
+.doc-drawer .ui-drawer__body { padding: var(--ui-space-4); }
+/* 抽屉是触屏场景，条目回到 40px 命中高度 */
+.doc-drawer .ui-sidenav__item { min-height: var(--ui-control-h); }
+
+/* ---------- 主区 ---------- */
+.doc-main { min-width: 0; padding: var(--ui-space-10) 0 var(--ui-space-16); }
+@media (max-width: 1024px) { .doc-main { padding-top: var(--ui-space-6); } }
+
+.doc-hero { padding-bottom: var(--ui-space-10); border-bottom: 1px solid var(--ui-border); }
+.doc-hero__eyebrow { display: inline-flex; align-items: center; gap: var(--ui-space-3); font-size: var(--ui-type-h3); font-weight: var(--ui-fw-semibold); letter-spacing: -.01em; color: var(--ui-text); margin-bottom: var(--ui-space-4); }
+.doc-hero__badges { display: flex; gap: var(--ui-space-2); flex-wrap: wrap; margin-bottom: var(--ui-space-5); }
+.doc-hero .ui-hero__title { max-width: 24ch; }
+.doc-hero__actions { display: flex; gap: var(--ui-space-3); flex-wrap: wrap; margin-top: var(--ui-space-8); }
+.doc-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--ui-space-6); margin-top: var(--ui-space-10); }
+
+.doc-section { padding: var(--ui-space-12) 0; border-bottom: 1px solid var(--ui-border); scroll-margin-top: 76px; }
+.doc-section:last-of-type { border-bottom: none; }
+.doc-section__head { margin-bottom: var(--ui-space-8); }
+.doc-section__eyebrow {
+  font-size: var(--ui-type-overline);
+  font-weight: var(--ui-fw-semibold);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ui-text-3);
+  margin-bottom: var(--ui-space-2);
+}
+.doc-section__title { font-size: var(--ui-fs-24); line-height: var(--ui-lh-24); font-weight: var(--ui-fw-bold); letter-spacing: -.02em; }
+.doc-section__desc { margin-top: var(--ui-space-3); font-size: var(--ui-fs-14); color: var(--ui-text-2); max-width: 72ch; line-height: var(--ui-lh-14); }
+
+/* 组件条目 */
+.doc-comp { padding: var(--ui-space-8) 0; border-top: 1px solid var(--ui-border); scroll-margin-top: 76px; }
+.doc-comp:first-of-type { border-top: none; padding-top: 0; }
+.doc-comp__title {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  font-size: var(--ui-fs-16);
+  font-weight: var(--ui-fw-semibold);
+  margin-bottom: var(--ui-space-2);
+}
+.doc-comp__title code {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-type-caption);
+  font-weight: var(--ui-fw-regular);
+  color: var(--ui-text-3);
+  background: var(--ui-surface-3);
+  padding: 2px 6px;
+  border-radius: var(--ui-radius-xs);
+}
+.doc-comp__desc { font-size: var(--ui-type-body-sm); color: var(--ui-text-2); line-height: var(--ui-lh-13); max-width: 76ch; margin-bottom: var(--ui-space-5); }
+
+/* 预览面板 */
+.doc-demo {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-6);
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-card);
+}
+/* 注意：列向 flex 必须显式关掉 wrap。带 wrap 的列向容器会把子项按行分配高度，
+   导致面板被撑高出一大截空白（实测表单演示面板从 228px 涨到 404px）。 */
+.doc-demo--stack { flex-direction: column; align-items: stretch; flex-wrap: nowrap; }
+.doc-demo--center { justify-content: center; }
+.doc-demo--flush { padding: 0; overflow: hidden; display: block; }
+.doc-demo--grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.doc-demo__label {
+  position: absolute;
+  top: var(--ui-space-2);
+  right: var(--ui-space-3);
+  font-family: var(--ui-font-mono);
+  font-size: 10px;
+  color: var(--ui-text-3);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.doc-demo + .doc-demo { margin-top: var(--ui-space-4); }
+.doc-demo-cell { display: flex; flex-direction: column; gap: var(--ui-space-2); align-items: flex-start; }
+.doc-demo-cell > .doc-demo__tag { font-family: var(--ui-font-mono); font-size: 10px; color: var(--ui-text-3); }
+.doc-two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--ui-space-4); }
+
+/* 代码块 */
+.doc-code { margin-top: var(--ui-space-4); }
+.doc-code__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  padding: 0 var(--ui-space-2) var(--ui-space-2);
+}
+.doc-code__label { font-family: var(--ui-font-mono); font-size: var(--ui-type-caption); color: var(--ui-text-3); }
+.doc-code .ui-codeblock { max-height: 420px; }
+
+/* 规格表 */
+.doc-spec { margin-top: var(--ui-space-5); }
+.doc-spec__title { font-size: var(--ui-type-body-sm); font-weight: var(--ui-fw-semibold); margin-bottom: var(--ui-space-3); }
+.doc-spec .ui-table-wrap { box-shadow: none; }
+.doc-spec .ui-table th, .doc-spec .ui-table td { white-space: normal; }
+.doc-spec .ui-table td:first-child { font-family: var(--ui-font-mono); font-size: var(--ui-type-body-sm); color: var(--ui-text); white-space: nowrap; }
+.doc-spec .ui-table td:last-child { color: var(--ui-text-2); font-size: var(--ui-type-body-sm); }
+
+/* 状态矩阵 */
+.doc-states { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--ui-space-3); margin-top: var(--ui-space-5); }
+.doc-state-cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-4);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-block);
+}
+.doc-state-cell > span:last-child { font-family: var(--ui-font-mono); font-size: 10px; color: var(--ui-text-3); }
+
+/* 色板 */
+.doc-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: var(--ui-space-3); }
+.doc-swatch { border: 1px solid var(--ui-border); border-radius: var(--ui-radius-block); overflow: hidden; background: var(--ui-surface); }
+.doc-swatch__chip { height: 52px; }
+.doc-swatch__body { padding: var(--ui-space-2) var(--ui-space-3); }
+.doc-swatch__name { font-family: var(--ui-font-mono); font-size: 11px; color: var(--ui-text); }
+.doc-swatch__val { font-family: var(--ui-font-mono); font-size: 10px; color: var(--ui-text-3); }
+
+/* 排版 / 间距 / 圆角 / 阴影 示例 */
+.doc-type-row { display: flex; align-items: baseline; gap: var(--ui-space-6); padding: var(--ui-space-3) 0; border-bottom: 1px solid var(--ui-border); }
+.doc-type-row:last-child { border-bottom: none; }
+.doc-type-row__sample { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.doc-type-row__meta { flex: none; width: 220px; font-family: var(--ui-font-mono); font-size: var(--ui-type-caption); color: var(--ui-text-3); text-align: right; }
+@media (max-width: 640px) { .doc-type-row__meta { width: 120px; } }
+
+.doc-space-row { display: flex; align-items: center; gap: var(--ui-space-4); padding: 5px 0; }
+.doc-space-bar { height: 16px; background: var(--ui-primary-weak); border: 1px solid var(--ui-primary-border); border-radius: var(--ui-radius-xs); flex: none; }
+.doc-space-label { font-family: var(--ui-font-mono); font-size: var(--ui-type-caption); color: var(--ui-text-2); }
+
+.doc-radius-row, .doc-shadow-row { display: flex; flex-wrap: wrap; gap: var(--ui-space-4); }
+.doc-radius-demo {
+  display: grid;
+  place-items: center;
+  width: 104px; height: 72px;
+  background: var(--ui-primary-weak);
+  border: 1px solid var(--ui-primary-border);
+  font-family: var(--ui-font-mono);
+  font-size: 11px;
+  color: var(--ui-text);
+}
+.doc-shadow-demo {
+  display: grid;
+  place-items: center;
+  width: 150px; height: 84px;
+  background: var(--ui-surface);
+  border-radius: var(--ui-radius-card);
+  font-family: var(--ui-font-mono);
+  font-size: 11px;
+  color: var(--ui-text-2);
+}
+
+/* 主色试验台 */
+.doc-accent-lab {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-5);
+  background: var(--ui-surface);
+  border: 1px dashed var(--ui-border-strong);
+  border-radius: var(--ui-radius-card);
+  margin-top: var(--ui-space-4);
+}
+.doc-accent-preview {
+  flex: 1;
+  min-width: 260px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-4);
+  border-radius: var(--ui-radius-block);
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-border);
+}
+.doc-accent-input { max-width: 160px; }
+.doc-accent-presets { display: flex; gap: var(--ui-space-2); flex-wrap: wrap; }
+.doc-accent-dot {
+  width: 28px; height: 28px;
+  border-radius: var(--ui-radius-pill);
+  border: 2px solid var(--ui-surface);
+  box-shadow: 0 0 0 1px var(--ui-border-strong);
+  cursor: pointer;
+}
+/* 触屏下 28×28 的色点达不到命中区底线：视觉不变，用居中 44×44 的透明方框撑开；
+   同时把色点间距抬到 16px，保证相邻命中框不重叠（28 + 16 = 44）。 */
+@media (pointer: coarse) {
+  .doc-accent-dot { position: relative; }
+  .doc-accent-dot::before {
+    content: "";
+    position: absolute;
+    left: 50%; top: 50%;
+    width: var(--ui-hit-min); height: var(--ui-hit-min);
+    transform: translate(-50%, -50%);
+  }
+  .doc-accent-presets { gap: var(--ui-space-4); }
+}
+
+/* 页脚 */
+.doc-footer { border-top: 1px solid var(--ui-border); background: var(--ui-surface); }
+
+/* 组内小标题 */
+.doc-subhead {
+  font-size: var(--ui-type-body-sm);
+  font-weight: var(--ui-fw-semibold);
+  color: var(--ui-text);
+  margin: var(--ui-space-6) 0 var(--ui-space-3);
+}
+.doc-note {
+  font-size: var(--ui-type-body-sm);
+  color: var(--ui-text-2);
+  padding: var(--ui-space-3) var(--ui-space-4);
+  background: var(--ui-surface-3);
+  border-radius: var(--ui-radius-block);
+  margin-top: var(--ui-space-4);
+  line-height: var(--ui-lh-13);
+}
+.doc-note strong { color: var(--ui-text); }

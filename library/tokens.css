@@ -1,0 +1,456 @@
+/* ============================================================
+   OneUI · tokens.css
+   ------------------------------------------------------------
+   一套框架无关的设计 Token 体系（中性无色主题 + 单一可配置主色）
+   三层结构：
+     L1 原始层 Primitive   仅原始色阶与标量，不含语义
+     L2 语义层 Semantic     绑定用途；组件只准引用这一层
+     L3 组件层 Component    绑定具体组件槽位
+   规则：组件代码中不得出现字面量色值 / 字号 / 间距。
+   换肤：只覆盖 L1 的 --ui-p-* 与 L2 的 --ui-primary-* 即可。
+   ============================================================ */
+
+:root {
+  /* ==================== L1 原始层 Primitive ==================== */
+  /* 中性灰阶（无色相，唯一基础色阶） */
+  --ui-n-0:   #FFFFFF;
+  --ui-n-25:  #FCFCFD;
+  --ui-n-50:  #F7F7F8;
+  --ui-n-100: #F1F1F3;
+  --ui-n-150: #E7E7EA;
+  --ui-n-200: #D9D9DE;
+  --ui-n-300: #C1C1C8;
+  --ui-n-400: #9C9CA5;
+  --ui-n-500: #71717A;
+  --ui-n-600: #52525B;
+  --ui-n-700: #3F3F46;
+  --ui-n-800: #27272A;
+  --ui-n-900: #18181B;
+  --ui-n-950: #0E0E11;
+
+  /* 主色阶（默认 = 中性墨黑；替换为任意品牌色只需改这一段）
+     档位约定：400 = active 档 · 500 = hover 档 · 600 = 主色本身 · 700 = 更深一档备选 */
+  --ui-p-50:   var(--ui-n-50);
+  --ui-p-100:  var(--ui-n-150);
+  --ui-p-200:  var(--ui-n-200);
+  --ui-p-300:  var(--ui-n-300);
+  --ui-p-400:  var(--ui-n-600);   /* #52525B */
+  --ui-p-500:  var(--ui-n-700);   /* #3F3F46 */
+  --ui-p-600:  var(--ui-n-900);   /* #18181B ← 主色 */
+  --ui-p-700:  var(--ui-n-950);   /* #0E0E11 */
+
+  /* 状态色阶（语义必需，非品牌色；中性主题下保留低饱和取值） */
+  --ui-success-50:  #F0FDF4;  --ui-success-500: #16A34A;  --ui-success-700: #15803D;
+  --ui-warning-50:  #FFFBEB;  --ui-warning-500: #D97706;  --ui-warning-700: #B45309;
+  --ui-danger-50:   #FEF2F2;  --ui-danger-500:  #DC2626;  --ui-danger-700:  #B91C1C;
+  --ui-info-50:     #F0F9FF;  --ui-info-500:    #0284C7;  --ui-info-700:    #0369A1;
+
+  /* 叠加遮罩（墨色半透明，来自中性 950） */
+  --ui-overlay: rgba(14, 14, 17, .48);
+  --ui-overlay-soft: rgba(14, 14, 17, .28);
+
+  /* ==================== L2 语义层 Semantic ==================== */
+  /* 面 */
+  --ui-bg:            var(--ui-n-50);
+  --ui-surface:       var(--ui-n-0);
+  --ui-surface-2:     var(--ui-n-25);
+  --ui-surface-3:     var(--ui-n-100);
+  --ui-surface-invert: var(--ui-n-900);
+  --ui-surface-glass: rgba(255, 255, 255, .88);   /* 吸顶栏毛玻璃底 */
+
+  /* 文字 */
+  --ui-text:          var(--ui-n-900);   /* 一级：标题、正文 */
+  --ui-text-2:        var(--ui-n-600);   /* 二级：#52525B on #F7F7F8 ≈ 7.4:1 */
+  --ui-text-3:        var(--ui-n-500);   /* 三级：#71717A on #FFF ≈ 4.8:1 */
+  --ui-text-disabled: var(--ui-n-400);   /* 禁用：不得承载必要信息 */
+  --ui-text-invert:   var(--ui-n-0);
+
+  /* 描边 */
+  --ui-border:        var(--ui-n-150);
+  --ui-border-strong: var(--ui-n-200);
+  --ui-border-weak:   var(--ui-n-100);
+
+  /* 中性控件的"灰面"（开关轨道 / 图标按钮按压 / 骨架 / 禁用底）
+     这些槽位必须走语义层：直接写 --ui-n-100 之类在深色模式会变成刺眼的亮块。 */
+  /* 轨道 / 中性标记（开关轨道、静音状态点、头像状态点）
+     不能取 n-300：白底上只有 1.79:1，未选中开关的轨道几乎与页面融成一片，
+     白旋钮压在同色轨道上也看不出位置（旋钮位置=开关状态，属必须可辨的信息）。
+     n-500 白底 4.83:1，白旋钮压其上同样 4.83:1，两侧都达标。 */
+  --ui-control-track:  var(--ui-n-500);
+  --ui-control-active: var(--ui-n-400);   /* 悬停/按压：比常态亮一档 */
+  --ui-disabled-bg:    var(--ui-n-100);
+  --ui-skeleton-bg:    var(--ui-n-100);
+  --ui-skeleton-bg-2:  var(--ui-n-150);
+
+  /* 中性控件的"白件"（开关旋钮 / 未选中勾选框里的勾）
+     深色模式不需要翻转：旋钮始终是白件，轨道才跟着主题变。 */
+  --ui-control-knob:   var(--ui-n-0);
+
+  /* 状态实心底上的前景（危险实心按钮 / 状态徽标）
+     #FFF 在 danger-500 上 4.83:1，两个主题都成立，故不做深色覆盖。 */
+  --ui-on-status:      var(--ui-n-0);
+
+  /* 文案选择高亮：深色模式必须反转成浅底深字，否则选中文字会消失 */
+  --ui-selection-bg:   var(--ui-n-900);
+  --ui-selection-text: var(--ui-n-0);
+
+  /* 链接下划线
+     注意不能取 --ui-n-300：白底上只有 2.05:1，而 .ui-link / .ui-btn--link 的文字色
+     与正文一致，下划线是唯一的"这是链接"信号，按非文本对比度必须 ≥3:1。
+     取 --ui-text-3（#71717A）白底 4.83:1 达标。 */
+  --ui-link-underline: var(--ui-text-3);
+
+  /* 装饰性分隔符（面包屑的 "/"）：不承载信息，仅靠间距与链接样式即可区分，
+     属 WCAG 1.4.11 的例外，故允许低于 3:1。 */
+  --ui-separator:      var(--ui-n-300);
+
+  /* 承载信息的图形标记描边（时间线圆点、步骤点）
+     与上面的分隔符不同：它标记"步骤进行到哪"，属必须可辨的图形 → 须 ≥3:1。 */
+  --ui-marker:         var(--ui-text-3);
+
+  /* Toast 图标：Toast 底在深色模式下会反白成白底，图标必须跟着换档。
+     浅色档 = 亮档（压在深色 Toast 底上，10.2 / 6.4 / 10.6 : 1）；
+     深色档见主题覆盖（改用 -700 深档，压在白色 Toast 底上 ≥4.8:1）。
+     直接用亮色字面量会踩坑：#4ADE80 on #FFF 只有 1.74:1，等于看不见。 */
+  --ui-toast-icon-success: #4ADE80;
+  --ui-toast-icon-danger:  #F87171;
+  --ui-toast-icon-warning: #FBBF24;
+
+  /* 反白块内部（CTA / 反白卡片 / 全局横幅）
+     底反白之后，内部的前景、描边、实心按钮也必须跟着反白，
+     否则深色模式下 CTA 变白、里面的白按钮就消失了。 */
+  --ui-on-invert:         var(--ui-n-0);       /* 反白底上的主前景 */
+  --ui-on-invert-weak:    var(--ui-n-300);     /* 反白底上的次级文字 */
+  --ui-on-invert-border:  var(--ui-n-600);     /* 反白底上的描边 */
+  --ui-on-invert-hover:   rgba(255, 255, 255, .08);
+  --ui-invert-action:     var(--ui-n-900);     /* 反白底上的实心按钮底 */
+
+  /* 反白块（代码块 / 气泡提示）：深浅模式都要与页面底色明确区分 */
+  --ui-code-bg:     var(--ui-n-950);
+  --ui-code-text:   var(--ui-n-100);
+  --ui-tooltip-bg:  var(--ui-n-900);
+  --ui-tooltip-text: var(--ui-n-0);
+  --ui-veil-bg:      rgba(255, 255, 255, .72);
+  --ui-inverse-line: rgba(255, 255, 255, .35);
+  --ui-inverse-head: var(--ui-n-0);
+
+  /* 主色（可配置：覆盖 --ui-primary 即可，其余自动跟随）
+     状态方向规则：hover / active 分别取 500 / 400 档，比主色 600 档浅一步。
+     为什么是"变浅"：中性墨黑主色再往深走是不可见的（#18181B → #0E0E11 只差 10/255，
+     肉眼分不出 hover），而向浅处走每一步都清晰可见，且白字对比度仍有 15.5:1 / 9.7:1 / 7.4:1。
+     换成品牌色时若"变浅"会掉到 4.5:1 以下，把下面两行改成 700 档 / 品牌更深一档即可。 */
+  --ui-primary:         var(--ui-p-600);
+  --ui-primary-hover:   var(--ui-p-500);
+  --ui-primary-active:  var(--ui-p-400);
+  --ui-primary-weak:    var(--ui-p-50);
+  --ui-primary-weak-hover: var(--ui-p-100);
+  --ui-primary-border:  var(--ui-p-200);
+  --ui-primary-text:    var(--ui-n-0);   /* 主色底上的文字 */
+
+  /* 状态语义（底 / 主 / 字 三件套，文字一律用深一档保证对比度） */
+  --ui-info:        var(--ui-info-500);     --ui-info-bg:    var(--ui-info-50);     --ui-info-text:    var(--ui-info-700);
+  --ui-success:     var(--ui-success-500);  --ui-success-bg: var(--ui-success-50);  --ui-success-text: var(--ui-success-700);
+  --ui-warning:     var(--ui-warning-500);  --ui-warning-bg: var(--ui-warning-50);  --ui-warning-text: var(--ui-warning-700);
+  --ui-danger:      var(--ui-danger-500);   --ui-danger-bg:  var(--ui-danger-50);   --ui-danger-text:  var(--ui-danger-700);
+
+  /* 字体族（系统栈，全平台通用） */
+  --ui-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  --ui-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* 字阶（10 阶，够用即止；新增字号须走规范修订） */
+  --ui-fs-40: 40px;  --ui-lh-40: 48px;
+  --ui-fs-32: 32px;  --ui-lh-32: 40px;
+  --ui-fs-24: 24px;  --ui-lh-24: 32px;
+  --ui-fs-20: 20px;  --ui-lh-20: 28px;
+  --ui-fs-16: 16px;  --ui-lh-16: 24px;
+  --ui-fs-15: 15px;  --ui-lh-15: 24px;
+  --ui-fs-14: 14px;  --ui-lh-14: 22px;
+  --ui-fs-13: 13px;  --ui-lh-13: 20px;
+  --ui-fs-12: 12px;  --ui-lh-12: 18px;
+  --ui-fs-11: 11px;  --ui-lh-11: 16px;
+
+  --ui-fw-regular: 400;
+  --ui-fw-medium: 500;
+  --ui-fw-semibold: 600;
+  --ui-fw-bold: 700;
+
+  /* 语义字号别名（组件引用这层） */
+  --ui-type-display: var(--ui-fs-40);   /* Hero 主标题 */
+  --ui-type-h1: var(--ui-fs-32);        /* 页面主标题 */
+  --ui-type-h2: var(--ui-fs-24);        /* 区块标题 */
+  --ui-type-h3: var(--ui-fs-20);        /* 卡片 / 面板标题 */
+  --ui-type-h4: var(--ui-fs-16);        /* 条目标题 */
+  --ui-type-body: var(--ui-fs-15);      /* 正文 */
+  --ui-type-body-sm: var(--ui-fs-13);   /* 次级正文 */
+  --ui-type-caption: var(--ui-fs-12);   /* 说明 / 脚注 */
+  --ui-type-overline: var(--ui-fs-11);  /* 微型标签 */
+
+  /* 间距（4pt 基准，只允许下列取值） */
+  --ui-space-1: 4px;
+  --ui-space-2: 8px;
+  --ui-space-3: 12px;
+  --ui-space-4: 16px;
+  --ui-space-5: 20px;
+  --ui-space-6: 24px;
+  --ui-space-8: 32px;
+  --ui-space-10: 40px;
+  --ui-space-12: 48px;
+  --ui-space-16: 64px;
+  --ui-page-gutter: 24px;          /* 页面左右边距 */
+  --ui-container: 1200px;          /* 内容最大宽度 */
+  --ui-container-wide: 1440px;
+
+  /* 圆角（7 档，禁止自由值） */
+  --ui-radius-xs: 4px;
+  --ui-radius-sm: 8px;
+  --ui-radius-md: 12px;
+  --ui-radius-lg: 16px;
+  --ui-radius-xl: 24px;
+  --ui-radius-2xl: 32px;
+  --ui-radius-pill: 999px;
+
+  /* 组件圆角槽位 */
+  --ui-radius-control: var(--ui-radius-sm);   /* 按钮、输入框、标签 */
+  --ui-radius-block: var(--ui-radius-md);     /* 区块、提示条、菜单 */
+  --ui-radius-card: var(--ui-radius-lg);      /* 卡片、面板 */
+  --ui-radius-sheet: var(--ui-radius-xl);     /* 弹层、抽屉、容器 */
+
+  /* 阴影（轻投影，禁止发光与渐变描边） */
+  --ui-shadow-xs: 0 1px 2px rgba(16, 18, 22, .05);
+  --ui-shadow-sm: 0 1px 3px rgba(16, 18, 22, .08), 0 1px 2px rgba(16, 18, 22, .04);
+  --ui-shadow-md: 0 4px 12px rgba(16, 18, 22, .08);
+  --ui-shadow-lg: 0 12px 32px rgba(16, 18, 22, .12);
+  --ui-shadow-xl: 0 24px 56px rgba(16, 18, 22, .18);
+
+  /* 动效 */
+  --ui-dur-1: 100ms;     /* 按压 / 即时反馈 */
+  --ui-dur-2: 180ms;     /* 状态切换、展开收起 */
+  --ui-dur-3: 280ms;     /* 页面转场、弹层进出 */
+  --ui-dur-loop: 1200ms; /* 不确定进度循环 */
+  --ui-ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ui-ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --ui-ease-linear: linear;
+
+  /* 层级 */
+  --ui-z-base: 0;
+  --ui-z-sticky: 20;
+  --ui-z-dropdown: 60;
+  --ui-z-overlay: 80;
+  --ui-z-modal: 90;
+  --ui-z-toast: 110;
+  --ui-z-tooltip: 120;
+
+  /* 尺寸底线 */
+  --ui-hit-min: 44px;            /* 可点击元素最小命中区 */
+  --ui-control-h-sm: 32px;
+  --ui-control-h: 40px;
+  --ui-control-h-lg: 48px;
+
+  /* ==================== L3 组件层 Component ==================== */
+  /* 按钮 */
+  --ui-btn-h-sm: var(--ui-control-h-sm);
+  --ui-btn-h: var(--ui-control-h);
+  --ui-btn-h-lg: var(--ui-control-h-lg);
+  --ui-btn-radius: var(--ui-radius-control);
+  --ui-btn-primary-bg: var(--ui-primary);
+  --ui-btn-primary-bg-hover: var(--ui-primary-hover);
+  --ui-btn-primary-bg-active: var(--ui-primary-active);
+  --ui-btn-primary-text: var(--ui-primary-text);
+  --ui-btn-primary-bg-disabled: var(--ui-disabled-bg);
+  --ui-btn-primary-text-disabled: var(--ui-text-disabled);
+  --ui-btn-default-bg: var(--ui-surface);
+  --ui-btn-default-bg-hover: var(--ui-surface-3);
+  --ui-btn-default-border: var(--ui-border-strong);
+  --ui-btn-default-text: var(--ui-text);
+  --ui-btn-ghost-bg-hover: var(--ui-surface-3);
+  --ui-btn-danger-bg: var(--ui-danger-500);
+  --ui-btn-danger-bg-hover: var(--ui-danger-700);
+
+  /* 输入框 */
+  --ui-input-h: var(--ui-control-h);
+  --ui-input-h-sm: var(--ui-control-h-sm);
+  --ui-input-h-lg: var(--ui-control-h-lg);
+  --ui-input-bg: var(--ui-surface);
+  --ui-input-border: var(--ui-border-strong);
+  --ui-input-border-hover: var(--ui-n-300);
+  --ui-input-placeholder: var(--ui-n-500);   /* #71717A，白底 4.83:1；深色模式另行覆盖为 n-400 */
+
+  /* 卡片 / 表格 */
+  --ui-card-bg: var(--ui-surface);
+  --ui-card-border: var(--ui-border);
+  --ui-card-radius: var(--ui-radius-card);
+  --ui-card-pad: var(--ui-space-6);
+  --ui-table-head-bg: var(--ui-n-50);
+  --ui-table-row-hover: var(--ui-n-25);
+  --ui-table-border: var(--ui-border);
+
+  /* 弹层 */
+  --ui-modal-radius: var(--ui-radius-sheet);
+  --ui-modal-bg: var(--ui-surface);
+  --ui-modal-shadow: var(--ui-shadow-xl);
+  --ui-toast-bg: var(--ui-n-900);
+  --ui-toast-text: var(--ui-n-0);
+
+  /* 侧栏导航 / 菜单
+     选中底刻意不复用 --ui-primary-weak：中性主题下它等于页面底 --ui-bg（同为 n-50），
+     选中项会与背景彻底融成一片，实测两者都是 #F7F7F8，等于没有选中态。
+     这里改用比 --ui-bg 明确深一档的灰面，并配一条主色左轨做双重指示。 */
+  --ui-nav-item-h: var(--ui-control-h-sm);
+  --ui-nav-item-radius: var(--ui-radius-control);
+  --ui-nav-item-text: var(--ui-text-2);
+  --ui-nav-item-text-active: var(--ui-text);
+  --ui-nav-label-text: var(--ui-text-3);
+  --ui-nav-bg-hover: var(--ui-n-100);
+  --ui-nav-bg-active: var(--ui-n-150);
+  --ui-nav-bar-active: var(--ui-primary);
+  --ui-nav-bar-w: 2px;
+  --ui-nav-bar-h: 16px;
+
+  /* 焦点环（跟随主色，勿用 outline:none 抹除） */
+  --ui-focus-width: 2px;
+  --ui-focus-offset: 2px;
+}
+
+/* ============================================================
+   主题覆盖示例（把下面这段拷进你的项目并按需改值）
+   —— 主色是全链路唯一的品牌变量，改 8 个原始值 + 2 行状态方向即可换肤
+   ------------------------------------------------------------
+   :root {
+     --ui-p-50:  #EFF6FF;
+     --ui-p-100: #DBEAFE;
+     --ui-p-200: #BFDBFE;
+     --ui-p-300: #93C5FD;
+     --ui-p-400: #60A5FA;
+     --ui-p-500: #3B82F6;
+     --ui-p-600: #2563EB;   主色本身
+     --ui-p-700: #1D4ED8;
+
+     品牌色通常"变深"更符合直觉，且白字对比度仍在 6:1 以上。
+     若品牌色本身很浅，请务必覆盖下面两行，否则 hover/active 会掉出 4.5:1。
+     --ui-primary-hover:  var(--ui-p-700);
+     --ui-primary-active: #1E40AF;
+   }
+   ============================================================ */
+
+/* 深色模式：仅翻转语义层，组件样式零改动 */
+@media (prefers-color-scheme: dark) {
+  :root[data-ui-theme="auto"] {
+    --ui-bg:            var(--ui-n-950);
+    --ui-surface:       var(--ui-n-900);
+    --ui-surface-glass: rgba(14, 14, 17, .86);
+    --ui-surface-2:     var(--ui-n-800);
+    --ui-surface-3:     var(--ui-n-700);
+    --ui-surface-invert: var(--ui-n-0);
+    --ui-text:          var(--ui-n-50);
+    --ui-text-2:        var(--ui-n-300);
+    --ui-text-3:        var(--ui-n-400);
+    --ui-text-invert:   var(--ui-n-900);
+    --ui-border:        var(--ui-n-700);
+    --ui-border-strong: var(--ui-n-600);
+    --ui-border-weak:   var(--ui-n-800);
+    --ui-control-track:  var(--ui-n-500);   /* 同浅色档：n-700 在深底色上只有 1.9:1，轨道不可辨 */
+    --ui-control-active: var(--ui-n-600);
+    --ui-marker:         var(--ui-n-400);
+    --ui-disabled-bg:    var(--ui-n-800);
+    --ui-skeleton-bg:    var(--ui-n-800);
+    --ui-skeleton-bg-2:  var(--ui-n-700);
+    --ui-code-bg:     var(--ui-n-900);
+    --ui-tooltip-bg:  var(--ui-n-0);
+    --ui-tooltip-text: var(--ui-n-900);
+    --ui-veil-bg:      rgba(14, 14, 17, .72);
+    --ui-inverse-line: rgba(14, 14, 17, .35);
+    --ui-inverse-head: var(--ui-n-950);
+    --ui-on-invert:         var(--ui-n-900);
+    --ui-on-invert-weak:    var(--ui-n-600);
+    --ui-on-invert-border:  var(--ui-n-300);
+    --ui-on-invert-hover:   rgba(0, 0, 0, .06);
+    --ui-invert-action:     var(--ui-n-0);
+    --ui-input-bg:      var(--ui-n-800);
+    --ui-table-head-bg: var(--ui-n-800);
+    --ui-table-row-hover: var(--ui-n-800);
+    --ui-card-bg:       var(--ui-n-900);
+    --ui-toast-bg:      var(--ui-n-0);
+    --ui-toast-text:    var(--ui-n-900);
+    --ui-primary:       var(--ui-n-0);     /* 深色底上主色反转为白 */
+    --ui-primary-hover: var(--ui-n-200);
+    --ui-primary-active: var(--ui-n-300);
+    --ui-primary-weak:  var(--ui-n-800);
+    --ui-primary-weak-hover: var(--ui-n-700);
+    --ui-primary-border: var(--ui-n-600);
+    --ui-primary-text:  var(--ui-n-900);
+    --ui-nav-bg-hover:  var(--ui-n-800);
+    --ui-nav-bg-active: var(--ui-n-700);
+    /* 深色专属覆盖：这些槽位不能靠语义层自动跟翻，必须显式给值 */
+    --ui-selection-bg:   var(--ui-n-50);
+    --ui-selection-text: var(--ui-n-900);
+    --ui-separator:      var(--ui-n-500);
+    --ui-input-placeholder: var(--ui-n-400);
+    --ui-toast-icon-success: var(--ui-success-700);
+    --ui-toast-icon-danger:  var(--ui-danger-700);
+    --ui-toast-icon-warning: var(--ui-warning-700);
+    --ui-info-bg:    rgba(2, 132, 199, .16);    --ui-info-text:    #7DD3FC;
+    --ui-success-bg: rgba(22, 163, 74, .16);    --ui-success-text: #86EFAC;
+    --ui-warning-bg: rgba(217, 119, 6, .18);    --ui-warning-text: #FCD34D;
+    --ui-danger-bg:  rgba(220, 38, 38, .16);    --ui-danger-text:  #FCA5A5;
+  }
+}
+
+:root[data-ui-theme="dark"] {
+  --ui-bg:            var(--ui-n-950);
+  --ui-surface:       var(--ui-n-900);
+  --ui-surface-glass: rgba(14, 14, 17, .86);
+  --ui-surface-2:     var(--ui-n-800);
+  --ui-surface-3:     var(--ui-n-700);
+  --ui-surface-invert: var(--ui-n-0);
+  --ui-text:          var(--ui-n-50);
+  --ui-text-2:        var(--ui-n-300);
+  --ui-text-3:        var(--ui-n-400);
+  --ui-text-invert:   var(--ui-n-900);
+  --ui-border:        var(--ui-n-700);
+  --ui-border-strong: var(--ui-n-600);
+  --ui-border-weak:   var(--ui-n-800);
+  --ui-control-track:  var(--ui-n-500);   /* 同浅色档：n-700 在深底色上只有 1.9:1，轨道不可辨 */
+  --ui-control-active: var(--ui-n-600);
+  --ui-marker:         var(--ui-n-400);
+  --ui-disabled-bg:    var(--ui-n-800);
+  --ui-skeleton-bg:    var(--ui-n-800);
+  --ui-skeleton-bg-2:  var(--ui-n-700);
+  --ui-code-bg:     var(--ui-n-900);
+  --ui-tooltip-bg:  var(--ui-n-0);
+  --ui-tooltip-text: var(--ui-n-900);
+  --ui-veil-bg:      rgba(14, 14, 17, .72);
+  --ui-inverse-line: rgba(14, 14, 17, .35);
+  --ui-inverse-head: var(--ui-n-950);
+  --ui-on-invert:         var(--ui-n-900);
+  --ui-on-invert-weak:    var(--ui-n-600);
+  --ui-on-invert-border:  var(--ui-n-300);
+  --ui-on-invert-hover:   rgba(0, 0, 0, .06);
+  --ui-invert-action:     var(--ui-n-0);
+  --ui-input-bg:      var(--ui-n-800);
+  --ui-table-head-bg: var(--ui-n-800);
+  --ui-table-row-hover: var(--ui-n-800);
+  --ui-card-bg:       var(--ui-n-900);
+  --ui-toast-bg:      var(--ui-n-0);
+  --ui-toast-text:    var(--ui-n-900);
+  --ui-primary:       var(--ui-n-0);
+  --ui-primary-hover: var(--ui-n-200);
+  --ui-primary-active: var(--ui-n-300);
+  --ui-primary-weak:  var(--ui-n-800);
+  --ui-primary-weak-hover: var(--ui-n-700);
+  --ui-primary-border: var(--ui-n-600);
+  --ui-primary-text:  var(--ui-n-900);
+  --ui-nav-bg-hover:  var(--ui-n-800);
+  --ui-nav-bg-active: var(--ui-n-700);
+  /* 深色专属覆盖：这些槽位不能靠语义层自动跟翻，必须显式给值 */
+  --ui-selection-bg:   var(--ui-n-50);
+  --ui-selection-text: var(--ui-n-900);
+  --ui-separator:      var(--ui-n-500);
+  --ui-input-placeholder: var(--ui-n-400);
+  --ui-toast-icon-success: var(--ui-success-700);
+  --ui-toast-icon-danger:  var(--ui-danger-700);
+  --ui-toast-icon-warning: var(--ui-warning-700);
+  --ui-info-bg:    rgba(2, 132, 199, .16);    --ui-info-text:    #7DD3FC;
+  --ui-success-bg: rgba(22, 163, 74, .16);    --ui-success-text: #86EFAC;
+  --ui-warning-bg: rgba(217, 119, 6, .18);    --ui-warning-text: #FCD34D;
+  --ui-danger-bg:  rgba(220, 38, 38, .16);    --ui-danger-text:  #FCA5A5;
+}
