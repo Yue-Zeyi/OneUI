@@ -262,6 +262,7 @@ body { background: var(--ui-bg); }
   border: 1px solid var(--ui-border);
 }
 .doc-accent-input { max-width: 160px; }
+.doc-accent-row { display: flex; align-items: center; gap: var(--ui-space-2); flex-wrap: wrap; }
 .doc-accent-presets { display: flex; gap: var(--ui-space-2); flex-wrap: wrap; }
 .doc-accent-dot {
   width: 28px; height: 28px;
@@ -283,6 +284,61 @@ body { background: var(--ui-bg); }
   }
   .doc-accent-presets { gap: var(--ui-space-4); }
 }
+
+/* 主色预设开关（导航栏 ≥641px / 抽屉底部 ≤640px）
+   ------------------------------------------------------------
+   窄屏为什么不上导航栏：实测 320px 视口下导航栏已经零余量
+   （品牌 82 + actions 182 + 间距 40 = 304，容器 320），再塞一个
+   44px 图标按钮需要 372px，必然溢出。所以窄屏改由抽屉底部承载同一组选项，
+   两边共用 data-accent-option 与同一段 JS 同步选中态。 */
+.doc-accent-picker,
+.doc-accent-mobile { display: none; }
+
+@media (min-width: 641px) { .doc-accent-picker { display: inline-flex; } }
+@media (max-width: 640px) { .doc-accent-mobile { display: block; } }
+
+/* 开关上的实时色点：直接吃 --ui-primary，所以主色与深浅色一切换它自己就跟着走，
+   JS 不需要碰它。外圈描边是为了深色模式下"白点压在黑导航栏上"也有边界。 */
+.doc-accent-picker__dot {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-primary);
+  box-shadow: 0 0 0 1px var(--ui-border);
+  transition: background-color var(--ui-dur-1) var(--ui-ease-out);
+}
+
+/* 菜单项里的静态色块：必须写死各预设的 600 档——它要展示的是"别的颜色长什么样"，
+   不能跟着当前主色走，所以这里不能用 --ui-primary。 */
+.doc-accent-swatch {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--ui-radius-pill);
+  box-shadow: 0 0 0 1px var(--ui-border);
+}
+.doc-accent-menu { min-width: 168px; }
+/* 开关贴着导航栏右缘，浮层改为右对齐，否则 180px 的菜单会顶出视口 */
+.doc-accent-menu { left: auto; right: 0; }
+
+.doc-accent-mobile {
+  padding: var(--ui-space-3) var(--ui-space-4) var(--ui-space-4);
+  border-top: 1px solid var(--ui-border);
+  flex: none;
+}
+.doc-accent-mobile__title {
+  font-size: var(--ui-type-overline);
+  font-weight: var(--ui-fw-semibold);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ui-text-3);
+  margin-bottom: var(--ui-space-3);
+}
+
+/* 选中态：色点加一圈主色外环。用 box-shadow 而非 border，
+   避免 2px 边框把 28px 的圆点压小 */
+.doc-accent-dot[aria-checked="true"] { box-shadow: 0 0 0 2px var(--ui-surface), 0 0 0 4px var(--ui-primary); }
 
 /* 页脚 */
 .doc-footer { border-top: 1px solid var(--ui-border); background: var(--ui-surface); }

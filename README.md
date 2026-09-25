@@ -1,7 +1,7 @@
 # OneUI · 通用 UI 组件库
 
 框架无关的通用组件库。**中性无色主题 + 单一可配置主色**，用 CSS 变量驱动，零依赖、零构建。
-Vue / React / Svelte / 原生页面 / 服务端模板都能直接引入。
+Vue / React / Svelte / 原生页面 / 服务端模板都能直接引入。主色自带 6 套预设（中性墨黑 + 5 套品牌色），加一个 `data-ui-accent` 属性即可切换（见 §3.1）。
 
 ### 命名约定
 
@@ -25,11 +25,12 @@ Vue / React / Svelte / 原生页面 / 服务端模板都能直接引入。
 ```
 OneUI/
 ├── library/                 ← 发布物，把整个目录拷进你的项目即可
-│   ├── tokens.css           三层设计 Token（颜色/字阶/间距/圆角/阴影/动效/层级）
+│   ├── tokens.css           三层设计 Token（颜色/字阶/间距/圆角/阴影/动效/层级）+ 5 套品牌主色预设
 │   ├── base.css             重置、排版、布局、工具类
 │   ├── components.css       全部组件样式
 │   ├── components.js        行为层（弹层、提示、标签页…），原生 JS，零依赖
-│   └── tokens.json          Token 导出，供设计工具与跨端（小程序/RN/Android/iOS）对齐
+│   └── tokens.json          Token 导出（primitive / preset / semantic / component / scale），
+│                            供设计工具与跨端（小程序/RN/Android/iOS）对齐
 ├── docs/                    ← 组件文档站（在线实例 + 代码片段 + 契约表）
 │   ├── index.html
 │   ├── docs.css
@@ -82,37 +83,61 @@ await OneUI.copy('要复制的文本');
 
 ## 3. 换主色（唯一的品牌变量）
 
-默认主色等于中性墨黑（`#18181B`），整站呈现灰阶语汇。要换成任意品牌色，只覆盖 L1 的 8 个原始值：
+### 3.1 用内置预设（推荐）
+
+`tokens.css` 一共 6 套可选主色，其中 5 套品牌色是预设块，`ink` 是默认值、不写任何块，加一个属性即可切换，零 CSS、零 JS：
+
+```html
+<html data-ui-accent="blue">   <!-- ink 墨黑 | blue 品蓝 | indigo 靛蓝 | emerald 翠绿 | orange 橙 | violet 紫罗兰 -->
+```
+
+不写这个属性（或写 `ink`）就是默认的中性墨黑——它刻意不写预设块，不匹配任何规则就自然回落到 `:root` 的中性灰阶，避免"默认值"与"预设值"两套数据打架。每套预设都已配好 10 档色阶、两个主题下的取值与 hover/active 方向，且通过下方全部对比度门槛。
+
+**深色模式下预设主色不反白。** 默认的墨黑在深色底上会整体反转为白底黑字，但品牌色不能这么处理——反白就把色相丢了。所以预设主色在深色模式下改走上半档浅色（`--ui-p-400` 配墨字）保住色相；只有墨黑因为没有色相可保，才走反白。这套分支靠 `--ui-primary-dark*` 这一组角色槽位实现：它们默认等于"墨黑反白"的取值，预设块覆盖它们，两个深色块统一消费它们。
+
+### 3.2 自建一套色阶
+
+覆盖 L1 的 10 个原始值：
 
 ```css
-:root {
-  --ui-p-50:  #EFF6FF;
-  --ui-p-100: #DBEAFE;
-  --ui-p-200: #BFDBFE;
+:root[data-ui-accent="brand"] {
+  --ui-p-50:  #EFF6FF;   /* weak 淡底 */
+  --ui-p-100: #DBEAFE;   /* weak hover */
+  --ui-p-200: #BFDBFE;   /* weak 边框 */
   --ui-p-300: #93C5FD;
-  --ui-p-400: #60A5FA;
+  --ui-p-400: #60A5FA;   /* 深色模式主色 */
   --ui-p-500: #3B82F6;
-  --ui-p-600: #2563EB;   /* 主色本身 */
-  --ui-p-700: #1D4ED8;
+  --ui-p-600: #2563EB;   /* 主色本身，压白字必须 ≥4.5:1 */
+  --ui-p-700: #1D4ED8;   /* hover */
+  --ui-p-800: #1E40AF;   /* active */
+  --ui-p-900: #172554;   /* 深色模式下的淡底 */
+  --ui-primary-hover:  var(--ui-p-700);
+  --ui-primary-active: var(--ui-p-800);
+  --ui-primary-dark:            var(--ui-p-400);
+  --ui-primary-dark-hover:      var(--ui-p-300);
+  --ui-primary-dark-active:     var(--ui-p-200);
+  --ui-primary-dark-weak:       var(--ui-p-900);
+  --ui-primary-dark-weak-hover: var(--ui-p-800);
+  --ui-primary-dark-border:     var(--ui-p-700);
+  --ui-primary-dark-text:       var(--ui-n-950);
 }
 ```
 
 `--ui-primary / primary-hover / primary-active / primary-weak / primary-border` 全部派生自这组值，按钮、开关、进度、标签、焦点环自动跟随，**组件样式一行都不用改**。
 
-### hover / active 的方向
+> ⚠️ **换肤声明必须落在 `<html>` 上。** `--ui-primary: var(--ui-p-600)` 声明在 `:root`，`var()` 就在 `:root` 完成替换；若把 `--ui-p-*` 写到某个后代元素上，父级那份 `--ui-primary` 早已变成具体色值继承下来，子元素改 L1 根本不生效。想在局部换色，必须把 `--ui-primary` 及其兄弟槽位也在同一个元素上重声明。
 
-档位约定是 **400 = active · 500 = hover · 600 = 主色本身**。默认中性主题让状态**变浅**（`#18181B → #3F3F46 → #52525B`），原因是近黑主色再加深只有 10/255 的差，肉眼分不出 hover；变浅则每一步都清晰，且白字对比度仍有 15.5 / 9.7 / 7.4:1。
+### 3.3 hover / active 的方向
 
-换成品牌色时，"变浅"可能把白字压到 4.5:1 以下，这时把方向改回"变深"（两行搞定）：
+档位约定是 **600 = 主色本身 · 700 = hover · 800 = active**。默认中性主题是唯一例外，它让状态**变浅**（`#18181B → #3F3F46 → #52525B`）：近黑主色再加深只有 10/255 的差，肉眼分不出 hover；变浅则每一步都清晰，且白字对比度仍有 15.5 / 9.7 / 7.4:1。
 
-```css
-:root {
-  --ui-primary-hover:  var(--ui-p-700);
-  --ui-primary-active: #1E40AF;   /* 品牌更深一档 */
-}
-```
+品牌色一律**变深**，白字对比度反而随之下探到 6–10:1。这就是预设块里 `--ui-primary-hover: var(--ui-p-700)` 的由来。
 
-文档站的「主色配置」试验台会自动判断方向：近黑主色往浅走、品牌色往深走，两种情况下 hover / active 都肉眼可辨且白字对比度 ≥ 4.5:1。
+### 3.4 关于 600 档的对比度陷阱
+
+600 档压白字必须 ≥4.5:1，但中明度的绿、橙在标准色阶的 600 档只有 **3.77:1 / 3.57:1**，过不了。所以预设里的 `emerald` 与 `orange` 的 600 档**直接深取一档**（`#047857` 得 5.49:1、`#C2410C` 得 5.18:1），这两套色阶因此跳过一个中间档。档位序号的可读性比色阶连续性更重要——消费者只引用槽位，从不关心档位之间色差是否均匀。
+
+文档站的「主色配置」区块与右上角的配色开关改的是同一份状态：点任意一处，导航栏开关、窄屏抽屉底部的色点、区块内的色点三处一起高亮。自定义色值会算出完整 10 档色阶写到 `<html>` 的行内样式上；若所选色值压白字不足 4.5:1，它**先改用墨色文字**（保住色相），只有连墨字也过不了时才沿加深方向调整，并明确告诉你改成了什么——不静默改值。
 
 深色模式：给 `<html>` 加 `data-ui-theme="dark"`（或 `"auto"` 跟随系统），仅翻转语义层。
 
@@ -147,6 +172,8 @@ await OneUI.copy('要复制的文本');
 | `data-ui="dropzone"` | 上传拖放区，含本地文件列表渲染 |
 | `data-ui="copy"` `data-copy-target="#id"` | 一键复制 + Toast 反馈 |
 | `data-ui="navbar"` `data-navbar-drawer="#id"` | 顶部导航与移动端目录抽屉联动 |
+| `data-ui-theme="light\|dark\|auto"` | 深浅色开关，声明在 `<html>` 上；`auto` 跟随系统 |
+| `data-ui-accent="ink\|blue\|indigo\|emerald\|orange\|violet"` | 主色预设，声明在 `<html>` 上；纯 CSS 生效，不需要 JS（见 §3.1） |
 | `data-ui="validate"` | 表单校验，字段规则写在 `data-validate`（`required\|email\|phone\|min:6\|max:20\|code`） |
 | `data-ui="backtop"` | 回到顶部 |
 
@@ -171,13 +198,13 @@ onMounted(() => {
 
 | 项 | 约束 |
 |---|---|
-| 主题 | 中性灰阶（无色相）+ 单一主色，深色模式仅翻转语义层 |
+| 主题 | 中性灰阶（无色相）+ 单一主色，深色模式仅翻转语义层；另有 5 套主色预设（见 §3.1） |
 | Token | 三层结构，组件只引用 L2/L3；代码中不出现字面量色值、字号、间距 |
 | 状态 | 交互组件实现 hover / active / focus-visible / disabled / loading / selected |
-| 状态方向 | hover = `--ui-p-500`、active = `--ui-p-400`，比主色 600 档浅一步；品牌色可改回变深（见 §3） |
-| 深色模式 | 所有"灰面"与"反白块内部"都走语义层：`--ui-control-track / -active`、`--ui-disabled-bg`、`--ui-skeleton-bg`、`--ui-code-bg`、`--ui-tooltip-bg`、`--ui-nav-bg-hover / -active`、`--ui-on-invert-*`、`--ui-veil-bg` |
+| 状态方向 | 品牌色 hover = `--ui-p-700`、active = `--ui-p-800`，比主色 600 档深一步；中性墨黑是唯一例外（600/500/400 往浅走，否则加深不可见）。已内置在 5 套预设里（见 §3.3） |
+| 深色模式 | 所有"灰面"与"反白块内部"都走语义层：`--ui-control-track / -active`、`--ui-disabled-bg`、`--ui-skeleton-bg`、`--ui-code-bg`、`--ui-tooltip-bg`、`--ui-nav-bg-hover / -active`、`--ui-on-invert-*`、`--ui-veil-bg`。主色另立 `--ui-primary-dark*` 一组角色槽位：默认 = 墨黑反白，预设主色覆盖成"上半档浅色 + 墨字"以保住色相（见 §3.1） |
 | 命中区 | 视觉尺寸可小于命中区，实际可点区域 ≥ 44×44。图标按钮（含 `--sm` 的 36×36）用 `::after` 撑开；`.ui-btn` / `.ui-segment` / `.ui-nav__link` / `.ui-navbar__brand` / `.ui-breadcrumb__item a` / `.ui-footer__link` / `.ui-table__sort` / `.ui-pagination__item` / `.ui-alert__close` / `.ui-file__remove` / `.ui-sidenav__item` 在 `@media (pointer: coarse)` 下用透明伪元素统一撑到 44；`.ui-input` / `.ui-check` / `.ui-menu__item` 等整行控件在触屏下直接抬 `min-height`。**鼠标场景不撑开**：44×44 这个基准来自 390×844 触摸设备，而密集工具条里相邻控件只隔 8px，把 32/40px 控件强行撑到 44px 会让 44×44 的命中框互相重叠、点到邻居（命中区不得重叠）；鼠标侧按 WCAG 2.5.8 的 24px 标准。**若你的产品要鼠标侧也硬达标**，把 `--ui-control-h` 改成 `48px`（主按钮高度档）即可，一行生效 |
-| 对比度 | 正文 ≥ 4.5:1；`--ui-text-2` 在画布上约 7.2:1，`--ui-text-3` 约 4.8:1；主色三态白字 17.7 / 10.4 / 7.7:1。`--ui-input-placeholder` 取 `--ui-n-500`（白底 4.83:1）；Toast 图标走 `--ui-toast-icon-*`，浅色档亮色 / 深色档 `-700` 深色——直接写亮色字面量在深色模式下会掉到 1.74:1 |
+| 对比度 | 正文 ≥ 4.5:1；`--ui-text-2` 在画布上约 7.2:1，`--ui-text-3` 约 4.8:1；主色三态（默认墨黑）白字 17.7 / 10.4 / 7.7:1，5 套预设的 600 档白字 5.17–6.25:1（绿、橙两套深取一档才达标，见 §3.4）。`--ui-input-placeholder` 取 `--ui-n-500`（白底 4.83:1）；Toast 图标走 `--ui-toast-icon-*`，浅色档亮色 / 深色档 `-700` 深色——直接写亮色字面量在深色模式下会掉到 1.74:1 |
 | 链接下划线 | `--ui-link-underline` 取 `--ui-text-3` 而非浅灰：`.ui-link` / `.ui-btn--link` 的文字色与正文一致，下划线是唯一的"这是链接"信号，按非文本对比度须 ≥3:1 |
 | 控件轨道 | `--ui-control-track` 取 `--ui-n-500`：取 `--ui-n-300` 时白底只有 1.79:1，未选中开关的轨道与页面融成一片、白旋钮也看不出位置（旋钮位置=开关状态，属必须可辨的信息） |
 | 图形标记 | `--ui-marker`（时间线圆点、步骤点）走 3:1 硬门槛；`--ui-separator`（面包屑 `/`）是纯装饰，属 WCAG 1.4.11 例外，两者不共用 |

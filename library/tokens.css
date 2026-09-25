@@ -28,8 +28,10 @@
   --ui-n-900: #18181B;
   --ui-n-950: #0E0E11;
 
-  /* 主色阶（默认 = 中性墨黑；替换为任意品牌色只需改这一段）
-     档位约定：400 = active 档 · 500 = hover 档 · 600 = 主色本身 · 700 = 更深一档备选 */
+  /* 主色阶（默认 = 中性墨黑）档位契约见下方「预设主色」标题块：
+     600 = 主色本身 · 700 = hover · 800 = active · 900 = 深色模式淡底。
+     墨黑刻意不给 800 / 900：它的状态走"变浅"方向、深色模式走整体反白，
+     两档都用不上——不是漏写，别照着它去补别的色阶。 */
   --ui-p-50:   var(--ui-n-50);
   --ui-p-100:  var(--ui-n-150);
   --ui-p-200:  var(--ui-n-200);
@@ -146,6 +148,19 @@
   --ui-primary-weak-hover: var(--ui-p-100);
   --ui-primary-border:  var(--ui-p-200);
   --ui-primary-text:    var(--ui-n-0);   /* 主色底上的文字 */
+
+  /* 深色模式下的主色角色（浅色档一律不用，只被文件末尾那两个深色块消费）
+     默认值 = 中性墨黑在深色底上反白为白，与改造前逐字等价。
+     为什么单独抽一层：深色块有两处（auto 媒体查询 + 显式 dark），
+     角色值集中在这里后，每套预设只要声明一遍，两处都吃得到——
+     否则每加一套配色就要在两个深色块里各抄 7 行。 */
+  --ui-primary-dark:            var(--ui-n-0);
+  --ui-primary-dark-hover:      var(--ui-n-200);
+  --ui-primary-dark-active:     var(--ui-n-300);
+  --ui-primary-dark-weak:       var(--ui-n-800);
+  --ui-primary-dark-weak-hover: var(--ui-n-700);
+  --ui-primary-dark-border:     var(--ui-n-600);
+  --ui-primary-dark-text:       var(--ui-n-900);
 
   /* 状态语义（底 / 主 / 字 三件套，文字一律用深一档保证对比度） */
   --ui-info:        var(--ui-info-500);     --ui-info-bg:    var(--ui-info-50);     --ui-info-text:    var(--ui-info-700);
@@ -312,25 +327,162 @@
 }
 
 /* ============================================================
-   主题覆盖示例（把下面这段拷进你的项目并按需改值）
-   —— 主色是全链路唯一的品牌变量，改 8 个原始值 + 2 行状态方向即可换肤
+   预设主色（换肤）
    ------------------------------------------------------------
-   :root {
-     --ui-p-50:  #EFF6FF;
-     --ui-p-100: #DBEAFE;
-     --ui-p-200: #BFDBFE;
-     --ui-p-300: #93C5FD;
-     --ui-p-400: #60A5FA;
-     --ui-p-500: #3B82F6;
-     --ui-p-600: #2563EB;   主色本身
-     --ui-p-700: #1D4ED8;
+   用法：<html data-ui-accent="blue">   —— 与 data-ui-theme 同一套属性开关
+   取值：ink 墨黑（默认）· blue 品蓝 · indigo 靛蓝 · emerald 翠绿
+         · orange 橙 · violet 紫罗兰
 
-     品牌色通常"变深"更符合直觉，且白字对比度仍在 6:1 以上。
-     若品牌色本身很浅，请务必覆盖下面两行，否则 hover/active 会掉出 4.5:1。
-     --ui-primary-hover:  var(--ui-p-700);
-     --ui-primary-active: #1E40AF;
-   }
+   ink 刻意不写声明块：不匹配任何规则，就自然回落到上面 :root 的中性灰阶。
+   这让"默认主题"永远只有一处定义，不存在预设与默认值两套数据打架。
+
+   为什么只声明 L1 就够换肤？
+     预设块与 --ui-primary: var(--ui-p-600) 落在 <html> 同一个元素上，
+     var() 就在该元素完成替换，所以 L2 会跟着重算。
+     反面教材：把 --ui-p-* 写在某个后代元素上——父级声明的 --ui-primary
+     早已替换成具体色值再继承下来，子元素改 L1 根本改不动它。
+     要局部换色，必须把 --ui-primary 及其兄弟槽位也在同一个元素上重声明。
+
+   ⚠ 本区块必须排在文件末尾两个深色块之前。
+     深色块要用 var(--ui-primary-dark*) 覆盖 --ui-primary-hover 等槽位，
+     两者选择器权重相同（都是 0,2,0），靠源码顺序决胜；写反了深色模式下
+     会继续用浅色档的 hover/active，颜色会跳。
+
+   档位契约（每套预设都给全 50–900）：
+     50 = weak 淡底 · 100 = weak hover · 200 = weak 边框
+     300 / 400 / 500 = 深色模式与状态档
+     600 = 主色本身 · 700 = hover · 800 = active · 900 = 深色模式 weak 淡底
+
+   状态方向：品牌色一律"变深"（hover → 700、active → 800），
+   既符合直觉，白字对比度也随之下探到 6–10:1。墨黑是唯一例外，
+   它的状态走"变浅"，原因见上面 --ui-primary 处的注释。
+
+   白字门槛：600 档压白字必须 ≥4.5:1。绿、橙这两个中明度色系
+   在 600 档分别只有 3.8:1 / 3.6:1，因此它们的 600 直接深取一档
+   （emerald 取 #047857 得 5.49:1、orange 取 #C2410C 得 5.18:1）。
+   代价是这两套色阶跳过一个中间档——档位序号的可读性比色阶连续性更重要，
+   消费者只引用槽位、从不关心档位之间的色差是否均匀。
+
+   深色模式：预设主色**不反白**，改走上半档浅色保住色相
+   （primary = 400、hover = 300、active = 200，配 --ui-n-950 深字）。
+   墨黑没有色相可保，才反白成白底黑字——这是它唯一的特殊之处。
    ============================================================ */
+
+/* 品蓝 · 偏冷的正统品牌蓝，最稳妥的通用选择 */
+:root[data-ui-accent="blue"] {
+  --ui-p-50:  #EFF6FF;
+  --ui-p-100: #DBEAFE;
+  --ui-p-200: #BFDBFE;
+  --ui-p-300: #93C5FD;
+  --ui-p-400: #60A5FA;
+  --ui-p-500: #3B82F6;
+  --ui-p-600: #2563EB;   /* 白字 5.17:1 */
+  --ui-p-700: #1D4ED8;
+  --ui-p-800: #1E40AF;
+  --ui-p-900: #172554;
+  --ui-primary-hover:  var(--ui-p-700);
+  --ui-primary-active: var(--ui-p-800);
+  --ui-primary-dark:            var(--ui-p-400);
+  --ui-primary-dark-hover:      var(--ui-p-300);
+  --ui-primary-dark-active:     var(--ui-p-200);
+  --ui-primary-dark-weak:       var(--ui-p-900);
+  --ui-primary-dark-weak-hover: var(--ui-p-800);
+  --ui-primary-dark-border:     var(--ui-p-700);
+  --ui-primary-dark-text:       var(--ui-n-950);
+}
+
+/* 靛蓝 · 比品蓝更紫一档，科技感强，适合工具型产品 */
+:root[data-ui-accent="indigo"] {
+  --ui-p-50:  #EEF2FF;
+  --ui-p-100: #E0E7FF;
+  --ui-p-200: #C7D2FE;
+  --ui-p-300: #A5B4FC;
+  --ui-p-400: #818CF8;
+  --ui-p-500: #6366F1;
+  --ui-p-600: #4F46E5;   /* 白字 6.25:1 */
+  --ui-p-700: #4338CA;
+  --ui-p-800: #3730A3;
+  --ui-p-900: #1E1B4B;
+  --ui-primary-hover:  var(--ui-p-700);
+  --ui-primary-active: var(--ui-p-800);
+  --ui-primary-dark:            var(--ui-p-400);
+  --ui-primary-dark-hover:      var(--ui-p-300);
+  --ui-primary-dark-active:     var(--ui-p-200);
+  --ui-primary-dark-weak:       var(--ui-p-900);
+  --ui-primary-dark-weak-hover: var(--ui-p-800);
+  --ui-primary-dark-border:     var(--ui-p-700);
+  --ui-primary-dark-text:       var(--ui-n-950);
+}
+
+/* 翠绿 · 600 深取一档，避开中明度绿的对比度陷阱 */
+:root[data-ui-accent="emerald"] {
+  --ui-p-50:  #ECFDF5;
+  --ui-p-100: #D1FAE5;
+  --ui-p-200: #A7F3D0;
+  --ui-p-300: #6EE7B7;
+  --ui-p-400: #34D399;
+  --ui-p-500: #10B981;
+  --ui-p-600: #047857;   /* 白字 5.49:1（不深取则只有 3.77:1） */
+  --ui-p-700: #065F46;
+  --ui-p-800: #064E3B;
+  --ui-p-900: #022C22;
+  --ui-primary-hover:  var(--ui-p-700);
+  --ui-primary-active: var(--ui-p-800);
+  --ui-primary-dark:            var(--ui-p-400);
+  --ui-primary-dark-hover:      var(--ui-p-300);
+  --ui-primary-dark-active:     var(--ui-p-200);
+  --ui-primary-dark-weak:       var(--ui-p-900);
+  --ui-primary-dark-weak-hover: var(--ui-p-800);
+  --ui-primary-dark-border:     var(--ui-p-700);
+  --ui-primary-dark-text:       var(--ui-n-950);
+}
+
+/* 橙 · 同样深取一档。注意它与 warning 语义色系出同门但取值不同
+   （warning 500 = #D97706），换成橙做主色时，警示态仍能靠明度差区分 */
+:root[data-ui-accent="orange"] {
+  --ui-p-50:  #FFF7ED;
+  --ui-p-100: #FFEDD5;
+  --ui-p-200: #FED7AA;
+  --ui-p-300: #FDBA74;
+  --ui-p-400: #FB923C;
+  --ui-p-500: #F97316;
+  --ui-p-600: #C2410C;   /* 白字 5.18:1（不深取则只有 3.57:1） */
+  --ui-p-700: #9A3412;
+  --ui-p-800: #7C2D12;
+  --ui-p-900: #431407;
+  --ui-primary-hover:  var(--ui-p-700);
+  --ui-primary-active: var(--ui-p-800);
+  --ui-primary-dark:            var(--ui-p-400);
+  --ui-primary-dark-hover:      var(--ui-p-300);
+  --ui-primary-dark-active:     var(--ui-p-200);
+  --ui-primary-dark-weak:       var(--ui-p-900);
+  --ui-primary-dark-weak-hover: var(--ui-p-800);
+  --ui-primary-dark-border:     var(--ui-p-700);
+  --ui-primary-dark-text:       var(--ui-n-950);
+}
+
+/* 紫罗兰 · 创意型产品常用，与 danger 的玫红系拉开了距离 */
+:root[data-ui-accent="violet"] {
+  --ui-p-50:  #F5F3FF;
+  --ui-p-100: #EDE9FE;
+  --ui-p-200: #DDD6FE;
+  --ui-p-300: #C4B5FD;
+  --ui-p-400: #A78BFA;
+  --ui-p-500: #8B5CF6;
+  --ui-p-600: #7C3AED;   /* 白字 5.67:1 */
+  --ui-p-700: #6D28D9;
+  --ui-p-800: #5B21B6;
+  --ui-p-900: #2E1065;
+  --ui-primary-hover:  var(--ui-p-700);
+  --ui-primary-active: var(--ui-p-800);
+  --ui-primary-dark:            var(--ui-p-400);
+  --ui-primary-dark-hover:      var(--ui-p-300);
+  --ui-primary-dark-active:     var(--ui-p-200);
+  --ui-primary-dark-weak:       var(--ui-p-900);
+  --ui-primary-dark-weak-hover: var(--ui-p-800);
+  --ui-primary-dark-border:     var(--ui-p-700);
+  --ui-primary-dark-text:       var(--ui-n-950);
+}
 
 /* 深色模式：仅翻转语义层，组件样式零改动 */
 @media (prefers-color-scheme: dark) {
@@ -371,13 +523,13 @@
     --ui-card-bg:       var(--ui-n-900);
     --ui-toast-bg:      var(--ui-n-0);
     --ui-toast-text:    var(--ui-n-900);
-    --ui-primary:       var(--ui-n-0);     /* 深色底上主色反转为白 */
-    --ui-primary-hover: var(--ui-n-200);
-    --ui-primary-active: var(--ui-n-300);
-    --ui-primary-weak:  var(--ui-n-800);
-    --ui-primary-weak-hover: var(--ui-n-700);
-    --ui-primary-border: var(--ui-n-600);
-    --ui-primary-text:  var(--ui-n-900);
+    --ui-primary:       var(--ui-primary-dark);   /* 中性墨黑在此反白为白；预设主色走浅档保色相 */
+    --ui-primary-hover: var(--ui-primary-dark-hover);
+    --ui-primary-active: var(--ui-primary-dark-active);
+    --ui-primary-weak:  var(--ui-primary-dark-weak);
+    --ui-primary-weak-hover: var(--ui-primary-dark-weak-hover);
+    --ui-primary-border: var(--ui-primary-dark-border);
+    --ui-primary-text:  var(--ui-primary-dark-text);
     --ui-nav-bg-hover:  var(--ui-n-800);
     --ui-nav-bg-active: var(--ui-n-700);
     /* 深色专属覆盖：这些槽位不能靠语义层自动跟翻，必须显式给值 */
@@ -432,13 +584,13 @@
   --ui-card-bg:       var(--ui-n-900);
   --ui-toast-bg:      var(--ui-n-0);
   --ui-toast-text:    var(--ui-n-900);
-  --ui-primary:       var(--ui-n-0);
-  --ui-primary-hover: var(--ui-n-200);
-  --ui-primary-active: var(--ui-n-300);
-  --ui-primary-weak:  var(--ui-n-800);
-  --ui-primary-weak-hover: var(--ui-n-700);
-  --ui-primary-border: var(--ui-n-600);
-  --ui-primary-text:  var(--ui-n-900);
+  --ui-primary:       var(--ui-primary-dark);
+  --ui-primary-hover: var(--ui-primary-dark-hover);
+  --ui-primary-active: var(--ui-primary-dark-active);
+  --ui-primary-weak:  var(--ui-primary-dark-weak);
+  --ui-primary-weak-hover: var(--ui-primary-dark-weak-hover);
+  --ui-primary-border: var(--ui-primary-dark-border);
+  --ui-primary-text:  var(--ui-primary-dark-text);
   --ui-nav-bg-hover:  var(--ui-n-800);
   --ui-nav-bg-active: var(--ui-n-700);
   /* 深色专属覆盖：这些槽位不能靠语义层自动跟翻，必须显式给值 */
