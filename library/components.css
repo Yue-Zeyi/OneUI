@@ -1,5 +1,5 @@
 /* ============================================================
-   OneUI · components.css
+   OwnUI · components.css
    ------------------------------------------------------------
    通用组件样式。依赖 tokens.css + base.css。
    每个交互组件实现七态：default / hover / active / focus-visible
@@ -1139,7 +1139,7 @@
   height: 64px;
 }
 .ui-navbar__brand { display: inline-flex; align-items: center; gap: var(--ui-space-2); font-size: var(--ui-fs-16); font-weight: var(--ui-fw-semibold); }
-/* 品牌标记：主色方块 + 自绘的「1」字标（品牌名 OneUI 的 One）
+/* 品牌标记：主色方块 + 自绘的「1」字标（品牌名 OwnUI 的 One）
    ------------------------------------------------------------
    字形几何（16 单位栅格 → 24px 渲染，缩放 1.5×，等效描边 2.85px）：
      · 旗杆   M5.4 5.9 → 8.4 3.6，再垂直下到 y12.4，圆头圆角

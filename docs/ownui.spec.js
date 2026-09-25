@@ -1,10 +1,10 @@
 /* ============================================================
-   OneUI 组件契约（oneui.spec.js）—— 唯一数据源
+   OwnUI 组件契约（ownui.spec.js）—— 唯一数据源
    ------------------------------------------------------------
    这份文件同时服务三个去处，所以只写一遍：
 
      1. docs/ai.html        —— 渲染成人类可读的规范页
-     2. tools/build-ai-files.mjs —— 生成 llms.txt / llms-full.txt / oneui.spec.json
+     2. tools/build-ai-files.mjs —— 生成 llms.txt / llms-full.txt / ownui.spec.json
      3. 导出面板的 starter.zip     —— 直接塞进用户项目，让那边的 AI 读到
 
    为什么要做成数据源而不是直接写文档：规范最容易死于「和代码脱节」。
@@ -23,7 +23,7 @@
 
   var SPEC = {
 
-    name: 'OneUI',
+    name: 'OwnUI',
     version: '1.0.0',
     tagline: '不挑框架的通用 UI 组件库',
     summary: 'CSS 变量 + 原生 JS，零依赖零构建。中性无色主题打底，主色一处可换；' +
@@ -52,7 +52,7 @@
     readOrder: [
       { file: 'llms.txt',          what: '索引：这是什么、关键文件在哪、想做什么该读哪段', lines: 60 },
       { file: 'AGENTS.md',         what: '必须守的规则与禁止清单，支持它的编辑器会自动读到', lines: 250 },
-      { file: 'oneui.spec.json',   what: '每个组件的准确写法：类名 / 变体 / 状态 / ARIA / 事件 / 片段', lines: 0 },
+      { file: 'ownui.spec.json',   what: '每个组件的准确写法：类名 / 变体 / 状态 / ARIA / 事件 / 片段', lines: 0 },
       { file: 'golden.html',       what: '一页完整可跑样板，照抄改比读规则有效', lines: 0 }
     ],
 
@@ -918,5 +918,5 @@ UI.toast({ message: '已保存', type: 'success', description: '3 秒后自动�
     ]
   };
 
-  global.OneUISpec = SPEC;
+  global.OwnUISpec = SPEC;
 })(typeof window !== 'undefined' ? window : this);

@@ -1,11 +1,11 @@
 /* ============================================================
-   OneUI · components.js
+   OwnUI · components.js
    ------------------------------------------------------------
    零依赖行为层（原生 ES5+ 语法，无构建步骤）。
-   全局导出 window.OneUI（window.UI 保留为兼容别名）。
+   全局导出 window.OwnUI（window.UI 保留为兼容别名）。
    用法：
      声明式：<button data-ui="modal" data-target="#demo">打开</button>
-     命令式：OneUI.toast('已保存'); OneUI.modal.open('#demo'); await OneUI.confirm({...})
+     命令式：OwnUI.toast('已保存'); OwnUI.modal.open('#demo'); await OwnUI.confirm({...})
    特性：焦点陷阱 / ESC 关闭 / 遮罩点击关闭 / 焦点归还 / 键盘导航 /
          prefers-reduced-motion 降级 / 事件派发（便于与任意框架集成）。
    ============================================================ */
@@ -729,7 +729,7 @@
       } catch (err) {
         emit(el, 'ui:error', { component: kind, error: err });
         if (global.console && global.console.error) {
-          global.console.error('[OneUI] 组件 "' + kind + '" 初始化失败，已跳过：', err, el);
+          global.console.error('[OwnUI] 组件 "' + kind + '" 初始化失败，已跳过：', err, el);
         }
       }
     }
@@ -820,6 +820,6 @@
     init(document);
   }
 
-  global.OneUI = UI;   /* 主命名 */
-  global.UI = UI;      /* 兼容别名，等价于 OneUI */
+  global.OwnUI = UI;   /* 主命名 */
+  global.UI = UI;      /* 兼容别名，等价于 OwnUI */
 })(typeof window !== 'undefined' ? window : this);

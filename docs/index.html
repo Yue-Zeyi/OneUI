@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OneUI · 通用 UI 组件库</title>
+<title>OwnUI · 通用 UI 组件库</title>
 <meta name="description" content="框架无关的通用 UI 组件库：中性无色主题 + 单一可配置主色，零依赖，纯 CSS 变量驱动。挑好主色即可导出主题，并附一套让 AI 读懂的规范。">
 <link rel="stylesheet" href="../library/tokens.css">
 <link rel="stylesheet" href="../library/base.css">
@@ -19,9 +19,9 @@
   <div class="ui-container ui-container--wide ui-navbar__inner">
     <a class="ui-navbar__brand" href="index.html">
       <span class="ui-navbar__logo" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.4 5.9 8.4 3.6v8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.2" y="11.45" width="9.6" height="1.9" rx="0.95" fill="currentColor"/></svg>
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.55" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
       </span>
-      OneUI
+      OwnUI
       <span class="doc-brand-sub">v1.0.0</span>
     </a>
     <nav class="ui-nav" aria-label="主导航">
@@ -134,9 +134,9 @@
     <section class="doc-land-hero">
       <div class="doc-hero__eyebrow">
         <span class="ui-navbar__logo" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.4 5.9 8.4 3.6v8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.2" y="11.45" width="9.6" height="1.9" rx="0.95" fill="currentColor"/></svg>
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.55" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
         </span>
-        OneUI
+        OwnUI
       </div>
       <h1 class="ui-hero__title">挑一种主色，<br>拿到一整套 UI</h1>
       <p class="ui-hero__desc">
@@ -231,7 +231,7 @@
           </div>
           <div class="doc-export__ops">
             <button class="ui-btn ui-btn--primary ui-btn--sm" type="button" data-export-zip>下载 starter.zip</button>
-            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-css>下载 oneui-theme.css</button>
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-css>下载 ownui-theme.css</button>
             <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-json>下载 tokens.json</button>
             <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-copy>复制 CSS</button>
             <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-link>复制分享链接</button>
@@ -240,7 +240,7 @@
         <div class="ui-collapse doc-export__preview" data-ui="collapse">
           <div class="ui-collapse__item">
             <button class="ui-collapse__header" type="button" aria-expanded="false" aria-controls="exportCss">
-              <span>预览 oneui-theme.css <span class="doc-export__lines" data-export-lines></span></span>
+              <span>预览 ownui-theme.css <span class="doc-export__lines" data-export-lines></span></span>
               <span class="ui-collapse__chevron"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8l4.5 4.5L14.5 8"/></svg></span>
             </button>
             <div class="ui-collapse__panel" id="exportCss" hidden>
@@ -348,7 +348,7 @@ const ok = await UI.confirm({
               <span class="ui-caption ui-muted">规则与禁止清单，AI 会自动读到</span>
             </div>
             <div class="doc-ai-file">
-              <code class="ui-code">oneui.spec.json</code>
+              <code class="ui-code">ownui.spec.json</code>
               <span class="ui-caption ui-muted">每个组件的准确写法与代码片段</span>
             </div>
             <div class="doc-ai-file">
@@ -378,8 +378,8 @@ const ok = await UI.confirm({
       </div>
 
       <div class="doc-note">
-        规范不是手抄的：<code class="ui-code">oneui.spec.js</code> 是唯一数据源，构建脚本从它生成
-        <code class="ui-code">llms.txt</code> 与 <code class="ui-code">oneui.spec.json</code>，
+        规范不是手抄的：<code class="ui-code">ownui.spec.js</code> 是唯一数据源，构建脚本从它生成
+        <code class="ui-code">llms.txt</code> 与 <code class="ui-code">ownui.spec.json</code>，
         并<b>反向校验</b><code class="ui-code">components.css</code> 里的真实类名——
         声明了却没有、有却没收录，两个方向都会报。这样规范不会悄悄过期。
       </div>
@@ -392,7 +392,7 @@ const ok = await UI.confirm({
   <div class="ui-container ui-container--wide" style="padding-block: var(--ui-space-8)">
     <div class="ui-row ui-row--between">
       <div class="ui-stack ui-stack--2">
-        <div class="ui-h4">OneUI</div>
+        <div class="ui-h4">OwnUI</div>
         <div class="ui-caption ui-muted">框架无关的通用 UI 组件库 · v1.0.0 · 中性无色主题 + 单一可配置主色</div>
       </div>
       <div class="ui-cluster ui-cluster--4">
@@ -410,8 +410,8 @@ const ok = await UI.confirm({
 </button>
 
 <script src="../library/components.js"></script>
-<script src="oneui.spec.js"></script>
-<script src="oneui.ai.js"></script>
+<script src="ownui.spec.js"></script>
+<script src="ownui.ai.js"></script>
 <script src="docs.js"></script>
 </body>
 </html>

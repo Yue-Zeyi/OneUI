@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /* ============================================================
-   OneUI · 生成 AI 交付物（tools/build-ai-files.mjs）
+   OwnUI · 生成 AI 交付物（tools/build-ai-files.mjs）
    ------------------------------------------------------------
    这是 dev 工具，不属于库本身：library/ 里不会出现它，接入方也不需要它。
    它做两件事：
 
-   1. 从 docs/oneui.spec.js 生成四份产物
+   1. 从 docs/ownui.spec.js 生成四份产物
         AGENTS.md            （仓库根）
         docs/llms.txt
         docs/llms-full.txt
-        docs/oneui.spec.json
+        docs/ownui.spec.json
 
    2. 对账：把 spec 里声明过的 ui-* 类名拿去 library/*.css 里逐个核对。
       · 正向（spec 声明了、CSS 里没有）→ 直接失败，退出码 1。
@@ -37,13 +37,13 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const sandbox = { window: {}, console };
 sandbox.window.window = sandbox.window;
 vm.createContext(sandbox);
-for (const f of ['docs/oneui.spec.js', 'docs/oneui.ai.js']) {
+for (const f of ['docs/ownui.spec.js', 'docs/ownui.ai.js']) {
   vm.runInContext(read(f), sandbox, { filename: f });
 }
-const spec = sandbox.window.OneUISpec;
-const ai = sandbox.window.OneUIAI;
-if (!spec) throw new Error('docs/oneui.spec.js 没有挂上 window.OneUISpec');
-if (!ai) throw new Error('docs/oneui.ai.js 没有挂上 window.OneUIAI');
+const spec = sandbox.window.OwnUISpec;
+const ai = sandbox.window.OwnUIAI;
+if (!spec) throw new Error('docs/ownui.spec.js 没有挂上 window.OwnUISpec');
+if (!ai) throw new Error('docs/ownui.ai.js 没有挂上 window.OwnUIAI');
 
 /* ---------- 2. 类名对账 ---------- */
 const ccs = ['library/components.css', 'library/base.css']
@@ -60,12 +60,12 @@ const artifacts = [
   ['AGENTS.md', ai.renderAgentsMd(spec)],
   ['docs/llms.txt', ai.renderLlmsTxt(spec)],
   ['docs/llms-full.txt', ai.renderLlmsFull(spec)],
-  ['docs/oneui.spec.json', ai.renderSpecJson(spec)],
+  ['docs/ownui.spec.json', ai.renderSpecJson(spec)],
 ];
 
 /* ---------- 4. 报告 ---------- */
 const pad = (s, n) => String(s).padEnd(n, ' ');
-console.log('OneUI · 生成 AI 交付物');
+console.log('OwnUI · 生成 AI 交付物');
 console.log('─'.repeat(54));
 console.log(`spec 版本        ${spec.version}`);
 console.log(`组件契约         core ${pad(spec.components.core.length, 3)} · more ${spec.components.more.length}`);
@@ -77,7 +77,7 @@ console.log('─'.repeat(54));
 if (missing.length) {
   console.error(`\n✗ 以下 ${missing.length} 个类名在 spec 里声明了，但 library/*.css 里不存在：`);
   missing.forEach((c) => console.error(`    ${c}`));
-  console.error('\n  这类问题最危险：AI 会照抄一个不存在的类名，页面静默变形。请修 docs/oneui.spec.js。');
+  console.error('\n  这类问题最危险：AI 会照抄一个不存在的类名，页面静默变形。请修 docs/ownui.spec.js。');
   process.exit(1);
 }
 console.log('✓ 正向对账通过：spec 声明的类名全部真实存在');

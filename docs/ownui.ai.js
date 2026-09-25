@@ -1,12 +1,12 @@
 /* ============================================================
-   OneUI · AI 交付物渲染器（oneui.ai.js）
+   OwnUI · AI 交付物渲染器（ownui.ai.js）
    ------------------------------------------------------------
-   把 oneui.spec.js 渲染成四份产物：
+   把 ownui.spec.js 渲染成四份产物：
 
      AGENTS.md        —— 规则与禁止清单，AI 在本仓库里工作会自动读到
      llms.txt         —— 索引，遵循 llmstxt.org 约定
      llms-full.txt    —— 上面几份拼成一整份，用于一次性喂给 AI
-     oneui.spec.json  —— 机器读的完整契约
+     ownui.spec.json  —— 机器读的完整契约
 
    为什么要有这个渲染器而不是直接写死四份文件：
    写死的版本迟早会与 spec 脱节，而「规范说 A、代码是 B」比没有规范更危险。
@@ -85,7 +85,7 @@
     var L = [];
     var S = spec;
 
-    L.push('# OneUI 使用规范');
+    L.push('# OwnUI 使用规范');
     L.push('');
     L.push('> 在本项目里写任何界面代码之前，先读完这一份。');
     L.push('> 它比通读 `components.css`（1500 行）快，也比凭经验猜准。');
@@ -317,7 +317,7 @@
     L.push('## 文档');
     L.push('');
     L.push('- [AGENTS.md](AGENTS.md)：规则与禁止清单。写代码前先读这一份。');
-    L.push('- [oneui.spec.json](oneui.spec.json)：完整组件契约（机器读）。');
+    L.push('- [ownui.spec.json](ownui.spec.json)：完整组件契约（机器读）。');
     L.push('');
     L.push('## 源码');
     L.push('');
@@ -356,7 +356,7 @@
     return JSON.stringify(spec, null, 2) + '\n';
   }
 
-  global.OneUIAI = {
+  global.OwnUIAI = {
     renderAgentsMd: renderAgentsMd,
     renderLlmsTxt: renderLlmsTxt,
     renderLlmsFull: renderLlmsFull,

@@ -1,5 +1,5 @@
 {
-  "name": "OneUI",
+  "name": "OwnUI",
   "version": "1.0.0",
   "tagline": "不挑框架的通用 UI 组件库",
   "summary": "CSS 变量 + 原生 JS，零依赖零构建。中性无色主题打底，主色一处可换；每个交互组件实现七态，命中区与对比度按无障碍底线校验。",
@@ -37,7 +37,7 @@
       "lines": 250
     },
     {
-      "file": "oneui.spec.json",
+      "file": "ownui.spec.json",
       "what": "每个组件的准确写法：类名 / 变体 / 状态 / ARIA / 事件 / 片段",
       "lines": 0
     },

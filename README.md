@@ -1,4 +1,4 @@
-# OneUI · 通用 UI 组件库
+# OwnUI · 通用 UI 组件库
 
 框架无关的通用组件库。**中性无色主题 + 单一可配置主色**，用 CSS 变量驱动，零依赖、零构建。
 Vue / React / Svelte / 原生页面 / 服务端模板都能直接引入。主色自带 6 套预设（中性墨黑 + 5 套品牌色），加一个 `data-ui-accent` 属性即可切换（见 §3.1）。
@@ -7,23 +7,23 @@ Vue / React / Svelte / 原生页面 / 服务端模板都能直接引入。主色
 
 | 位置 | 取值 | 说明 |
 |---|---|---|
-| 产品名 | `OneUI` | 对外称呼、文档标题、页脚署名 |
-| JS 全局 | `window.OneUI` | 命令式 API 入口 |
-| JS 兼容别名 | `window.UI` | 与 `OneUI` 完全等价，二选一即可 |
+| 产品名 | `OwnUI` | 对外称呼、文档标题、页脚署名 |
+| JS 全局 | `window.OwnUI` | 命令式 API 入口 |
+| JS 兼容别名 | `window.UI` | 与 `OwnUI` 完全等价，二选一即可 |
 | CSS 类名前缀 | `ui-` | 如 `.ui-btn`、`.ui-modal__dialog` |
 | CSS 变量前缀 | `--ui-` | 如 `--ui-primary`、`--ui-space-4` |
 | 工具类前缀 | `u-` | 如 `.u-mt-4` |
 | 事件前缀 | `ui:` | 如 `ui:submit`、`ui:change` |
 | 数据属性 | `data-ui` / `data-ui-*` | 如 `data-ui="modal"`、`data-ui-close` |
 
-> 产品名与代码前缀刻意分离：`OneUI` 是品牌称呼，`ui-` 是稳定的技术命名空间。若你的项目已有 `ui-` 冲突，构建期重命名即可，不必改动品牌名。
+> 产品名与代码前缀刻意分离：`OwnUI` 是品牌称呼，`ui-` 是稳定的技术命名空间。若你的项目已有 `ui-` 冲突，构建期重命名即可，不必改动品牌名。
 
 ---
 
 ## 1. 文件结构
 
 ```
-OneUI/
+OwnUI/
 ├── library/                 ← 发布物，把整个目录拷进你的项目即可
 │   ├── tokens.css           三层设计 Token（颜色/字阶/间距/圆角/阴影/动效/层级）+ 5 套品牌主色预设
 │   ├── base.css             重置、排版、布局、工具类
@@ -36,11 +36,11 @@ OneUI/
 │   ├── docs.html            组件文档：在线实例 + 代码片段 + 契约表
 │   ├── ai.html              AI 规范页：禁止清单 / Token / 决策 / 组件速查，可直接下载四份交付物
 │   ├── check.html           合规自检：粘贴你写的 HTML，按规则清单逐条挑错
-│   ├── oneui.spec.js        组件契约的唯一数据源（四份 AI 产物都由它生成）
-│   ├── oneui.ai.js          渲染器：把 spec 渲染成 AGENTS.md / llms.txt / JSON
+│   ├── ownui.spec.js        组件契约的唯一数据源（四份 AI 产物都由它生成）
+│   ├── ownui.ai.js          渲染器：把 spec 渲染成 AGENTS.md / llms.txt / JSON
 │   ├── llms.txt             给 AI 的精简索引（约 30 行，随取随读）
 │   ├── llms-full.txt        上面那份 + 完整契约全文
-│   ├── oneui.spec.json      机器可读的完整契约
+│   ├── ownui.spec.json      机器可读的完整契约
 │   ├── docs.css / docs.js   文档站的样式与行为
 ├── tools/                   ← 开发用，不进发布物
 │   └── build-ai-files.mjs   由 spec 生成四份 AI 产物，并拿 spec 里的类名去 CSS 反向对账
@@ -48,7 +48,7 @@ OneUI/
 └── README.md
 ```
 
-> `docs/` 与 `tools/` 都不是交付物；`library/` 才是。四份 AI 产物是**生成物**，改了 `oneui.spec.js` 或组件样式后要重跑 `node tools/build-ai-files.mjs`（加 `--check` 只校验不写文件）。
+> `docs/` 与 `tools/` 都不是交付物；`library/` 才是。四份 AI 产物是**生成物**，改了 `ownui.spec.js` 或组件样式后要重跑 `node tools/build-ai-files.mjs`（加 `--check` 只校验不写文件）。
 
 ## 2. 快速开始
 
@@ -84,11 +84,11 @@ OneUI/
 ### 命令式用法
 
 ```js
-OneUI.toast({ message: '保存成功', description: '已更新 3 个字段', type: 'success' });
-OneUI.modal.open('#myModal');  OneUI.modal.close('#myModal');
-OneUI.drawer.open('#filterDrawer');
-await OneUI.confirm({ title: '确认删除该密钥？', description: '删除后调用立即失败。', confirmText: '删除' });
-await OneUI.copy('要复制的文本');
+OwnUI.toast({ message: '保存成功', description: '已更新 3 个字段', type: 'success' });
+OwnUI.modal.open('#myModal');  OwnUI.modal.close('#myModal');
+OwnUI.drawer.open('#filterDrawer');
+await OwnUI.confirm({ title: '确认删除该密钥？', description: '删除后调用立即失败。', confirmText: '删除' });
+await OwnUI.copy('要复制的文本');
 ```
 
 ## 3. 换主色（唯一的品牌变量）
@@ -164,10 +164,10 @@ await OneUI.copy('要复制的文本');
 
 | 操作 | 产物 |
 | --- | --- |
-| 复制 CSS | 当前主题的 `oneui-theme.css` 全文进剪贴板 |
-| 下载 oneui-theme.css | 上面那份，优先走系统「另存为」对话框 |
+| 复制 CSS | 当前主题的 `ownui-theme.css` 全文进剪贴板 |
+| 下载 ownui-theme.css | 上面那份，优先走系统「另存为」对话框 |
 | 下载 tokens.json | 同一套 Token 的 JSON 版（值已解析成最终色值），可直接喂 Tokens Studio / Style Dictionary |
-| 下载 starter.zip | library 五个文件 + 这一版主题 + **示例页 + 可直接照抄的样板页（golden.html）** + AGENTS.md / oneui.spec.json / llms.txt + 接入说明，解压即能跑 |
+| 下载 starter.zip | library 五个文件 + 这一版主题 + **示例页 + 可直接照抄的样板页（golden.html）** + AGENTS.md / ownui.spec.json / llms.txt + 接入说明，解压即能跑 |
 | 复制分享链接 | 把主色与主题编码进 URL hash，如 `#accent=custom&c=%23FF6B35&theme=dark`，别人打开就是同一个配色 |
 
 几条约定：
@@ -215,8 +215,8 @@ await OneUI.copy('要复制的文本');
 | `data-ui="validate"` | 表单校验，字段规则写在 `data-validate`（`required\|email\|phone\|min:6\|max:20\|code`） |
 | `data-ui="backtop"` | 回到顶部 |
 
-命令式 API：`OneUI.toast` · `OneUI.modal.open/close/toggle` · `OneUI.drawer.open/close/toggle` · `OneUI.confirm` · `OneUI.copy` · `OneUI.init(root)` · `OneUI.lockScroll/unlockScroll` · `OneUI.formatSize`。
-（`UI.toast` 等旧写法依然可用，`window.UI` 只是 `window.OneUI` 的别名。）
+命令式 API：`OwnUI.toast` · `OwnUI.modal.open/close/toggle` · `OwnUI.drawer.open/close/toggle` · `OwnUI.confirm` · `OwnUI.copy` · `OwnUI.init(root)` · `OwnUI.lockScroll/unlockScroll` · `OwnUI.formatSize`。
+（`UI.toast` 等旧写法依然可用，`window.UI` 只是 `window.OwnUI` 的别名。）
 
 ### 事件（框架集成的关键）
 
@@ -263,25 +263,25 @@ Chrome / Edge 88+、Safari 14+、Firefox 78+（对齐 2021 年后的常青版本
 ## 8. 注意事项
 
 - `library/` 内的样式表不需要构建工具，但也没有做 CSS 前缀自动补全；如需支持更老浏览器，请在你的构建里加 Autoprefixer。
-- 类名前缀统一 `ui-`，CSS 变量前缀统一 `--ui-`，工具类前缀 `u-`，事件前缀 `ui:`——与产品名 `OneUI` 的对应关系见开头的「命名约定」表。若与现有项目冲突，可用构建期重命名。
+- 类名前缀统一 `ui-`，CSS 变量前缀统一 `--ui-`，工具类前缀 `u-`，事件前缀 `ui:`——与产品名 `OwnUI` 的对应关系见开头的「命名约定」表。若与现有项目冲突，可用构建期重命名。
 - 组件层不引入任何图标字体或图标库：图标由使用方以 inline SVG 提供，样式只约定 20px / 2px 描边 / 圆头端点。
 - 未提供的能力（有意不做）：日期选择器、级联选择、富文本、虚拟滚动表格——这些属于业务组件，建议按需在项目内实现，样式继续复用本库 Token。
 
 ## 9. 让 AI 照着写
 
-这套库把「AI 能读懂并遵从」当成一等能力，四份交付物全部由 `docs/oneui.spec.js`（唯一数据源）生成，**手改无意义**：
+这套库把「AI 能读懂并遵从」当成一等能力，四份交付物全部由 `docs/ownui.spec.js`（唯一数据源）生成，**手改无意义**：
 
 | 文件 | 给谁用 | 怎么用 |
 |---|---|---|
 | `AGENTS.md` | Claude Code / Cursor / Copilot 等会自动读根目录的助手 | 放仓库根，14 节：禁止清单、必须做的事、Token、状态方向、刻度、决策、组件速查、片段、写完自查 |
 | `llms.txt` | 会按 llms.txt 约定取索引的爬虫 / 助手 | 约 30 行索引，先读它再决定要不要拉全文 |
 | `llms-full.txt` | 需要一次性拿到全部规则的助手 | 索引 + AGENTS.md 全文 + 契约 JSON |
-| `oneui.spec.json` | 程序 / 设计工具 | 机器可读契约：15 个核心组件的 base / 用途 / 变体 / 尺寸 / 状态 / 属性 / aria / 事件 / 片段 |
+| `ownui.spec.json` | 程序 / 设计工具 | 机器可读契约：15 个核心组件的 base / 用途 / 变体 / 尺寸 / 状态 / 属性 / aria / 事件 / 片段 |
 
 配套两道防线：
 
 1. **防漂移**：`node tools/build-ai-files.mjs` 生成产物时，会拿 spec 里声明过的类名去 `library/*.css` 反向对账，**声明了但 CSS 里没有的直接 `exit 1`**。规范与实现从此不会各说各话。
-2. **写完自检**：`docs/check.html` 是个粘贴式检查器，把你写的 HTML 贴进去，按 17 条规则逐条挑错（非 OneUI 类名、裸色值、非 4pt 间距、缺 `type`、缺 aria、表头缺 `data-sort` 等），错误与提醒分级，注释里的内容不会误报。
+2. **写完自检**：`docs/check.html` 是个粘贴式检查器，把你写的 HTML 贴进去，按 17 条规则逐条挑错（非 OwnUI 类名、裸色值、非 4pt 间距、缺 `type`、缺 aria、表头缺 `data-sort` 等），错误与提醒分级，注释里的内容不会误报。
 
 浏览器里的 `docs/ai.html` 是这四份产物的可视化入口，可以直接复制或下载。
 

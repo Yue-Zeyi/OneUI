@@ -1,12 +1,12 @@
 /* ============================================================
-   OneUI · 文档站脚本（docs.js）
+   OwnUI · 文档站脚本（docs.js）
    仅服务文档站：主题切换、导航搜索、滚动定位、主色试验台。
    ============================================================ */
 (function () {
   'use strict';
 
   /* ---------- 亮暗模式（验证 Token 语义层可翻转） ---------- */
-  var STORE_KEY = 'oneui-doc-theme';
+  var STORE_KEY = 'ownui-doc-theme';
   var root = document.documentElement;
   var saved = null;
   try { saved = localStorage.getItem(STORE_KEY); } catch (e) { saved = null; }
@@ -151,8 +151,8 @@
          <html> 的行内样式（行内权重最高，能盖过预设块）。
      两者互斥，切回预设时必须逐个清掉行内属性。 */
   var ACCENTS = ['ink', 'blue', 'indigo', 'emerald', 'orange', 'violet'];
-  var ACCENT_KEY = 'oneui-doc-accent';
-  var ACCENT_HEX_KEY = 'oneui-doc-accent-hex';
+  var ACCENT_KEY = 'ownui-doc-accent';
+  var ACCENT_HEX_KEY = 'ownui-doc-accent-hex';
 
   function hexToRgb(hex) {
     var h = hex.replace('#', '');
@@ -193,7 +193,7 @@
     '--ui-primary-dark-weak', '--ui-primary-dark-weak-hover', '--ui-primary-dark-border',
     '--ui-primary-dark-text'];
   var INLINE_PROPS = RAMP_STEPS.map(function (s) { return '--ui-p-' + s; }).concat(DERIVED);
-  var CUSTOM_STYLE_ID = 'oneui-custom-accent';
+  var CUSTOM_STYLE_ID = 'ownui-custom-accent';
 
   /* 清掉自定义主色的全部痕迹：旧行内样式（历史版本残留）+ 注入的规则。
      切回预设、换色、恢复默认都会走到这里，漏掉任何一个来源都会留下幽灵值。 */
@@ -212,7 +212,7 @@
      模式主色被提亮到 #AE7171，文字却还是行内写死的白字，只剩 3.89:1。
      用 :root:where([data-ui-accent="custom"])（恒 0,1,0）+ 注入位置在
      tokens.css 之后：浅色下按源码顺序盖过 :root 的默认值，深色块又能照常
-     接管那几个槽位 —— 与导出的 oneui-theme.css 是同一套机制。 */
+     接管那几个槽位 —— 与导出的 ownui-theme.css 是同一套机制。 */
   function writeCustomAccent(css) {
     var el = document.getElementById(CUSTOM_STYLE_ID);
     if (!el) {
@@ -452,7 +452,7 @@
         松手才 commit 一次，否则一段拖动会写几十次 localStorage 并把提示刷满屏；
      3) 键盘可达 —— 色相条与 SV 方块都是 role="slider"，方向键微调、Shift 加速
         十倍，和本项目其它组件的无障碍基线保持一致。 */
-  var RECENT_KEY = 'oneui-doc-recent';
+  var RECENT_KEY = 'ownui-doc-recent';
   var MAX_RECENT = 5;
 
   /* SV 面板与色相条都在 HSV 空间里工作，而引擎只认 hex，这里是转换层。
@@ -976,9 +976,9 @@
   function composeThemeCss(previewTheme) {
     var head = [
       '/* ============================================================',
-      '   OneUI · 主题快照 — ' + accentLabel(),
+      '   OwnUI · 主题快照 — ' + accentLabel(),
       '   ------------------------------------------------------------',
-      '   由 OneUI 文档站导出 · ' + todayStamp() + ' · 导出时预览主题 ' + previewTheme,
+      '   由 OwnUI 文档站导出 · ' + todayStamp() + ' · 导出时预览主题 ' + previewTheme,
       '',
       '   用法：放在 tokens.css 之后，然后在 <html> 上写 data-ui-accent="brand"。',
       '   本文件与深浅色无关：浅色槽位和深色槽位都在这里，切主题即换一套。',
@@ -1037,7 +1037,7 @@
       color[slot[0].slice('--ui-primary-'.length)] = { value: hex, type: 'color', $description: slot[1] };
     });
     var doc = {
-      $description: 'OneUI 主题快照 · ' + accentLabel() + ' · ' + todayStamp()
+      $description: 'OwnUI 主题快照 · ' + accentLabel() + ' · ' + todayStamp()
         + '。深色系列（dark-*）的值就是深色模式下的取值，浅色系列同理，'
         + '不需要再按主题拆两份。'
     };
@@ -1155,14 +1155,14 @@
     return out;
   }
 
-  /* 打包进 zip 的源文件。路径以 docs/ 为基准 —— zip 里换到 oneui/ 目录下，
+  /* 打包进 zip 的源文件。路径以 docs/ 为基准 —— zip 里换到 ownui/ 目录下，
      theme.css 与它们同放，示例页按相对路径引用才不会散架。 */
   var STARTER_SOURCES = [
-    ['oneui/tokens.css', '../library/tokens.css'],
-    ['oneui/base.css', '../library/base.css'],
-    ['oneui/components.css', '../library/components.css'],
-    ['oneui/components.js', '../library/components.js'],
-    ['oneui/tokens.json', '../library/tokens.json']
+    ['ownui/tokens.css', '../library/tokens.css'],
+    ['ownui/base.css', '../library/base.css'],
+    ['ownui/components.css', '../library/components.css'],
+    ['ownui/components.js', '../library/components.js'],
+    ['ownui/tokens.json', '../library/tokens.json']
   ];
 
   function fetchText(url) {
@@ -1190,20 +1190,20 @@
       '<head>',
       '<meta charset="utf-8">',
       '<meta name="viewport" content="width=device-width, initial-scale=1">',
-      '<title>OneUI · 接入示例</title>',
+      '<title>OwnUI · 接入示例</title>',
       '<!-- 顺序别调：tokens 定义变量 → base 定页面基线 → components 用它们，',
-      '     oneui-theme 最后进来覆盖主色阶（它必须排在 tokens 之后）。 -->',
-      '<link rel="stylesheet" href="oneui/tokens.css">',
-      '<link rel="stylesheet" href="oneui/base.css">',
-      '<link rel="stylesheet" href="oneui/components.css">',
-      '<link rel="stylesheet" href="oneui/oneui-theme.css">',
+      '     ownui-theme 最后进来覆盖主色阶（它必须排在 tokens 之后）。 -->',
+      '<link rel="stylesheet" href="ownui/tokens.css">',
+      '<link rel="stylesheet" href="ownui/base.css">',
+      '<link rel="stylesheet" href="ownui/components.css">',
+      '<link rel="stylesheet" href="ownui/ownui-theme.css">',
       '</head>',
       '<body>',
       '<div class="ui-container ui-section ui-stack ui-stack--8">',
       '',
       '  <header class="ui-row ui-row--between">',
       '    <div>',
-      '      <span class="ui-badge ui-badge--primary">OneUI Starter</span>',
+      '      <span class="ui-badge ui-badge--primary">OwnUI Starter</span>',
       '      <h1 class="ui-h1 u-mt-3">接入示例</h1>',
       '      <p class="ui-lead ui-mt-2 ui-prose">这一页只引了 library 的四个文件加一份主题，没有构建、没有依赖、没有 node_modules。</p>',
       '    </div>',
@@ -1214,7 +1214,7 @@
       '    <div class="ui-card__header">',
       '      <div>',
       '        <div class="ui-card__title">主色已经生效</div>',
-      '        <div class="ui-card__desc">下面所有控件的主色都来自 <code class="ui-code">oneui/oneui-theme.css</code>，改它一处，全站跟着走。</div>',
+      '        <div class="ui-card__desc">下面所有控件的主色都来自 <code class="ui-code">ownui/ownui-theme.css</code>，改它一处，全站跟着走。</div>',
       '      </div>',
       '    </div>',
       '    <div class="ui-card__body ui-cluster ui-cluster--3">',
@@ -1260,7 +1260,7 @@
       '  </div>',
       '</div>',
       '',
-      '<script src="oneui/components.js"></script>',
+      '<script src="ownui/components.js"></script>',
       '<script>',
       '  UI.init();',
       '  document.getElementById("themeBtn").addEventListener("click", function () {',
@@ -1291,13 +1291,13 @@
       '<head>',
       '<meta charset="utf-8">',
       '<meta name="viewport" content="width=device-width, initial-scale=1">',
-      '<title>成员管理 · OneUI 样板页</title>',
+      '<title>成员管理 · OwnUI 样板页</title>',
       '<!-- 顺序不可颠倒：tokens 定义变量 → base 定页面基线 → components 用它们；',
-      '     oneui-theme 放最末，它要覆盖主色阶，必须排在 tokens 之后。 -->',
-      '<link rel="stylesheet" href="oneui/tokens.css">',
-      '<link rel="stylesheet" href="oneui/base.css">',
-      '<link rel="stylesheet" href="oneui/components.css">',
-      '<link rel="stylesheet" href="oneui/oneui-theme.css">',
+      '     ownui-theme 放最末，它要覆盖主色阶，必须排在 tokens 之后。 -->',
+      '<link rel="stylesheet" href="ownui/tokens.css">',
+      '<link rel="stylesheet" href="ownui/base.css">',
+      '<link rel="stylesheet" href="ownui/components.css">',
+      '<link rel="stylesheet" href="ownui/ownui-theme.css">',
       '</head>',
       '<body>',
       '',
@@ -1306,7 +1306,7 @@
       '  <div class="ui-container ui-container--wide ui-navbar__inner">',
       '    <a class="ui-navbar__brand" href="#">',
       '      <span class="ui-navbar__logo" aria-hidden="true">',
-      '        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.4 5.9 8.4 3.6v8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.2" y="11.45" width="9.6" height="1.9" rx="0.95" fill="currentColor"/></svg>',
+      '        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.55" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>',
       '      </span>',
       '      Acme',
       '    </a>',
@@ -1462,7 +1462,7 @@
       '  </div>',
       '</div>',
       '',
-      '<script src="oneui/components.js"></script>',
+      '<script src="ownui/components.js"></script>',
       '<script>',
       '  /* 行为都通过 ui:* 自定义事件广播，这里是原生接法。',
       '     换到 Vue / React 里就是 @ui:sort 或 addEventListener，逻辑一样。 */',
@@ -1498,7 +1498,7 @@
 
   function starterReadme() {
     return [
-      '# OneUI Starter',
+      '# OwnUI Starter',
       '',
       '解压后直接用浏览器打开 `index.html` 就能看，不需要构建、不需要装依赖。',
       '',
@@ -1509,19 +1509,19 @@
       '| `index.html` | 最小接入示例，从这里开始改 |',
       '| `golden.html` | 一整页完整样板：导航、指标、表格、表单、弹窗与事件接线 |',
       '| `AGENTS.md` | **给 AI 的规则**：禁止清单、Token 契约、决策表、15 个组件的完整片段 |',
-      '| `oneui.spec.json` | 组件契约的机器读版本，AI 按需取用 |',
+      '| `ownui.spec.json` | 组件契约的机器读版本，AI 按需取用 |',
       '| `llms.txt` | 索引，供抓站场景使用 |',
-      '| `oneui/tokens.css` | 全部设计 Token，三层结构：L1 原始 → L2 语义 → L3 组件 |',
-      '| `oneui/base.css` | 重置与排版基线 |',
-      '| `oneui/components.css` | 组件样式 |',
-      '| `oneui/components.js` | 组件行为，原生 JS，导出 `window.UI` |',
-      '| `oneui/oneui-theme.css` | 本次导出的主色主题 |',
-      '| `oneui/tokens.json` | 同一套 Token 的 JSON 版，给设计侧用 |',
+      '| `ownui/tokens.css` | 全部设计 Token，三层结构：L1 原始 → L2 语义 → L3 组件 |',
+      '| `ownui/base.css` | 重置与排版基线 |',
+      '| `ownui/components.css` | 组件样式 |',
+      '| `ownui/components.js` | 组件行为，原生 JS，导出 `window.UI` |',
+      '| `ownui/ownui-theme.css` | 本次导出的主色主题 |',
+      '| `ownui/tokens.json` | 同一套 Token 的 JSON 版，给设计侧用 |',
       '',
       '## 让 AI 照着写',
       '',
       '`AGENTS.md` 放在项目根目录就行 —— 多数编码助手（CodeBuddy、Claude Code、Cursor 等）',
-      '会自动读取它。`oneui.spec.json` 与它同级，AI 要查某个组件的准确类名时再读。',
+      '会自动读取它。`ownui.spec.json` 与它同级，AI 要查某个组件的准确类名时再读。',
       '',
       '这一步不做的话，AI 会按它的先验生成 Bootstrap 或 Tailwind 的类名：',
       '`container` / `d-flex` / `btn-primary` 在这套库里全都不存在，写了不报错，只是完全不生效。',
@@ -1530,15 +1530,15 @@
       '',
       '## 接入',
       '',
-      '`oneui-theme.css` 必须排在 `tokens.css` 之后，其余顺序按下面这个来：',
+      '`ownui-theme.css` 必须排在 `tokens.css` 之后，其余顺序按下面这个来：',
       '',
       '```html',
-      '<link rel="stylesheet" href="oneui/tokens.css">',
-      '<link rel="stylesheet" href="oneui/base.css">',
-      '<link rel="stylesheet" href="oneui/components.css">',
-      '<link rel="stylesheet" href="oneui/oneui-theme.css">',
+      '<link rel="stylesheet" href="ownui/tokens.css">',
+      '<link rel="stylesheet" href="ownui/base.css">',
+      '<link rel="stylesheet" href="ownui/components.css">',
+      '<link rel="stylesheet" href="ownui/ownui-theme.css">',
       '',
-      '<script src="oneui/components.js"><\/script>',
+      '<script src="ownui/components.js"><\/script>',
       '<script>UI.init();<\/script>',
       '```',
       '',
@@ -1553,7 +1553,7 @@
       '',
       '## 改颜色',
       '',
-      '微调：直接改 `oneui/oneui-theme.css` 里的 `--ui-p-*`。档位契约是'
+      '微调：直接改 `ownui/ownui-theme.css` 里的 `--ui-p-*`。档位契约是'
         + ' 600 = 主色、700 = hover、800 = active、900 = 深色模式的淡底。',
       '',
       '换一整套：回文档站的「主色配置」重新导出，覆盖同名文件即可。'
@@ -1574,13 +1574,13 @@
      随便什么环境都能出，file:// 下不可用的只有需要读源码的 library/。
      少了这一步，导出的就只是一套「看得见」的样式，而不是「能让 AI 照着写」的规范。 */
   function aiBundle() {
-    var spec = window.OneUISpec;
-    var ai = window.OneUIAI;
+    var spec = window.OwnUISpec;
+    var ai = window.OwnUIAI;
     if (!spec || !ai) return [];
     return [
       { name: 'AGENTS.md', text: ai.renderAgentsMd(spec) },
       { name: 'llms.txt', text: ai.renderLlmsTxt(spec) },
-      { name: 'oneui.spec.json', text: ai.renderSpecJson(spec) }
+      { name: 'ownui.spec.json', text: ai.renderSpecJson(spec) }
     ];
   }
 
@@ -1595,7 +1595,7 @@
         { name: 'golden.html', text: goldenPage() },
         /* 规范放在项目根：AGENTS.md 是多数编码助手会自动读的位置，
            spec.json 与它同级便于互相引用。 */
-        { name: 'oneui/oneui-theme.css', text: buildThemeCss() }
+        { name: 'ownui/ownui-theme.css', text: buildThemeCss() }
       ].concat(aiBundle(), files));
     });
   }
@@ -1625,7 +1625,7 @@
       return buildStarterZip();
     }).then(function (bytes) {
       if (!bytes) return;
-      saveFile('oneui-starter.zip', bytes, 'application/zip');
+      saveFile('ownui-starter.zip', bytes, 'application/zip');
     }).catch(function (err) {
       UI.toast({
         message: '打包失败：' + (err && err.message ? err.message : '未知错误'),
@@ -1650,7 +1650,7 @@
         var css = buildThemeCss();
         UI.copy(css).then(function (ok) {
           UI.toast({
-            message: ok ? 'oneui-theme.css 已复制（' + css.split('\n').length + ' 行）'
+            message: ok ? 'ownui-theme.css 已复制（' + css.split('\n').length + ' 行）'
                         : '复制失败，请在预览里手动全选',
             type: ok ? 'success' : 'danger', duration: 2400
           });
@@ -1658,11 +1658,11 @@
         return;
       }
       if (btn.hasAttribute('data-export-css')) {
-        saveFile('oneui-theme.css', buildThemeCss(), 'text/css');
+        saveFile('ownui-theme.css', buildThemeCss(), 'text/css');
         return;
       }
       if (btn.hasAttribute('data-export-json')) {
-        saveFile('oneui-tokens.json', buildThemeJson(), 'application/json');
+        saveFile('ownui-tokens.json', buildThemeJson(), 'application/json');
         return;
       }
       if (btn.hasAttribute('data-export-link')) {
@@ -1725,7 +1725,7 @@
   /* ============================================================
      AI 规范页（docs/ai.html）
      ------------------------------------------------------------
-     这一页的正文全部从 oneui.spec.js 渲染出来，页面里只有空容器。
+     这一页的正文全部从 ownui.spec.js 渲染出来，页面里只有空容器。
      这么做的理由不是省事，是**不允许漂移**：规范若有一份手写的副本，
      改了数据源而忘了改副本，页面上就会教 AI 用不存在的类名。
      现在页面与导出文件走同一组渲染函数，二者不可能不一致。
@@ -1735,10 +1735,10 @@
   (function initAiPage() {
     var host = document.querySelector('[data-ai-forbidden]');
     if (!host) return;
-    var spec = window.OneUISpec;
-    var ai = window.OneUIAI;
+    var spec = window.OwnUISpec;
+    var ai = window.OwnUIAI;
     if (!spec || !ai) {
-      host.innerHTML = '<div class="doc-note doc-note--warn">规范数据源没加载成功，请检查 oneui.spec.js 与 oneui.ai.js 的路径。</div>';
+      host.innerHTML = '<div class="doc-note doc-note--warn">规范数据源没加载成功，请检查 ownui.spec.js 与 ownui.ai.js 的路径。</div>';
       return;
     }
 
@@ -1747,7 +1747,7 @@
       agents: { name: 'AGENTS.md',        mime: 'text/markdown;charset=utf-8', text: ai.renderAgentsMd(spec) },
       llms:   { name: 'llms.txt',         mime: 'text/plain;charset=utf-8',    text: ai.renderLlmsTxt(spec) },
       full:   { name: 'llms-full.txt',    mime: 'text/plain;charset=utf-8',    text: ai.renderLlmsFull(spec) },
-      spec:   { name: 'oneui.spec.json',  mime: 'application/json;charset=utf-8', text: ai.renderSpecJson(spec) }
+      spec:   { name: 'ownui.spec.json',  mime: 'application/json;charset=utf-8', text: ai.renderSpecJson(spec) }
     };
 
     var esc = function (s) {
@@ -1906,7 +1906,7 @@
   /* ============================================================
      自检页（docs/check.html）
      ------------------------------------------------------------
-     规则集与 oneui.spec.js 同源：禁止清单里那些「会被写错的东西」，
+     规则集与 ownui.spec.js 同源：禁止清单里那些「会被写错的东西」，
      在这里变成可执行的检查。AI 写完让它自己跑一遍，比人肉 review 有效。
 
      实现取向：全部按「单个开标签」为检查单位。
@@ -1917,7 +1917,7 @@
   /* ============================================================
      自检页（docs/check.html）
      ------------------------------------------------------------
-     规则集与 oneui.spec.js 同源：禁止清单里那些「会被写错的东西」，
+     规则集与 ownui.spec.js 同源：禁止清单里那些「会被写错的东西」，
      在这里变成可执行的检查。AI 写完让它自己跑一遍，比人肉 review 有效。
 
      检查单位是「单个开标签 + 内联样式」。不用 DOMParser 是因为这一页
@@ -1930,14 +1930,14 @@
     var out = document.querySelector('[data-chk-report]');
     if (!input || !out) return;
 
-    var spec = window.OneUISpec;
+    var spec = window.OwnUISpec;
 
     /* ---------- 规则集 ----------
        检查实现与页面上那份规则清单都读这里。写成一份表而不是散在代码里，
        是为了避免「页面写着会查 A、实际没查」—— 那正是这套东西要防的病。
        级别：error 会让功能不工作或主题失效；warn 是可维护性问题。 */
     var RULES = [
-      { id: 'alien', sev: 'error', name: '非 OneUI 类名',
+      { id: 'alien', sev: 'error', name: '非 OwnUI 类名',
         fix: '本库没有这类类名，写了不报错但完全不生效。改用 ui- 前缀的等价类。' },
       { id: 'hex', sev: 'error', name: '裸色值',
         fix: '换成语义 token：var(--ui-primary) / var(--ui-text-2) / var(--ui-danger)。写死色值换主题时不会跟随。' },
@@ -1975,7 +1975,7 @@
     var R = {};
     RULES.forEach(function (r) { R[r.id] = r; });
 
-    /* 非 OneUI 的类名。这些是「写了不报错但完全不生效」，最该拦的一类。 */
+    /* 非 OwnUI 的类名。这些是「写了不报错但完全不生效」，最该拦的一类。 */
     var ALIEN_EXACT = [
       'container', 'container-fluid', 'row', 'flex', 'clearfix',
       'btn', 'form-control', 'form-group', 'input-group', 'table-responsive',
@@ -2022,7 +2022,7 @@
         }
       }
 
-      /* --- 1. 非 OneUI 类名：逐个 class 词元判断，避免误伤 ui-row 里的 row --- */
+      /* --- 1. 非 OwnUI 类名：逐个 class 词元判断，避免误伤 ui-row 里的 row --- */
       var classRe = /class\s*=\s*("([^"]*)"|'([^']*)')/gi, cm;
       while ((cm = classRe.exec(text)) !== null) {
         var raw = cm[2] !== undefined ? cm[2] : cm[3];

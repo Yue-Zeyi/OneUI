@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* ============================================================
-   OneUI · 构建部署产物（tools/build-dist.mjs）
+   OwnUI · 构建部署产物（tools/build-dist.mjs）
    ------------------------------------------------------------
    产出两样东西，都在 dist/ 下：
 
@@ -11,7 +11,7 @@
         ——包括 docs.js 里 zip 导出的 fetch 路径。这顺带修好一件事：
         本地 file:// 下打不开的 starter.zip，在 http(s) 部署下就能用了。
 
-   2. dist/oneui-standalone.html   单文件版首页
+   2. dist/ownui-standalone.html   单文件版首页
       · 五个 CSS / 四个 JS 全部内联，零外部请求
       · 给 EdgeOne「单 HTML 部署」这类只收一份文档的通道用
       · JS 里字面的 </script> 必须转义成 <\/script，否则内联即断
@@ -82,7 +82,7 @@ function buildStandalone() {
     (m, href) => '<style>\n' + readAsset(href) + '\n</style>\n'
   );
 
-  // JS：components.js / oneui.spec.js / oneui.ai.js / docs.js → 内联 <script>
+  // JS：components.js / ownui.spec.js / ownui.ai.js / docs.js → 内联 <script>
   html = html.replace(
     /[ \t]*<script src="(\.\.\/library\/[\w.-]+|[\w.-]+\.js)"><\/script>\n?/g,
     (m, src) => {
@@ -93,11 +93,11 @@ function buildStandalone() {
   );
 
   // 防呆：不该再剩下任何本地引用
-  const leftover = html.match(/(?:src|href)="(\.\.\/|docs\.(?:css|js)|oneui\.(?:spec|ai))/g);
+  const leftover = html.match(/(?:src|href)="(\.\.\/|docs\.(?:css|js)|ownui\.(?:spec|ai))/g);
   if (leftover) throw new Error('单文件版仍有外部引用：' + leftover.join(', '));
 
-  writeFileSync(join(DIST, 'oneui-standalone.html'), html);
-  console.log('写出 dist/oneui-standalone.html',
+  writeFileSync(join(DIST, 'ownui-standalone.html'), html);
+  console.log('写出 dist/ownui-standalone.html',
     (html.length / 1024).toFixed(1) + ' KB（全部内联，starter 模板已剔除）');
 }
 
@@ -105,8 +105,8 @@ function buildStandalone() {
 
 const SITE_FILES = [
   'index.html', 'docs.html', 'ai.html', 'check.html',
-  'docs.css', 'docs.js', 'oneui.spec.js', 'oneui.ai.js',
-  'llms.txt', 'llms-full.txt', 'oneui.spec.json',
+  'docs.css', 'docs.js', 'ownui.spec.js', 'ownui.ai.js',
+  'llms.txt', 'llms-full.txt', 'ownui.spec.json',
 ];
 
 function buildSite() {

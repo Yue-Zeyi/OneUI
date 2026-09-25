@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI 规范 · OneUI</title>
-<meta name="description" content="让 AI 照着 OneUI 写的四份机器可读文件：AGENTS.md、llms.txt、oneui.spec.json、golden.html。含禁止清单、决策表与组件契约。">
+<title>AI 规范 · OwnUI</title>
+<meta name="description" content="让 AI 照着 OwnUI 写的四份机器可读文件：AGENTS.md、llms.txt、ownui.spec.json、golden.html。含禁止清单、决策表与组件契约。">
 <link rel="stylesheet" href="../library/tokens.css">
 <link rel="stylesheet" href="../library/base.css">
 <link rel="stylesheet" href="../library/components.css">
@@ -16,9 +16,9 @@
   <div class="ui-container ui-container--wide ui-navbar__inner">
     <a class="ui-navbar__brand" href="index.html">
       <span class="ui-navbar__logo" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.4 5.9 8.4 3.6v8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.2" y="11.45" width="9.6" height="1.9" rx="0.95" fill="currentColor"/></svg>
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.55" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
       </span>
-      OneUI
+      OwnUI
       <span class="doc-brand-sub">v1.0.0</span>
     </a>
     <nav class="ui-nav" aria-label="主导航">
@@ -144,7 +144,7 @@
     <section class="doc-hero">
       <div class="doc-hero__eyebrow">
         <span class="ui-navbar__logo" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.4 5.9 8.4 3.6v8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.2" y="11.45" width="9.6" height="1.9" rx="0.95" fill="currentColor"/></svg>
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.55" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
         </span>
         AI 规范
       </div>
@@ -198,7 +198,7 @@
 
         <div class="ai-art">
           <div class="ai-art__top">
-            <code class="ui-code">oneui.spec.json</code>
+            <code class="ui-code">ownui.spec.json</code>
             <span class="ai-art__size" data-ai-size="spec"></span>
           </div>
           <div class="ai-art__desc">契约。每个组件的类名、变体、尺寸、状态、必需属性、ARIA、事件与代码片段。机器读的那一份。</div>
@@ -222,7 +222,7 @@
       </div>
 
       <div class="doc-note">
-        <b>怎么用：</b>把 <code class="ui-code">AGENTS.md</code> 和 <code class="ui-code">oneui.spec.json</code> 放进项目根目录就行，
+        <b>怎么用：</b>把 <code class="ui-code">AGENTS.md</code> 和 <code class="ui-code">ownui.spec.json</code> 放进项目根目录就行，
         多数编码助手会自动读取前者。其余两份不用放——<code class="ui-code">llms.txt</code> 是给爬站场景的，
         <code class="ui-code">llms-full.txt</code> 是给「只能贴文本」的场景的。
         首页导出的 <code class="ui-code">starter.zip</code> 里这四份都已经放好了。
@@ -341,7 +341,7 @@
         <div class="ui-card ui-card--pad-lg"><div class="ui-card__body ui-stack ui-stack--4">
           <div class="ui-h4">单一数据源</div>
           <p class="ui-text-sm ui-muted">
-            这一页看到的每个字、以及四份导出文件，都来自 <code class="ui-code">docs/oneui.spec.js</code> 一个文件。
+            这一页看到的每个字、以及四份导出文件，都来自 <code class="ui-code">docs/ownui.spec.js</code> 一个文件。
             页面渲染与文件生成走的是同一组函数，不可能出现「页面上说 A、导出的文件里说 B」。
           </p>
         </div></div>
@@ -358,7 +358,7 @@
       <div class="doc-demo doc-demo--stack">
         <span class="doc-demo__label">构建命令</span>
         <div class="ui-codeblock">
-<pre><code># 生成四份产物（AGENTS.md / llms.txt / llms-full.txt / oneui.spec.json）
+<pre><code># 生成四份产物（AGENTS.md / llms.txt / llms-full.txt / ownui.spec.json）
 node tools/build-ai-files.mjs
 
 # 只校验不写文件，提交前或 CI 里用
@@ -379,7 +379,7 @@ node tools/build-ai-files.mjs --check</code></pre>
   <div class="ui-container ui-container--wide" style="padding-block: var(--ui-space-8)">
     <div class="ui-row ui-row--between">
       <div class="ui-stack ui-stack--2">
-        <div class="ui-h4">OneUI</div>
+        <div class="ui-h4">OwnUI</div>
         <div class="ui-caption ui-muted">框架无关的通用 UI 组件库 · v1.0.0 · 中性无色主题 + 单一可配置主色</div>
       </div>
       <div class="ui-cluster ui-cluster--4">
@@ -409,8 +409,8 @@ node tools/build-ai-files.mjs --check</code></pre>
 </noscript>
 
 <script src="../library/components.js"></script>
-<script src="oneui.spec.js"></script>
-<script src="oneui.ai.js"></script>
+<script src="ownui.spec.js"></script>
+<script src="ownui.ai.js"></script>
 <script src="docs.js"></script>
 </body>
 </html>

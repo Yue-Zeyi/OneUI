@@ -1,4 +1,4 @@
-# OneUI
+# OwnUI
 
 > 不挑框架的通用 UI 组件库。CSS 变量 + 原生 JS，零依赖零构建。中性无色主题打底，主色一处可换；每个交互组件实现七态，命中区与对比度按无障碍底线校验。
 
@@ -8,7 +8,7 @@
 ## 文档
 
 - [AGENTS.md](AGENTS.md)：规则与禁止清单。写代码前先读这一份。
-- [oneui.spec.json](oneui.spec.json)：完整组件契约（机器读）。
+- [ownui.spec.json](ownui.spec.json)：完整组件契约（机器读）。
 
 ## 源码
 

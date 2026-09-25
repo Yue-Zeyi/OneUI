@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* ============================================================
-   OneUI · 部署单文件版到 EdgeOne（tools/deploy-edgeone.mjs）
+   OwnUI · 部署单文件版到 EdgeOne（tools/deploy-edgeone.mjs）
    ------------------------------------------------------------
    为什么不直接用 `mcporter call ... value="$(cat dist/oneui-standalone.html)"`：
    产物 300+ KB，Windows CreateProcess 命令行上限 32 KB，必炸。
@@ -13,7 +13,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const ENDPOINT = 'https://mcp-on-edge.edgeone.app/mcp-server';
-const FILE = process.argv[2] || join(process.cwd(), 'dist', 'oneui-standalone.html');
+const FILE = process.argv[2] || join(process.cwd(), 'dist', 'ownui-standalone.html');
 const html = readFileSync(FILE, 'utf8');
 console.log('读取', FILE, (html.length / 1024).toFixed(1) + ' KB');
 
