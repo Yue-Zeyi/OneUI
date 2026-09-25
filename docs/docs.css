@@ -340,6 +340,212 @@ body { background: var(--ui-bg); }
    避免 2px 边框把 28px 的圆点压小 */
 .doc-accent-dot[aria-checked="true"] { box-shadow: 0 0 0 2px var(--ui-surface), 0 0 0 4px var(--ui-primary); }
 
+/* 调色板（自绘浮层，文档站专有）
+   ------------------------------------------------------------
+   为什么不用原生 <input type="color">：它弹出的是系统对话框，站内拿不到
+   实时预览、样式完全不可控，也和本站自己的浮层体系不是一套。自绘还能顺手
+   显示对比度读数——这正是「为什么会自动改色」的可预期性来源。
+
+   为什么放 docs.css 而不是 library/：它是文档站的换肤工具，不是通用组件。
+   放进库就得进发布物、要过整套发布审计，而它对任何接入方都没用。 */
+.doc-accent-chip {
+  flex: none;
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-primary);
+  box-shadow: 0 0 0 1px var(--ui-border-strong);
+}
+.doc-accent-mobile__palette { margin-top: var(--ui-space-4); }
+
+.doc-palette {
+  position: fixed;
+  /* 用 modal 层而不是 dropdown 层：窄屏的入口在抽屉里，抽屉自己就是 z-modal，
+     而它是 --ui-z-overlay 之上的全屏层；停在 60 会被盖住，拖色时看不见预览。
+     与抽屉同级、靠 docs.css 后加载取胜；又低于 toast(110)，提示不会被压掉。 */
+  z-index: var(--ui-z-modal);
+  width: 248px;
+  padding: var(--ui-space-3);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-block);
+  box-shadow: var(--ui-shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity var(--ui-dur-2) var(--ui-ease-out),
+              transform var(--ui-dur-2) var(--ui-ease-out),
+              visibility var(--ui-dur-2);
+}
+.doc-palette.is-open { opacity: 1; visibility: visible; transform: none; }
+
+.doc-palette__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2);
+  margin-bottom: var(--ui-space-3);
+}
+.doc-palette__title {
+  font-size: var(--ui-type-overline);
+  font-weight: var(--ui-fw-semibold);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ui-text-3);
+}
+/* .ui-icon-btn 基类没有 position:relative，命中区伪元素要靠它定位，这里补上。
+   视觉 28px、命中区 28 + 8×2 = 44px，够到 --ui-hit-min 的底线。 */
+.doc-palette__close { position: relative; width: 28px; height: 28px; }
+.doc-palette__close::after { content: ""; position: absolute; inset: -8px; }
+
+/* SV 面板：底色是纯色相，上面叠「向右压白」「向上压黑」两层。
+   下面这些写死的 #FFF / #000 不是主题色，而是色彩空间的坐标轴本身，
+   换成变量反而会把色域算错——和 .doc-accent-swatch 写死预设值是同一个道理。 */
+.doc-palette__sv {
+  position: relative;
+  height: 128px;
+  border-radius: var(--ui-radius-control);
+  overflow: hidden;
+  cursor: crosshair;
+  touch-action: none;   /* 不写死：触屏拖动会被页面滚动抢走，面板直接拖不动 */
+}
+.doc-palette__sv-fill { position: absolute; inset: 0; background: #FF0000; }
+.doc-palette__sv-white { position: absolute; inset: 0; background: linear-gradient(to right, #FFF, rgba(255, 255, 255, 0)); }
+.doc-palette__sv-black { position: absolute; inset: 0; background: linear-gradient(to top, #000, rgba(0, 0, 0, 0)); }
+
+.doc-palette__thumb {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: var(--ui-radius-pill);
+  border: 2px solid #FFF;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .38);
+  pointer-events: none;
+}
+
+/* 色相条同样写死 —— 它就是色相环的展开，走变量会失去意义 */
+.doc-palette__hue {
+  position: relative;
+  height: 12px;
+  margin-top: var(--ui-space-3);
+  border-radius: var(--ui-radius-pill);
+  cursor: pointer;
+  touch-action: none;
+  background: linear-gradient(to right,
+    #FF0000 0%, #FFFF00 16.6%, #00FF00 33.3%, #00FFFF 50%,
+    #0000FF 66.6%, #FF00FF 83.3%, #FF0000 100%);
+}
+.doc-palette__hue .doc-palette__thumb { top: 50%; }
+
+.doc-palette__row {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  margin-top: var(--ui-space-3);
+}
+.doc-palette__preview {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--ui-radius-control);
+  box-shadow: 0 0 0 1px var(--ui-border-strong);
+}
+.doc-palette__hex {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--ui-font-mono);
+  text-transform: uppercase;
+}
+
+.doc-palette__meta {
+  display: flex;
+  gap: var(--ui-space-2);
+  margin-top: var(--ui-space-3);
+}
+.doc-palette__ratio {
+  flex: 1;
+  padding: 3px var(--ui-space-2);
+  border-radius: var(--ui-radius-control);
+  background: var(--ui-surface-2);
+  font-size: var(--ui-type-caption);
+  color: var(--ui-text-3);
+}
+.doc-palette__ratio b {
+  font-family: var(--ui-font-mono);
+  font-weight: var(--ui-fw-semibold);
+  color: var(--ui-text-2);
+}
+/* 高亮实际生效的那一侧：引擎就是按这行读数决定用白字还是墨字的 */
+.doc-palette__ratio.is-picked { background: var(--ui-primary-weak); color: var(--ui-text); }
+.doc-palette__ratio.is-picked b { color: var(--ui-text); }
+
+.doc-palette__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2);
+  margin-top: var(--ui-space-3);
+  padding-top: var(--ui-space-3);
+  border-top: 1px solid var(--ui-border);
+}
+/* flex:1 而不是靠父级 space-between：最近用色为空时它是一个 0 宽的元素，
+   space-between 会让"恢复默认"跑到中间去。让它吃掉剩余空间，按钮就恒定贴右。 */
+.doc-palette__recent { flex: 1; display: flex; gap: var(--ui-space-2); }
+.doc-palette__recent-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--ui-radius-pill);
+  box-shadow: 0 0 0 1px var(--ui-border-strong);
+  cursor: pointer;
+}
+/* 触屏命中区：视觉 20px 不变，用居中 44px 透明框撑开 */
+@media (pointer: coarse) {
+  .doc-palette__recent-dot { position: relative; }
+  .doc-palette__recent-dot::after {
+    content: "";
+    position: absolute;
+    left: 50%; top: 50%;
+    width: var(--ui-hit-min); height: var(--ui-hit-min);
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* 导出（文档站专有）
+   「预览」借用库自带的折叠面板并默认收起：生成的 CSS 有五十来行，
+   直接铺开会把这一节压得看不到底，而多数人只关心按钮能不能点。 */
+.doc-export {
+  margin-top: var(--ui-space-6);
+  padding: var(--ui-space-4) var(--ui-space-4) var(--ui-space-1);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-card);
+  background: var(--ui-surface);
+}
+.doc-export__head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: var(--ui-space-3) var(--ui-space-5); flex-wrap: wrap;
+}
+.doc-export__title { font-size: var(--ui-fs-15); font-weight: var(--ui-fw-semibold); color: var(--ui-text); }
+.doc-export__sub { margin-top: 2px; font-size: var(--ui-type-caption); color: var(--ui-text-3); }
+.doc-export__sub b { font-weight: var(--ui-fw-medium); color: var(--ui-text-2); font-family: var(--ui-font-mono); }
+.doc-export__ops { display: flex; align-items: center; gap: var(--ui-space-2); flex-wrap: wrap; }
+.doc-export__preview { margin-top: var(--ui-space-4); }
+.doc-export__lines { font-size: var(--ui-type-caption); font-weight: var(--ui-fw-regular); color: var(--ui-text-3); }
+.doc-export__code {
+  margin: 0;
+  max-height: 320px;
+  overflow: auto;
+  padding: var(--ui-space-3) var(--ui-space-4);
+  background: var(--ui-code-bg);
+  color: var(--ui-code-text);
+  border-radius: var(--ui-radius-block);
+  font-size: var(--ui-fs-12);
+  line-height: 1.7;
+  tab-size: 2;
+}
+.doc-export__code code { font-family: var(--ui-font-mono); white-space: pre; }
+
 /* 页脚 */
 .doc-footer { border-top: 1px solid var(--ui-border); background: var(--ui-surface); }
 
@@ -359,4 +565,9 @@ body { background: var(--ui-bg); }
   margin-top: var(--ui-space-4);
   line-height: var(--ui-lh-13);
 }
-.doc-note strong { color: var(--ui-text); }
+.doc-note strong,
+.doc-note b { color: var(--ui-text); }
+.doc-note[hidden] { display: none; }
+/* 不可用提示：左侧竖条用告警色，底色仍走中性面 —— 深色模式下
+   --ui-warning-50 这类亮色底会白得刺眼，而告警色本身两个主题都够清楚。 */
+.doc-note--warn { box-shadow: inset 3px 0 0 var(--ui-warning-500); }

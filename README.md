@@ -100,7 +100,13 @@ await OneUI.copy('要复制的文本');
 覆盖 L1 的 10 个原始值：
 
 ```css
-:root[data-ui-accent="brand"] {
+/* 选择器特意写成 :root:where([…]) 而不是 :root[…] —— :where() 的权重恒为 0，
+   整条只剩 :root 的 0,1,0，刚好低于 tokens.css 里两个深色块（0,2,0）。
+   它们要把 hover / active / text 这三个浅色槽位改指到 --ui-primary-dark-*，
+   权重必须压得住你自己的块。若写成 :root[data-ui-accent="brand"]（0,2,0）、
+   又放在 tokens.css 之后，就会反过来压住深色块 —— 症状是深色模式下 hover
+   还是那个深蓝、主按钮仍然是白字。文档站的「导出」生成的也是这个写法。 */
+:root:where([data-ui-accent="brand"]) {
   --ui-p-50:  #EFF6FF;   /* weak 淡底 */
   --ui-p-100: #DBEAFE;   /* weak hover */
   --ui-p-200: #BFDBFE;   /* weak 边框 */
@@ -113,6 +119,7 @@ await OneUI.copy('要复制的文本');
   --ui-p-900: #172554;   /* 深色模式下的淡底 */
   --ui-primary-hover:  var(--ui-p-700);
   --ui-primary-active: var(--ui-p-800);
+  --ui-primary-text:   var(--ui-n-0);    /* 600 档偏亮时改成 var(--ui-n-950) */
   --ui-primary-dark:            var(--ui-p-400);
   --ui-primary-dark-hover:      var(--ui-p-300);
   --ui-primary-dark-active:     var(--ui-p-200);
@@ -140,6 +147,27 @@ await OneUI.copy('要复制的文本');
 文档站的「主色配置」区块与右上角的配色开关改的是同一份状态：点任意一处，导航栏开关、窄屏抽屉底部的色点、区块内的色点三处一起高亮。自定义色值会算出完整 10 档色阶写到 `<html>` 的行内样式上；若所选色值压白字不足 4.5:1，它**先改用墨色文字**（保住色相），只有连墨字也过不了时才沿加深方向调整，并明确告诉你改成了什么——不静默改值。
 
 深色模式：给 `<html>` 加 `data-ui-theme="dark"`（或 `"auto"` 跟随系统），仅翻转语义层。
+
+### 3.5 从文档站直接导出
+
+文档站的「主色配置」区块底部有个**导出**面板，把当前这一版配色打包带走。五项里只有 zip 需要读文件，其余四项任何环境（含 `file://`）都能用：
+
+| 操作 | 产物 |
+| --- | --- |
+| 复制 CSS | 当前主题的 `oneui-theme.css` 全文进剪贴板 |
+| 下载 oneui-theme.css | 上面那份，优先走系统「另存为」对话框 |
+| 下载 tokens.json | 同一套 Token 的 JSON 版（值已解析成最终色值），可直接喂 Tokens Studio / Style Dictionary |
+| 下载 starter.zip | library 五个文件 + 这一版主题 + 最小示例页 + 接入说明，解压即能跑 |
+| 复制分享链接 | 把主色与主题编码进 URL hash，如 `#accent=custom&c=%23FF6B35&theme=dark`，别人打开就是同一个配色 |
+
+几条约定：
+
+- 导出的 CSS 选择器是 `:root:where([data-ui-accent="brand"])`（权重 0,1,0，理由见 3.2），用法是放在 `tokens.css` 之后 + `<html data-ui-accent="brand">`；文件末尾另附一份改 `:root` 的「直改版」，给不想动 HTML 的场景。
+- 导出的文件**与深浅色无关**：浅色槽位与深色槽位都在里面，切主题即换一套。生成时会临时按浅色读取语义槽位，免得把深色模式下的取值写进浅色槽位。
+- 值与 `tokens.css` 对得上的写成 `var()` 引用（改色阶时状态档自动跟随），对不上的（自定义色算出来的深色主色没有对应档位）写具体色值。
+- `starter.zip` 要把本地源码一起打包，`file://` 下会被同源策略拦住 —— 此时按钮置灰并说明原因与解决办法（起个本地服务器即可），不做静默失败。
+
+分享链接的优先级：**链接里的配置 > 本地存储 > 默认墨黑**。目录锚点（`#btn` 这类不带 `=` 的 hash）不会被误读成配置。
 
 ## 4. 组件清单一览
 

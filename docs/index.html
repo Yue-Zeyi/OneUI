@@ -64,6 +64,11 @@
             <span class="doc-accent-swatch" style="background:#7C3AED" aria-hidden="true"></span>紫罗兰
             <span class="ui-menu__check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4"/></svg></span>
           </button>
+          <div class="ui-menu__divider"></div>
+          <button class="ui-menu__item" role="menuitem" type="button" data-accent-palette>
+            <span class="ui-menu__icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.2"/><circle cx="7.2" cy="7.9" r="1.05"/><circle cx="12.8" cy="7.9" r="1.05"/><circle cx="8.3" cy="12.9" r="1.05"/></svg></span>调色板
+            <span class="ui-menu__shortcut">自定义</span>
+          </button>
         </div>
       </div>
       <button class="ui-icon-btn ui-navbar__toggle" type="button" data-ui-navbar-toggle aria-expanded="false" aria-label="打开目录">
@@ -95,6 +100,9 @@
         <button class="doc-accent-dot" type="button" data-accent-option="orange" style="background:#C2410C" aria-label="橙" aria-checked="false" role="menuitemradio"></button>
         <button class="doc-accent-dot" type="button" data-accent-option="violet" style="background:#7C3AED" aria-label="紫罗兰" aria-checked="false" role="menuitemradio"></button>
       </div>
+      <button class="ui-btn ui-btn--default ui-btn--sm doc-accent-mobile__palette" type="button" data-accent-palette>
+        <span class="doc-accent-chip" data-accent-chip aria-hidden="true"></span>调色板
+      </button>
     </div>
   </div>
 </div>
@@ -512,8 +520,14 @@ const ok = await UI.confirm({
    不写这个属性就是默认的中性墨黑。两种主题、hover/active 方向都已配好。 */
 &lt;html data-ui-accent="blue"&gt;
 
-/* 方式二：自建色阶。加在 tokens.css 之后即可，档位契约如下 */
-:root[data-ui-accent="brand"] {
+/* 方式二：自建色阶。加在 tokens.css 之后即可，档位契约如下。
+
+   选择器特意写成 :root:where([…]) 而不是 :root[…] —— :where() 的权重恒为 0，
+   整条选择器只剩 :root 的 0,1,0，刚好低于 tokens.css 里两个深色块（0,2,0）。
+   深色块要把下面这三个浅色槽位改指到 --ui-primary-dark-*，权重必须压得住它们。
+   若写成 :root[data-ui-accent="brand"]（0,2,0），本文件在后就会反过来压住深色块，
+   症状是深色模式下 hover 还是那个深蓝、主按钮仍然是白字。 */
+:root:where([data-ui-accent="brand"]) {
   --ui-p-50:  #EFF6FF;   /* weak 淡底 */
   --ui-p-100: #DBEAFE;   /* weak hover */
   --ui-p-200: #BFDBFE;   /* weak 边框 */
@@ -528,6 +542,7 @@ const ok = await UI.confirm({
   /* 品牌色状态往"变深"走；墨黑是唯一例外，它往浅处走，否则加深肉眼不可见 */
   --ui-primary-hover:  var(--ui-p-700);
   --ui-primary-active: var(--ui-p-800);
+  --ui-primary-text:   var(--ui-n-0);    /* 600 档偏亮时改成 var(--ui-n-950) */
 
   /* 深色模式不反白，改走上半档浅色以保住色相——墨黑没有色相可保，才整体反白 */
   --ui-primary-dark:            var(--ui-p-400);
@@ -553,7 +568,10 @@ const ok = await UI.confirm({
             <button class="doc-accent-dot" type="button" data-accent-option="violet" style="background:#7C3AED" aria-label="紫罗兰" aria-checked="false" role="menuitemradio"></button>
           </div>
           <div class="doc-accent-row">
-            <input class="ui-input ui-input--sm doc-accent-input" type="text" placeholder="#2563EB" data-accent-input aria-label="自定义主色">
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-accent-palette>
+              <span class="doc-accent-chip" data-accent-chip aria-hidden="true"></span>调色板
+            </button>
+            <input class="ui-input ui-input--sm doc-accent-input" type="text" placeholder="#2563EB" data-accent-input aria-label="自定义主色（十六进制）" spellcheck="false">
             <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-accent-reset>恢复默认</button>
           </div>
         </div>
@@ -566,16 +584,73 @@ const ok = await UI.confirm({
           <div class="ui-switch"><input type="checkbox" id="accentSwitch" checked><span class="ui-switch__track"></span><label class="ui-switch__label" for="accentSwitch">开关</label></div>
         </div>
       </div>
+      <div class="doc-export" data-export>
+        <div class="doc-export__head">
+          <div>
+            <div class="doc-export__title">导出这一版主题</div>
+            <div class="doc-export__sub">当前 <b data-export-current>中性墨黑 · 浅色</b>，导出内容随主色与主题实时重算</div>
+          </div>
+          <div class="doc-export__ops">
+            <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-export-copy>复制 CSS</button>
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-css>下载 oneui-theme.css</button>
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-json>下载 tokens.json</button>
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-zip>下载 starter.zip</button>
+            <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-export-link>复制分享链接</button>
+          </div>
+        </div>
+        <div class="ui-collapse doc-export__preview" data-ui="collapse">
+          <div class="ui-collapse__item">
+            <button class="ui-collapse__header" type="button" aria-expanded="false" aria-controls="exportCss">
+              <span>预览 oneui-theme.css <span class="doc-export__lines" data-export-lines></span></span>
+              <span class="ui-collapse__chevron"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8l4.5 4.5L14.5 8"/></svg></span>
+            </button>
+            <div class="ui-collapse__panel" id="exportCss" hidden>
+              <pre class="doc-export__code"><code data-export-code></code></pre>
+            </div>
+          </div>
+        </div>
+        <div class="doc-note" data-export-hint>
+          <b>怎么用：</b>把导出的 <code class="ui-code">oneui-theme.css</code> 放在 <code class="ui-code">tokens.css</code> 之后，
+          在 <code class="ui-code">&lt;html&gt;</code> 上写 <code class="ui-code">data-ui-accent="brand"</code> 即可；
+          文件末尾还附了一份「直改版」<code class="ui-code">:root</code>，不想加属性就直接用那份。
+          <b>starter.zip</b> 是「解压即能跑」的一份：library 五个文件 + 这一版主题 + 一个最小示例页 + 接入说明，
+          连 <code class="ui-code">README.md</code> 里的目录说明都写好了。
+          <b>复制分享链接</b>会把当前主色与主题编码进 URL 的 hash，别人打开就是同一个配色。
+          <br>
+          导出的文件<b>与深浅色无关</b>：浅色槽位和深色槽位都在里面，切主题即换一套。
+          它的选择器写成 <code class="ui-code">:root:where([…])</code> 正是为了让权重留在 0,1,0 ——
+          否则后引入的它会压住 tokens.css 的深色块，深色模式下 hover 会退回浅色档、主按钮的字会变成白色。
+        </div>
+        <div class="doc-note doc-note--warn" data-export-warn hidden>
+          <b>starter.zip 暂时不可用。</b>它要把 <code class="ui-code">library/</code> 里的源码一起打包，而浏览器不允许页面在
+          <code class="ui-code">file://</code> 下读取本地文件（这正是它比另外几个导出项多出来的依赖）。
+          在项目根目录起一个本地服务再访问即可恢复，例如 <code class="ui-code">python -m http.server</code> 之后打开
+          <code class="ui-code">http://localhost:8000/docs/</code>。其余四项不读文件，任何环境下都能用。
+        </div>
+      </div>
       <div class="doc-note">
         上面这排色点、右上角开关、以及窄屏抽屉底部的色点，是<b>同一组选项、同一段状态</b>——点任意一处，三处一起高亮。
         联动之所以能成立，是因为它们改的都是 <code class="ui-code">&lt;html&gt;</code> 上的 <code class="ui-code">--ui-p-*</code>：
         <code class="ui-code">--ui-primary / hover / active / weak / border</code> 全部派生自它，于是按钮、开关、进度、标签自动跟随。
         <b>注意作用域</b>：这些声明必须落在 <code class="ui-code">&lt;html&gt;</code> 上，写到某个后代元素上是不生效的——
         <code class="ui-code">var()</code> 在声明它的元素上就完成了替换，父级那份早已变成具体色值继承下来。
+        <b>作用域之外还有一个权重坑</b>：两个深色块（<code class="ui-code">:root[data-ui-theme="dark"]</code> 与
+        <code class="ui-code">@media</code> 里那条 <code class="ui-code">auto</code>）都是 0,2,0，
+        它们负责把 <code class="ui-code">hover / active / text</code> 这三个浅色槽位改指到深色槽位。
+        自己的色阶块若也写成 0,2,0 又放在其后，就会把这份覆盖权抢走，深色模式的 hover 会退回浅色档。
+        写成 <code class="ui-code">:root:where([…])</code> 让它只剩 0,1,0 即可 —— 上面代码块与导出的文件都是这么写的。
         自定义色值会算出完整的 10 档色阶写到 <code class="ui-code">&lt;html&gt;</code> 的行内样式上；
         若所选色值压白字不足 4.5:1，它<b>先改用墨色文字</b>把色相原样留住，只有连墨字也过不了的中间调窄带，
         才沿加深方向调整，并<b>明确告诉你改成了什么</b>——不静默改值。
         深色模式下预设主色不反白：它走 400 档浅色配深字以保住色相，只有墨黑因为无色相可保才整体反白。
+      </div>
+      <div class="doc-note">
+        <b>调色板</b>是自绘的，不是 <code class="ui-code">&lt;input type="color"&gt;</code>——后者的系统对话框
+        拿不到实时预览，样式也不受控。面板里拖动 SV 方块与色相条会<b>边拖边改全站</b>（rAF 节流），
+        松手才落盘并提示；下面两行对比度读数会实时告诉你引擎最终会用白字还是墨字。
+        一处刻意的行为：<b>当前色暗到或灰到看不出色相时，一碰色相条会先把它抬进可辨区间</b>
+        （明度 &lt;35% 抬到 85%，饱和度 &lt;35% 抬到 70%）。否则默认的墨黑明度只有 11%，
+        拖色相条会毫无反应、看着像坏了。深蓝、翠绿这类正常色不受影响。
       </div>
     </section>
 
