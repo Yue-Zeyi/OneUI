@@ -2160,6 +2160,9 @@
     }
 
     /* ---------- 页面上那份规则清单：读同一份 RULES ---------- */
+    /* 首屏徽标的规则数也活取——写死的话下次加规则就变成撒谎 */
+    var countBadge = document.querySelector('[data-chk-count]');
+    if (countBadge) countBadge.textContent = RULES.length + ' 条规则';
     var rulesHost = document.querySelector('[data-chk-rules]');
     if (rulesHost) {
       var h = '<div class="ui-table-wrap ai-table"><table class="ui-table ui-table--compact"><thead><tr>' +

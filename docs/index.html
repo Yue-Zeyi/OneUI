@@ -200,7 +200,7 @@
             <div class="ui-switch"><input type="checkbox" id="landSwitch" checked><span class="ui-switch__track"></span><label class="ui-switch__label" for="landSwitch">开关</label></div>
           </div>
           <div class="doc-land-preview__row">
-            <input class="ui-input" type="text" placeholder="输入框，焦点环取主色" style="max-width: 240px">
+            <input class="ui-input" type="text" placeholder="输入框，焦点环取主色" aria-label="输入框示例">
             <button class="ui-icon-btn" type="button" aria-label="更多操作">
               <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10" cy="4.6" r=".9"/><circle cx="10" cy="10" r=".9"/><circle cx="10" cy="15.4" r=".9"/></svg>
             </button>
@@ -230,11 +230,11 @@
             </div>
           </div>
           <div class="doc-export__ops">
-            <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-export-copy>复制 CSS</button>
+            <button class="ui-btn ui-btn--primary ui-btn--sm" type="button" data-export-zip>下载 starter.zip</button>
             <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-css>下载 oneui-theme.css</button>
             <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-json>下载 tokens.json</button>
-            <button class="ui-btn ui-btn--primary ui-btn--sm" type="button" data-export-zip>下载 starter.zip</button>
-            <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-export-link>复制分享链接</button>
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-copy>复制 CSS</button>
+            <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-export-link>复制分享链接</button>
           </div>
         </div>
         <div class="ui-collapse doc-export__preview" data-ui="collapse">
@@ -249,16 +249,18 @@
           </div>
         </div>
         <div class="doc-note" data-export-hint>
-          <b>starter.zip 是「解压即能跑」的一份：</b><code class="ui-code">library/</code> 五个文件 + 这一版主题 +
-          最小示例页 + 一页完整样板 + <code class="ui-code">AGENTS.md</code> 与组件契约。
-          后两样是给 AI 看的——放进你的项目，它写的页面就自然是这套 UI。
-          <b>复制分享链接</b>会把当前主色与主题编码进 URL 的 hash，别人打开就是同一个配色。
+          <div><b>starter.zip 解压即用：</b><code class="ui-code">library/</code> 五个文件 + 这一版主题 +
+          示例页 + 一页完整样板 + <code class="ui-code">AGENTS.md</code> 与组件契约。</div>
+          <div>后两样是给 AI 看的——放进你的项目，它写的页面就自然是这套 UI。
+          「复制分享链接」会把当前主色与主题编码进 URL 的 hash，别人打开就是同一个配色。</div>
         </div>
         <div class="doc-note doc-note--warn" data-export-warn hidden>
-          <b>starter.zip 暂时不可用。</b>它要把 <code class="ui-code">library/</code> 里的源码一起打包，而浏览器不允许页面在
-          <code class="ui-code">file://</code> 下读取本地文件（这正是它比另外几个导出项多出来的依赖）。
-          在项目根目录起一个本地服务再访问即可恢复，例如 <code class="ui-code">python -m http.server</code> 之后打开
-          <code class="ui-code">http://localhost:8000/docs/</code>。其余四项不读文件，任何环境下都能用。
+          <div><b>starter.zip 暂时不可用。</b>它要把 <code class="ui-code">library/</code> 里的源码一起打包，
+          而浏览器不允许页面在 <code class="ui-code">file://</code> 下读取本地文件
+          （这正是它比另外几个导出项多出来的依赖）。</div>
+          <div>在项目根目录起一个本地服务再访问即可恢复，例如
+          <code class="ui-code">python -m http.server</code> 之后打开
+          <code class="ui-code">http://localhost:8000/docs/</code>。其余四项不读文件，任何环境下都能用。</div>
         </div>
       </div>
     </section>
@@ -293,7 +295,7 @@
 
       <div class="doc-demo doc-demo--stack">
         <span class="doc-demo__label">两种用法</span>
-        <div class="ui-grid ui-grid--2 ui-grid--tight">
+        <div class="ui-grid ui-grid--2 ui-grid--tight doc-demo__duo">
           <div class="ui-stack ui-stack--3">
             <div class="ui-h4">声明式：写 data 属性即可</div>
             <div class="ui-codeblock ui-codeblock--light">

@@ -567,19 +567,26 @@ body { background: var(--ui-bg); }
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--ui-space-5);
-  align-items: start;
+  /* 不写 align-items: start —— 默认 stretch 让左右两张卡片等高、底边对齐；
+     之前设了 start，右栏导出面板比左栏调色台短一截，页面右下角悬着一块空白，
+     看起来像没排完版。 */
   scroll-margin-top: 76px;
 }
 @media (max-width: 1023px) {
   .doc-land-tool { grid-template-columns: minmax(0, 1fr); }
 }
 
-/* --- 调色台 --- */
+/* --- 调色台 ---
+   与右栏导出面板用同一档内边距（space-5），两栏标题左边缘才能对齐。
+   卡片本身是纵向 flex：底部注释行 margin-top:auto 吸底，
+   右栏等高时左栏的注释也贴住卡片底边，两栏的「落款」在同一水平线上。 */
 .doc-land-lab {
   padding: var(--ui-space-5);
   background: var(--ui-surface);
   border: 1px solid var(--ui-border);
   border-radius: var(--ui-radius-card);
+  display: flex;
+  flex-direction: column;
 }
 .doc-land-lab__title { font-size: var(--ui-fs-15); font-weight: var(--ui-fw-semibold); color: var(--ui-text); }
 .doc-land-lab__sub {
@@ -594,6 +601,9 @@ body { background: var(--ui-bg); }
   flex-direction: column;
   gap: var(--ui-space-3);
 }
+/* 自定义 hex 输入框撑满剩余宽度：固定 160px 会在「调色板 / 输入框 / 恢复默认」
+   后面留出一截突兀的空白，整行看起来没排过版。 */
+.doc-land-lab .doc-accent-input { flex: 1 1 140px; min-width: 120px; max-width: 220px; }
 .doc-land-preview {
   margin-top: var(--ui-space-4);
   padding: var(--ui-space-4);
@@ -605,8 +615,11 @@ body { background: var(--ui-bg); }
   border-radius: var(--ui-radius-block);
 }
 .doc-land-preview__row { display: flex; align-items: center; flex-wrap: wrap; gap: var(--ui-space-3); }
+/* 预览里的输入框撑满剩余宽度，与上面几行一样「占满整行」，节奏才统一 */
+.doc-land-preview .ui-input { flex: 1 1 180px; min-width: 160px; }
 .doc-land-lab__foot {
-  margin-top: var(--ui-space-4);
+  margin-top: auto; /* 吸底：见 .doc-land-lab 的注释 */
+  padding-top: var(--ui-space-4);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -614,16 +627,36 @@ body { background: var(--ui-bg); }
   gap: var(--ui-space-3);
 }
 
-/* --- 导出面板进右栏：五颗按钮改为两列网格，窄栏里不会挤成一坨 --- */
-.doc-export--land { margin-top: 0; }
+/* --- 导出面板进右栏：五颗按钮改为两列网格，窄栏里不会挤成一坨 ---
+   两个容易漏的细节：
+   · grid 必须显式给 gap —— 按钮是块级撑满的，没有 gap 就会零间距贴死，
+     看起来像一条被拍扁的按钮墙；
+   · padding 要与左侧调色台（space-5）一致。两栏并排，内边距不同会导致
+     标题、按钮列的左边缘对不上，这是「边距乱」观感的主要来源。
+     基类那个 space-1 的底边距是为文档页「注释贴底」设计的，落地页不适用。 */
+.doc-export--land {
+  margin-top: 0;
+  padding: var(--ui-space-5);
+  /* 等高布局下右栏内容比左栏短：纵向 flex + 注释吸底，
+     让空隙留在「预览折叠」与「说明条」之间，而不是卡片底部一大块空白。 */
+  display: flex;
+  flex-direction: column;
+}
 .doc-export--land .doc-export__head { display: block; }
 .doc-export--land .doc-export__ops {
   margin-top: var(--ui-space-4);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-2);
 }
 .doc-export--land .doc-export__ops > .ui-btn { width: 100%; }
 .doc-export--land [data-export-link] { grid-column: 1 / -1; }
+/* 折叠预览与说明条跟按钮组之间的节奏：比默认的 space-4 收半档。 */
+.doc-export--land .doc-export__preview { margin-top: var(--ui-space-3); }
+.doc-export--land .doc-note { margin-top: var(--ui-space-3); }
+/* 说明条吸底（hidden 的那条不占位，同时写上无副作用） */
+.doc-export--land [data-export-hint],
+.doc-export--land [data-export-warn] { margin-top: auto; padding-top: var(--ui-space-2); }
 
 /* --- 首页区块：只留上分隔线，节奏比文档页松一档 --- */
 .doc-land-sec {
@@ -642,6 +675,11 @@ body { background: var(--ui-bg); }
 @media (max-width: 640px) {
   .doc-ai-file { grid-template-columns: minmax(0, 1fr); gap: 2px; }
 }
+
+/* --- 「两种用法」双栏代码块等高 ---
+   .ui-grid 拉伸的是两个 .ui-stack 容器，但容器里的代码块各按内容高度排，
+   左 3 行右 5 行，底边参差。让代码块吃掉容器的剩余高度，两块底边就对齐了。 */
+.doc-demo__duo > .ui-stack > .ui-codeblock { flex: 1; }
 
 /* ============================================================
    AI 规范页（docs/ai.html 专有）
