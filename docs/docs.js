@@ -1566,9 +1566,39 @@
       '- 换肤只覆盖 L1 色阶与 L2 主色槽位，组件样式一行都不用动；',
       '- 状态方向：品牌色的 hover / active 往「更深」走，中性墨黑是唯一例外（往浅走），'
         + '否则加深肉眼看不出来。',
+      '',
+      '## 许可证',
+      '',
+      'OwnUI 基于 [MIT](LICENSE) 协议开源，本 starter 内已附带 LICENSE 文件。',
+      '可以自由使用、修改、再分发、商用，唯一要求是保留版权与许可声明。',
       ''
     ].join('\n');
   }
+
+  /* MIT 全文内嵌一份，starter.zip 里随包携带（约 1KB，store 模式不压缩也不心疼） */
+  var MIT_LICENSE_TEXT = [
+    'MIT License',
+    '',
+    'Copyright (c) 2026 Yue-Zeyi',
+    '',
+    'Permission is hereby granted, free of charge, to any person obtaining a copy',
+    'of this software and associated documentation files (the "Software"), to deal',
+    'in the Software without restriction, including without limitation the rights',
+    'to use, copy, modify, merge, publish, distribute, sublicense, and/or sell',
+    'copies of the Software, and to permit persons to whom the Software is',
+    'furnished to do so, subject to the following conditions:',
+    '',
+    'The above copyright notice and this permission notice shall be included in all',
+    'copies or substantial portions of the Software.',
+    '',
+    'THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR',
+    'IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,',
+    'FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE',
+    'AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER',
+    'LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,',
+    'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE',
+    'SOFTWARE.'
+  ].join('\n');
 
   /* 给 AI 的那几份。它们在内存里生成，不走 fetch —— 所以 content 部分
      随便什么环境都能出，file:// 下不可用的只有需要读源码的 library/。
@@ -1593,6 +1623,8 @@
         { name: 'README.md', text: starterReadme() },
         { name: 'index.html', text: starterDemo() },
         { name: 'golden.html', text: goldenPage() },
+        /* 协议跟着 starter 走：用户拿它再分发时不必回头找源头 */
+        { name: 'LICENSE', text: MIT_LICENSE_TEXT },
         /* 规范放在项目根：AGENTS.md 是多数编码助手会自动读的位置，
            spec.json 与它同级便于互相引用。 */
         { name: 'ownui/ownui-theme.css', text: buildThemeCss() }
