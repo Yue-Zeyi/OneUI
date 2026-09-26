@@ -574,6 +574,10 @@
 .ui-stat__value { font-size: var(--ui-fs-32); line-height: var(--ui-lh-32); font-weight: var(--ui-fw-bold); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
 .ui-stat__unit { font-size: var(--ui-fs-16); font-weight: var(--ui-fw-medium); color: var(--ui-text-2); margin-left: 2px; }
 .ui-stat__trend { display: inline-flex; align-items: center; gap: var(--ui-space-1); font-size: var(--ui-type-caption); color: var(--ui-text-2); }
+/* 趋势后面的补充说明文字（「较上月」这类） */
+.ui-stat__caption { font-size: var(--ui-type-caption); color: var(--ui-text-3); }
+/* 独立复选框（表格行首全选/行选这种不带 .ui-check 包裹的裸 input） */
+.ui-check__input { width: 16px; height: 16px; accent-color: var(--ui-primary); cursor: pointer; }
 .ui-stat__trend--up { color: var(--ui-success-text); }
 .ui-stat__trend--down { color: var(--ui-danger-text); }
 .ui-stat__icon {
@@ -899,6 +903,14 @@
 .ui-result--warning .ui-result__icon { background: var(--ui-warning-bg); color: var(--ui-warning-text); }
 .ui-result--danger .ui-result__icon { background: var(--ui-danger-bg); color: var(--ui-danger-text); }
 .ui-result__title { font-size: var(--ui-fs-20); font-weight: var(--ui-fw-semibold); }
+/* 大号字标变体（404 的「404」、500 的事件号）：替代 icon 的文字型头图 */
+.ui-result__glyph {
+  font-size: 64px;
+  line-height: 1;
+  font-weight: var(--ui-fw-semibold);
+  letter-spacing: .04em;
+  color: var(--ui-text-3);
+}
 .ui-result__desc { font-size: var(--ui-fs-14); color: var(--ui-text-2); max-width: 52ch; }
 .ui-result__actions { display: flex; gap: var(--ui-space-3); margin-top: var(--ui-space-2); flex-wrap: wrap; justify-content: center; }
 .ui-result__detail {
@@ -1000,6 +1012,22 @@
   border-bottom: 1px solid var(--ui-border);
 }
 .ui-modal__title { flex: 1; font-size: var(--ui-type-h4); font-weight: var(--ui-fw-semibold); }
+/* 关闭按钮：modal 与 drawer 的头部共用（此前页面在用但样式缺失，点击区无反馈） */
+.ui-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border: none;
+  border-radius: var(--ui-radius-control);
+  background: transparent;
+  color: var(--ui-text-3);
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.ui-modal__close:hover { background: var(--ui-surface-3); color: var(--ui-text); }
 .ui-modal__body { padding: var(--ui-space-6); overflow: auto; font-size: var(--ui-fs-14); line-height: var(--ui-lh-14); color: var(--ui-text-2); }
 .ui-modal__footer {
   display: flex;
@@ -1091,6 +1119,8 @@
 .ui-popconfirm.is-open { opacity: 1; visibility: visible; transform: none; }
 .ui-popconfirm__title { font-weight: var(--ui-fw-semibold); color: var(--ui-text); margin-bottom: var(--ui-space-1); }
 .ui-popconfirm__desc { color: var(--ui-text-2); line-height: var(--ui-lh-13); }
+/* 单行文本变体：admin 表格行内操作在用（确认「删除/退款？」这类一句话） */
+.ui-popconfirm__text { color: var(--ui-text); line-height: var(--ui-lh-13); }
 .ui-popconfirm__actions { display: flex; justify-content: flex-end; gap: var(--ui-space-2); margin-top: var(--ui-space-4); }
 
 /* 回到顶部 */

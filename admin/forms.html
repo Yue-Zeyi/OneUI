@@ -207,35 +207,35 @@
       <div class="ui-card__body">
         <form data-ui="validate" novalidate style="max-width: 680px">
           <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <label class="ui-field__label" for="fs-name">站点名称 <b aria-hidden="true">*</b></label>
+            <label class="ui-label" for="fs-name">站点名称 <b aria-hidden="true">*</b></label>
             <input class="ui-input" id="fs-name" name="site" type="text" value="OwnUI Admin" data-validate="required" data-message-required="站点名称不能为空">
-            <div class="ui-field__help">显示在浏览器标题与登录页</div>
+            <div class="ui-help">显示在浏览器标题与登录页</div>
           </div>
           <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <label class="ui-field__label" for="fs-url">站点地址 <b aria-hidden="true">*</b></label>
+            <label class="ui-label" for="fs-url">站点地址 <b aria-hidden="true">*</b></label>
             <input class="ui-input" id="fs-url" name="url" type="text" placeholder="https://admin.example.com" data-validate="required|url">
-            <div class="ui-field__help">以 https:// 开头的完整地址</div>
+            <div class="ui-help">以 https:// 开头的完整地址</div>
           </div>
           <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <label class="ui-field__label" for="fs-desc">站点描述</label>
+            <label class="ui-label" for="fs-desc">站点描述</label>
             <textarea class="ui-textarea" id="fs-desc" name="desc" rows="3" placeholder="一句话介绍这个后台是做什么的"></textarea>
           </div>
           <div class="ui-row" style="gap: var(--ui-space-4); margin-bottom: var(--ui-space-4)">
             <div class="ui-field" style="flex:1">
-              <label class="ui-field__label" for="fs-lang">界面语言</label>
+              <label class="ui-label" for="fs-lang">界面语言</label>
               <select class="ui-select" id="fs-lang">
                 <option>简体中文</option><option>English</option><option>日本語</option>
               </select>
             </div>
             <div class="ui-field" style="flex:1">
-              <label class="ui-field__label" for="fs-tz">时区</label>
+              <label class="ui-label" for="fs-tz">时区</label>
               <select class="ui-select" id="fs-tz">
                 <option>UTC+8 北京</option><option>UTC+0 伦敦</option><option>UTC-5 纽约</option>
               </select>
             </div>
           </div>
           <div class="ui-field" style="margin-bottom: var(--ui-space-5)">
-            <span class="ui-field__label">维护模式</span>
+            <span class="ui-label">维护模式</span>
             <div class="ui-switch">
               <input type="checkbox" id="fs-maint">
               <span class="ui-switch__track"></span>
@@ -257,28 +257,28 @@
         <form data-ui="validate" novalidate style="max-width: 760px">
           <div class="ui-row" style="gap: var(--ui-space-4)">
             <div class="ui-field" style="flex:1; margin-bottom: var(--ui-space-4)">
-              <label class="ui-field__label" for="fs-pwd">管理员密码 <b aria-hidden="true">*</b></label>
+              <label class="ui-label" for="fs-pwd">管理员密码 <b aria-hidden="true">*</b></label>
               <input class="ui-input" id="fs-pwd" name="pwd" type="password" placeholder="至少 8 位" data-validate="required|min:8">
-              <div class="ui-field__help">修改后会要求全部设备重新登录</div>
+              <div class="ui-help">修改后会要求全部设备重新登录</div>
             </div>
             <div class="ui-field" style="flex:1; margin-bottom: var(--ui-space-4)">
-              <label class="ui-field__label" for="fs-pwd2">确认密码 <b aria-hidden="true">*</b></label>
+              <label class="ui-label" for="fs-pwd2">确认密码 <b aria-hidden="true">*</b></label>
               <input class="ui-input" id="fs-pwd2" name="pwd2" type="password" data-validate="required">
             </div>
           </div>
           <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <label class="ui-field__label" for="fs-phone">绑定手机号 <b aria-hidden="true">*</b></label>
+            <label class="ui-label" for="fs-phone">绑定手机号 <b aria-hidden="true">*</b></label>
             <input class="ui-input" id="fs-phone" name="phone" type="tel" placeholder="11 位手机号" data-validate="required|phone">
           </div>
           <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <label class="ui-field__label" for="fs-budget">单日预算上限</label>
+            <label class="ui-label" for="fs-budget">单日预算上限</label>
             <div class="ui-input-group" style="max-width: 240px">
               <span class="ui-input-group__addon ui-input-group__addon--prefix">¥</span>
               <input class="ui-input" id="fs-budget" type="text" inputmode="decimal" value="5,000">
             </div>
           </div>
           <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <span class="ui-field__label">两步验证</span>
+            <span class="ui-label">两步验证</span>
             <div class="ui-stack ui-stack--2" role="radiogroup" aria-label="两步验证">
               <div class="ui-radio"><input type="radio" name="2fa" id="fa1" checked><label for="fa1">关闭</label></div>
               <div class="ui-radio"><input type="radio" name="2fa" id="fa2"><label for="fa2">短信验证码</label></div>
@@ -286,7 +286,7 @@
             </div>
           </div>
           <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <span class="ui-field__label">安全通知</span>
+            <span class="ui-label">安全通知</span>
             <div class="ui-row" style="gap: var(--ui-space-5)">
               <div class="ui-check"><input type="checkbox" id="nt1" checked><label for="nt1">异地登录提醒</label></div>
               <div class="ui-check"><input type="checkbox" id="nt2" checked><label for="nt2">密码修改提醒</label></div>
@@ -294,7 +294,7 @@
             </div>
           </div>
           <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <label class="ui-field__label" for="fs-expire">会话超时</label>
+            <label class="ui-label" for="fs-expire">会话超时</label>
             <div class="ui-segmented" data-ui="segmented" role="radiogroup" aria-label="会话超时" style="align-self: flex-start">
               <button class="ui-segment" role="radio" aria-selected="false" type="button">30 分钟</button>
               <button class="ui-segment" role="radio" aria-selected="true" type="button">2 小时</button>
@@ -303,7 +303,7 @@
             </div>
           </div>
           <div class="ui-field" style="margin-bottom: var(--ui-space-5)">
-            <span class="ui-field__label">备案材料上传</span>
+            <span class="ui-label">备案材料上传</span>
             <div class="ui-dropzone" data-ui="dropzone" style="padding: var(--ui-space-6); text-align: center">
               <svg width="28" height="28" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--ui-text-3)"><path d="M10 13V4M6.5 7.5L10 4l3.5 3.5"/><path d="M4 13.5V16h12v-2.5"/></svg>
               <div class="ui-caption ui-muted" style="margin-top: var(--ui-space-2)">点击或拖拽文件到此处，支持 PDF / JPG，单个不超过 10MB</div>

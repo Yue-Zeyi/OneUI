@@ -256,7 +256,7 @@
 
 <!-- 新增 / 编辑用户 -->
 <div class="ui-modal" id="userModal" aria-hidden="true" role="dialog" aria-labelledby="umTitle">
-  <div class="ui-modal__panel" style="max-width: 460px">
+  <div class="ui-modal__dialog" style="max-width: 460px">
     <div class="ui-modal__header">
       <div class="ui-modal__title" id="umTitle">新增用户</div>
       <button class="ui-modal__close" type="button" data-ui-close aria-label="关闭">
@@ -267,23 +267,23 @@
       <form id="uform" data-ui="validate" novalidate>
         <input type="hidden" id="uf-id">
         <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-          <label class="ui-field__label" for="uf-name">姓名 <b aria-hidden="true">*</b></label>
+          <label class="ui-label" for="uf-name">姓名 <b aria-hidden="true">*</b></label>
           <input class="ui-input" id="uf-name" name="name" type="text" placeholder="例如：王小明" data-validate="required">
-          <div class="ui-field__help">成员可见的显示名</div>
+          <div class="ui-help">成员可见的显示名</div>
         </div>
         <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-          <label class="ui-field__label" for="uf-email">邮箱 <b aria-hidden="true">*</b></label>
+          <label class="ui-label" for="uf-email">邮箱 <b aria-hidden="true">*</b></label>
           <input class="ui-input" id="uf-email" name="email" type="email" placeholder="name@example.com" data-validate="required|email">
-          <div class="ui-field__help">用于登录与通知</div>
+          <div class="ui-help">用于登录与通知</div>
         </div>
         <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-          <label class="ui-field__label" for="uf-role">角色</label>
+          <label class="ui-label" for="uf-role">角色</label>
           <select class="ui-select" id="uf-role" name="role">
             <option>成员</option><option>运营</option><option>管理员</option>
           </select>
         </div>
         <div class="ui-field" style="margin-bottom: var(--ui-space-2)">
-          <span class="ui-field__label">启用账户</span>
+          <span class="ui-label">启用账户</span>
           <div class="ui-switch">
             <input type="checkbox" id="uf-active" checked>
             <span class="ui-switch__track"></span>
@@ -503,13 +503,13 @@
         '<span class="ui-avatar" aria-hidden="true">' + u.name.charAt(0) + '</span>' +
         '<div><div class="adm-cell-user__name" style="font-size: var(--ui-fs-15)">' + u.name + '</div>' +
         '<div class="adm-cell-user__mail">' + u.email + '</div></div></div>' +
-      '<div class="ui-desc">' +
-        '<div class="ui-desc__item"><span class="ui-desc__label">角色</span><span class="ui-desc__value">' + u.role + '</span></div>' +
-        '<div class="ui-desc__item"><span class="ui-desc__label">状态</span><span class="ui-desc__value">' + statusHtml(u.status) + '</span></div>' +
-        '<div class="ui-desc__item"><span class="ui-desc__label">注册时间</span><span class="ui-desc__value">' + u.created + '</span></div>' +
-        '<div class="ui-desc__item"><span class="ui-desc__label">最近登录</span><span class="ui-desc__value">' + u.last + '</span></div>' +
-        '<div class="ui-desc__item"><span class="ui-desc__label">用户 ID</span><span class="ui-desc__value"><code class="ui-code">' + u.id + '</code></span></div>' +
-      '</div>';
+      '<dl class="ui-desc">' +
+        '<dt>角色</dt><dd>' + u.role + '</dd>' +
+        '<dt>状态</dt><dd>' + statusHtml(u.status) + '</dd>' +
+        '<dt>注册时间</dt><dd>' + u.created + '</dd>' +
+        '<dt>最近登录</dt><dd>' + u.last + '</dd>' +
+        '<dt>用户 ID</dt><dd><code class="ui-code">' + u.id + '</code></dd>' +
+      '</dl>';
     if (window.UI && UI.drawer) UI.drawer.open('#userDrawer');
   }
 

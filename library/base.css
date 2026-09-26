@@ -155,6 +155,7 @@ hr { border: none; border-top: 1px solid var(--ui-border); margin: 0; }
 .ui-row--center { justify-content: center; }
 .ui-row--nowrap { flex-wrap: nowrap; }
 .ui-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-2); }
+.ui-cluster--2 { gap: var(--ui-space-2); }
 .ui-cluster--3 { gap: var(--ui-space-3); }
 .ui-cluster--4 { gap: var(--ui-space-4); }
 .ui-spacer { flex: 1 1 auto; min-width: 0; }
@@ -167,6 +168,13 @@ hr { border: none; border-top: 1px solid var(--ui-border); margin: 0; }
 .ui-grid--auto-sm { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
 .ui-grid--sidebar { grid-template-columns: 260px minmax(0, 1fr); align-items: start; }
 .ui-grid--tight { gap: var(--ui-space-4); }
+
+/* 间距微调工具类：叠在已有布局类上做一档覆盖（ui-row 默认 space-3，偶尔要更紧/更松） */
+.ui-gap-2 { gap: var(--ui-space-2); }
+.ui-gap-3 { gap: var(--ui-space-3); }
+.ui-gap-4 { gap: var(--ui-space-4); }
+.ui-gap-6 { gap: var(--ui-space-6); }
+.ui-mt-2 { margin-top: var(--ui-space-2); }
 
 .ui-divider { height: 1px; background: var(--ui-border); border: none; }
 .ui-divider--vertical { width: 1px; height: auto; align-self: stretch; }

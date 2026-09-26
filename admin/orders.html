@@ -455,12 +455,12 @@
 
   function openDrawer(o) {
     document.getElementById('odBody').innerHTML =
-      '<div class="ui-desc">' +
-        '<div class="ui-desc__item"><span class="ui-desc__label">订单号</span><span class="ui-desc__value"><code class="ui-code">' + o.id + '</code></span></div>' +
-        '<div class="ui-desc__item"><span class="ui-desc__label">客户</span><span class="ui-desc__value">' + o.customer + '（' + o.mail + '）</span></div>' +
-        '<div class="ui-desc__item"><span class="ui-desc__label">支付方式</span><span class="ui-desc__value">' + o.pay + '</span></div>' +
-        '<div class="ui-desc__item"><span class="ui-desc__label">状态</span><span class="ui-desc__value"><span class="ui-status ui-status--' + STATUS_CLS[o.status] + '"><span class="ui-dot"></span>' + o.status + '</span></span></div>' +
-      '</div>' +
+      '<dl class="ui-desc">' +
+        '<dt>订单号</dt><dd><code class="ui-code">' + o.id + '</code></dd>' +
+        '<dt>客户</dt><dd>' + o.customer + '（' + o.mail + '）</dd>' +
+        '<dt>支付方式</dt><dd>' + o.pay + '</dd>' +
+        '<dt>状态</dt><dd><span class="ui-status ui-status--' + STATUS_CLS[o.status] + '"><span class="ui-dot"></span>' + o.status + '</span></dd>' +
+      '</dl>' +
       '<div class="ui-h4" style="margin: var(--ui-space-5) 0 var(--ui-space-3)">商品明细</div>' +
       '<div class="ui-table-wrap"><table class="ui-table ui-table--compact"><thead><tr><th>商品</th><th>数量</th><th>小计</th></tr></thead><tbody>' +
         '<tr><td>' + o.goods + '</td><td class="ui-table__cell-num">1</td><td class="ui-table__cell-num">¥' + o.amount.toLocaleString() + '</td></tr>' +

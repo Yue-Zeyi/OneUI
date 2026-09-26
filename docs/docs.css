@@ -88,6 +88,12 @@ body { background: var(--ui-bg); }
 }
 /* 抽屉是触屏场景，条目回到 40px 命中高度 */
 .doc-drawer .ui-sidenav__item { min-height: var(--ui-control-h); }
+/* 抽屉底部（窄屏主色预设）：吸底 + 一条分隔线，和上面的导航分层 */
+.doc-drawer__foot {
+  margin-top: auto;
+  padding-top: var(--ui-space-4);
+  border-top: 1px solid var(--ui-border);
+}
 
 /* ---------- 主区 ---------- */
 .doc-main { min-width: 0; padding: var(--ui-space-10) 0 var(--ui-space-16); }
@@ -589,6 +595,8 @@ body { background: var(--ui-bg); }
   flex-direction: column;
 }
 .doc-land-lab__title { font-size: var(--ui-fs-15); font-weight: var(--ui-fw-semibold); color: var(--ui-text); }
+/* 头部块与下面的调控行拉开一档：不加的话标题和控件贴在一起 */
+.doc-land-lab__head { margin-bottom: var(--ui-space-4); }
 .doc-land-lab__sub {
   margin-top: 2px;
   font-size: var(--ui-type-caption);

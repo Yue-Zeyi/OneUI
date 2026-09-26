@@ -512,6 +512,8 @@
   line-height: var(--ui-lh-relaxed);
 }
 .adm-note__foot { display: flex; align-items: center; gap: var(--ui-space-3); margin-top: 2px; }
+/* 分类小徽标：弱化为文字色，避免和左侧的事件徽标抢层级 */
+.adm-note__cat { font-weight: var(--ui-fw-regular); color: var(--ui-text-2); }
 .adm-note__ops { display: flex; align-items: center; gap: var(--ui-space-1); flex: none; }
 .adm-note__del { color: var(--ui-text-3); }
 .adm-note__del:hover { color: var(--ui-danger-text); }
