@@ -237,12 +237,13 @@
 .adm-user__name { font-size: var(--ui-fs-13); font-weight: var(--ui-fw-medium); color: var(--ui-text); }
 .adm-user__role { font-size: var(--ui-fs-11); color: var(--ui-text-3); }
 
-/* ---------- 内容区 ---------- */
+/* ---------- 内容区 ----------
+   后台内容区全宽自适应，不设 max-width：
+   宽屏（2K/带鱼屏）下限宽又不居中，右侧会悬一大块空白，像没排完版。 */
 .adm-content {
   flex: 1;
   padding: var(--ui-space-5) var(--ui-space-6) var(--ui-space-8);
   width: 100%;
-  max-width: 1440px;
 }
 .adm-content__head {
   margin-bottom: var(--ui-space-5);
@@ -319,7 +320,9 @@
 @media (max-width: 1023px) { .adm-grid { grid-template-columns: minmax(0, 1fr); } }
 
 /* 图表卡 */
-.adm-chart { width: 100%; height: auto; display: block; }
+/* 图表卡：等比缩放但封顶高度，宽屏下不会把图拉成一整面墙 */
+.adm-chart { width: 100%; height: auto; max-height: 280px; display: block; }
+.adm-chart-wrap { display: flex; justify-content: center; }
 .adm-chart .line {
   fill: none;
   stroke: var(--ui-primary);
