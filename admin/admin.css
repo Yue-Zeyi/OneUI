@@ -201,6 +201,13 @@
   display: flex;
   align-items: center;
   gap: var(--ui-space-4);
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+/* 面包屑单行：窄空间下两项会竖排堆叠，丑且占高 */
+.adm-top .ui-breadcrumb {
+  white-space: nowrap;
+  flex: none;
 }
 .adm-top__spacer { flex: 1; }
 .adm-top__actions {
@@ -238,12 +245,16 @@
 .adm-user__role { font-size: var(--ui-fs-11); color: var(--ui-text-3); }
 
 /* ---------- 内容区 ----------
-   后台内容区全宽自适应，不设 max-width：
-   宽屏（2K/带鱼屏）下限宽又不居中，右侧会悬一大块空白，像没排完版。 */
+   超宽屏（2K/带鱼屏）下完全不限宽会把 4 张统计卡拉成半米宽，
+   内容贴左、图标贴右，中间全是空；限宽不居中又会右侧悬空。
+   所以：限宽 1760px 并水平居中——1920 屏基本全宽利用，
+   更宽的屏幕两侧对称收窄，卡片保持合理比例。 */
 .adm-content {
   flex: 1;
   padding: var(--ui-space-5) var(--ui-space-6) var(--ui-space-8);
   width: 100%;
+  max-width: calc(1760px + var(--ui-space-6) * 2);
+  margin: 0 auto;
 }
 .adm-content__head {
   margin-bottom: var(--ui-space-5);
@@ -286,6 +297,11 @@
   .adm-user__meta, .adm-search--top { display: none; }
   .adm-content { padding: var(--ui-space-4) var(--ui-space-4) var(--ui-space-8); }
 }
+/* 手机下面包屑让位：顶栏只剩汉堡 + 动作区，挤不出第二行 */
+@media (max-width: 639px) {
+  .adm-top { padding: 0 var(--ui-space-3); gap: var(--ui-space-2); }
+  .adm-top .ui-breadcrumb { display: none; }
+}
 
 /* ============================================================
    模板专有件
@@ -299,6 +315,8 @@
 }
 @media (max-width: 1279px) { .adm-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 639px)  { .adm-stats { grid-template-columns: minmax(0, 1fr); } }
+/* 统计卡内边距加大一档：卡片越宽 padding 越显小，16px 会贴边 */
+.adm-stats .ui-card--pad { padding: var(--ui-space-5); }
 .adm-stats .ui-stat__icon {
   width: 40px;
   height: 40px;
@@ -308,6 +326,7 @@
   justify-content: center;
   background: var(--ui-primary-weak, var(--ui-surface-3));
   color: var(--ui-primary);
+  flex: none;
 }
 
 /* 双栏工作区 */
