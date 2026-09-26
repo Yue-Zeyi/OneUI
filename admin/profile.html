@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-ui-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%2318181B'/%3E%3Ccircle cx='8' cy='8' r='4.55' fill='none' stroke='%23fff' stroke-width='1.9'/%3E%3C/svg%3E">
+<title>个人资料 · OwnUI Admin</title>
+<link rel="stylesheet" href="../library/tokens.css">
+<link rel="stylesheet" href="../library/base.css">
+<link rel="stylesheet" href="../library/components.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="adm">
+<div class="adm-veil"></div>
+
+<!-- ==================== 侧栏（全站共用，唯一数据源是 tools/sync-admin-nav.py） ==================== -->
+<aside class="adm-side" aria-label="管理侧栏">
+  <a class="adm-side__brand" href="index.html">
+    <span class="ui-navbar__logo" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.55" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+    </span>
+    <span class="adm-brand-text">OwnUI Admin</span>
+  </a>
+
+  <div class="adm-side__menu">
+    <nav class="ui-sidenav" aria-label="功能菜单">
+      <div class="ui-sidenav__group">
+        <div class="ui-sidenav__label">总览</div>
+        <a class="ui-sidenav__item" href="index.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6" rx="1.2"/><rect x="11" y="3" width="6" height="6" rx="1.2"/><rect x="3" y="11" width="6" height="6" rx="1.2"/><rect x="11" y="11" width="6" height="6" rx="1.2"/></svg>
+          <span>仪表盘</span>
+        </a>
+        <a class="ui-sidenav__item" href="charts.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17V9M8 17V4M13 17v-6M18 17v-9"/></svg>
+          <span>图表页</span>
+        </a>
+      </div>
+      <div class="ui-sidenav__group">
+        <div class="ui-sidenav__label">业务</div>
+        <a class="ui-sidenav__item" href="users.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="6.5" r="3.2"/><path d="M3.8 16.8c.9-3 3.3-4.6 6.2-4.6s5.3 1.6 6.2 4.6"/></svg>
+          <span>用户管理</span>
+          <span class="ui-sidenav__badge ui-badge ui-badge--primary ui-badge--pill">12</span>
+        </a>
+        <a class="ui-sidenav__item" href="orders.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l1.5 3.5H3.5z"/><path d="M4.5 6.5V16a1 1 0 001 1h9a1 1 0 001-1V6.5"/><path d="M8 9.5h4"/></svg>
+          <span>订单管理</span>
+          <span class="ui-sidenav__badge ui-badge ui-badge--danger ui-badge--pill">3</span>
+        </a>
+        <a class="ui-sidenav__item" href="articles.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2.8" width="12" height="14.4" rx="1.6"/><path d="M7 7h6M7 10h6M7 13h3.5"/></svg>
+          <span>内容管理</span>
+        </a>
+        <a class="ui-sidenav__item" href="files.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6a1.5 1.5 0 011.5-1.5h3l2 2.5h8A1.5 1.5 0 0117 8.5v7A1.5 1.5 0 0115.5 17h-11A1.5 1.5 0 013 15.5z"/></svg>
+          <span>文件管理</span>
+        </a>
+      </div>
+      <div class="ui-sidenav__group">
+        <div class="ui-sidenav__label">协作</div>
+        <a class="ui-sidenav__item" href="notifications.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3a5 5 0 015 5v3l1.5 2.5H3.5L5 11V8a5 5 0 015-5z"/><path d="M8.5 16a1.5 1.5 0 003 0"/></svg>
+          <span>消息中心</span>
+          <span class="ui-sidenav__badge ui-badge ui-badge--danger ui-badge--pill">5</span>
+        </a>
+      </div>
+      <div class="ui-sidenav__group adm-menu__item">
+        <button class="ui-sidenav__item" type="button" data-sub aria-expanded="false">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h14M3 10h14M3 14h14"/><circle cx="7" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="13" cy="10" r="1.6" fill="currentColor" stroke="none"/><circle cx="8" cy="14" r="1.6" fill="currentColor" stroke="none"/></svg>
+          <span>系统设置</span>
+          <svg class="adm-caret" width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8l4.5 4.5L14.5 8"/></svg>
+        </button>
+        <div class="adm-sub">
+          <a class="ui-sidenav__item" href="settings.html"><span>站点设置</span></a>
+          <a class="ui-sidenav__item" href="settings.html#security"><span>安全与登录</span></a>
+          <a class="ui-sidenav__item" href="profile.html"><span>个人资料</span></a>
+        </div>
+      </div>
+      <div class="ui-sidenav__group">
+        <div class="ui-sidenav__label">页面</div>
+        <a class="ui-sidenav__item" href="login.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 3H16a1 1 0 011 1v12a1 1 0 01-1 1h-3.5"/><path d="M3 10h9M9.5 6.5L13 10l-3.5 3.5"/></svg>
+          <span>登录页</span>
+        </a>
+        <a class="ui-sidenav__item" href="404.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.5L18 16.5H2z"/><path d="M10 8.5v3.6M10 14.4v.2"/></svg>
+          <span>404 页面不存在</span>
+        </a>
+        <a class="ui-sidenav__item" href="500.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.5L18 16.5H2z"/><path d="M10 8.5v3.6M10 14.4v.2"/></svg>
+          <span>500 服务异常</span>
+        </a>
+        <a class="ui-sidenav__item" href="maintenance.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 5.8V10l3 1.8"/></svg>
+          <span>维护中</span>
+        </a>
+      </div>
+      <div class="ui-sidenav__group">
+        <div class="ui-sidenav__label">资源</div>
+        <a class="ui-sidenav__item" href="../docs/docs.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4.5C8.6 3.4 6.7 3 4 3v12c2.7 0 4.6.4 6 1.5 1.4-1.1 3.3-1.5 6-1.5V3c-2.7 0-4.6.4-6 1.5z"/><path d="M10 4.5v12"/></svg>
+          <span>组件文档</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="adm-side__foot">
+    <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-adm-fold>
+      <svg class="adm-ico" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M8 3v14"/></svg>
+      收起侧栏
+    </button>
+    <span class="adm-side__ver">v1.0.0 · MIT</span>
+  </div>
+</aside>
+
+
+<!-- ==================== 主区 ==================== -->
+<div class="adm-main">
+
+  <header class="adm-top">
+    <button class="ui-icon-btn adm-fold-btn" type="button" data-adm-fold aria-label="折叠侧栏">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 5.5h14M3 10h14M3 14.5h14"/></svg>
+    </button>
+    <button class="ui-icon-btn adm-burger" type="button" data-adm-drawer aria-label="打开侧栏" aria-expanded="false">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 5.5h14M3 10h14M3 14.5h14"/></svg>
+    </button>
+
+    <nav class="ui-breadcrumb" aria-label="面包屑">
+      <span class="ui-breadcrumb__item"><a href="index.html">首页</a></span>
+      <span class="ui-breadcrumb__sep">/</span>
+      <span class="ui-breadcrumb__item" aria-current="page">个人资料</span>
+    </nav>
+
+    <div class="adm-top__spacer"></div>
+
+    <div class="ui-search adm-search--top">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="9" r="5.5"/><path d="M13 13l3.5 3.5"/></svg>
+      <input class="ui-input ui-input--sm" type="search" placeholder="搜索…" aria-label="全局搜索" style="width: 180px">
+    </div>
+
+    <div class="adm-top__actions">
+      <button class="ui-icon-btn" type="button" data-adm-theme="light" aria-pressed="false" aria-label="切换浅色" data-tooltip="浅色">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="10" cy="10" r="3.5"/><path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.7 4.7l1.4 1.4M13.9 13.9l1.4 1.4M15.3 4.7l-1.4 1.4M6.1 13.9l-1.4 1.4"/></svg>
+      </button>
+      <button class="ui-icon-btn" type="button" data-adm-theme="dark" aria-pressed="false" aria-label="切换深色" data-tooltip="深色">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 12.2A7 7 0 017.8 3.5a7 7 0 108.7 8.7z"/></svg>
+      </button>
+
+      <div class="ui-dropdown-wrap" data-ui="dropdown">
+        <button class="ui-icon-btn" type="button" data-ui="dropdown-trigger" aria-label="切换主色" data-tooltip="主色">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17a7 7 0 110-14c3.9 0 7 2.6 7 5.8 0 2-1.6 3.2-3.4 3.2h-1.4c-1 0-1.8.8-1.8 1.8 0 .5.2.9.4 1.3.2.3-.1.9-.8.9z"/><circle cx="7" cy="8" r=".9" fill="currentColor" stroke="none"/><circle cx="10.5" cy="5.8" r=".9" fill="currentColor" stroke="none"/><circle cx="14" cy="7.8" r=".9" fill="currentColor" stroke="none"/></svg>
+        </button>
+        <div class="ui-menu" role="menu" aria-label="主色预设">
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="true" type="button" data-adm-accent="brand" data-adm-label="墨黑"><span class="ui-dot" style="background:#18181B"></span>墨黑</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="blue" data-adm-label="品蓝"><span class="ui-dot" style="background:#2563EB"></span>品蓝</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="indigo" data-adm-label="靛蓝"><span class="ui-dot" style="background:#4F46E5"></span>靛蓝</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="emerald" data-adm-label="翠绿"><span class="ui-dot" style="background:#047857"></span>翠绿</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="orange" data-adm-label="橙"><span class="ui-dot" style="background:#C2410C"></span>橙</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="violet" data-adm-label="紫罗兰"><span class="ui-dot" style="background:#7C3AED"></span>紫罗兰</button>
+        </div>
+      </div>
+
+      <div class="ui-dropdown-wrap" data-ui="dropdown">
+        <button class="ui-icon-btn" type="button" data-ui="dropdown-trigger" aria-label="消息通知" data-tooltip="消息">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3a5 5 0 015 5v3l1.5 2.5H3.5L5 11V8a5 5 0 015-5z"/><path d="M8.5 16a1.5 1.5 0 003 0"/></svg>
+          <span class="ui-badge ui-badge--danger ui-badge--pill" style="position:absolute; top:4px; right:4px; min-width:16px; height:16px; font-size:10px; line-height:16px; padding:0">5</span>
+        </button>
+        <div class="ui-menu" role="menu" aria-label="消息通知" style="min-width: 260px">
+          <button class="ui-menu__item" role="menuitem" type="button"><span class="ui-status ui-status--success"><span class="ui-dot"></span></span>订单 #20481 已支付</button>
+          <button class="ui-menu__item" role="menuitem" type="button"><span class="ui-status ui-status--warning"><span class="ui-dot"></span></span>服务器 CPU 82%，请关注</button>
+          <button class="ui-menu__item" role="menuitem" type="button"><span class="ui-status ui-status--info"><span class="ui-dot"></span></span>新用户「李清照」已注册</button>
+          <div role="separator"></div>
+          <button class="ui-menu__item" role="menuitem" type="button">查看全部消息</button>
+        </div>
+      </div>
+
+      <div class="ui-dropdown-wrap" data-ui="dropdown">
+        <button class="adm-user" type="button" data-ui="dropdown-trigger" aria-label="账户菜单">
+          <span class="ui-avatar ui-avatar--sm" aria-hidden="true">林</span>
+          <span class="adm-user__meta">
+            <span class="adm-user__name">林晚</span><br>
+            <span class="adm-user__role">管理员</span>
+          </span>
+        </button>
+        <div class="ui-menu" role="menu" aria-label="账户菜单">
+          <button class="ui-menu__item" role="menuitem" type="button">个人资料</button>
+          <button class="ui-menu__item" role="menuitem" type="button">账户设置</button>
+          <div role="separator"></div>
+          <button class="ui-menu__item" role="menuitem" type="button" data-adm-logout>退出登录</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- 内容 -->
+  <main class="adm-content">
+    <div class="adm-content__head">
+      <div>
+        <h1 class="adm-content__title">个人资料</h1>
+        <p class="adm-content__desc">管理你的公开信息、登录凭据与偏好</p>
+      </div>
+      <div class="ui-row" style="gap: var(--ui-space-2)">
+        <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-p-cancel>放弃修改</button>
+        <button class="ui-btn ui-btn--primary ui-btn--sm" type="button" data-p-save>保存资料</button>
+      </div>
+    </div>
+
+    <div class="adm-profile">
+      <!-- 左：身份卡 -->
+      <aside class="ui-stack ui-stack--4">
+        <div class="ui-card ui-card--pad">
+          <div class="ui-card__body">
+            <div class="adm-identity">
+              <span class="ui-avatar ui-avatar--lg" id="pAvatar">林</span>
+              <div class="adm-identity__meta">
+                <div class="adm-identity__name">林晚</div>
+                <div class="adm-identity__role"><span class="ui-badge ui-badge--primary ui-badge--pill">管理员</span></div>
+              </div>
+            </div>
+            <div class="ui-row" style="gap: var(--ui-space-2); margin-top: var(--ui-space-4)">
+              <button class="ui-btn ui-btn--default ui-btn--sm ui-btn--block" type="button" data-p-avatar>更换头像</button>
+              <button class="ui-btn ui-btn--ghost ui-btn--sm ui-btn--block" type="button" data-p-remove>移除</button>
+            </div>
+            <p class="ui-caption ui-muted" style="margin-top: var(--ui-space-2)">支持 jpg / png，建议 200×200 以上</p>
+          </div>
+        </div>
+
+        <div class="ui-card ui-card--pad">
+          <div class="ui-card__header"><div class="ui-card__title">联系方式</div></div>
+          <div class="ui-card__body">
+            <div class="ui-list ui-stack--1">
+              <div class="ui-list__item"><div class="ui-list__main"><div class="ui-list__title ui-caption ui-muted">邮箱</div><div class="ui-list__sub">wan.lin@example.com</div></div></div>
+              <div class="ui-list__item"><div class="ui-list__main"><div class="ui-list__title ui-caption ui-muted">手机</div><div class="ui-list__sub ui-mono">138****6621</div></div></div>
+              <div class="ui-list__item"><div class="ui-list__main"><div class="ui-list__title ui-caption ui-muted">所在部门</div><div class="ui-list__sub">产品技术部</div></div></div>
+              <div class="ui-list__item"><div class="ui-list__main"><div class="ui-list__title ui-caption ui-muted">入职日期</div><div class="ui-list__sub">2024-03-11</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui-card ui-card--pad">
+          <div class="ui-card__header"><div class="ui-card__title">本月概览</div></div>
+          <div class="ui-card__body">
+            <div class="ui-metrics">
+              <div class="adm-metric"><span class="adm-metric__value ui-num">128</span><span class="adm-metric__label">处理订单</span></div>
+              <div class="adm-metric"><span class="adm-metric__value ui-num">42</span><span class="adm-metric__label">发布内容</span></div>
+              <div class="adm-metric"><span class="adm-metric__value ui-num">16</span><span class="adm-metric__label">参与评审</span></div>
+              <div class="adm-metric"><span class="adm-metric__value ui-num">98%</span><span class="adm-metric__label">任务完成率</span></div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 右：分组设置 -->
+      <section>
+        <div class="ui-tabs" data-ui="tabs" id="ptabs">
+          <div class="ui-tabs__list" role="tablist" aria-label="资料分组">
+            <button class="ui-tab" role="tab" aria-selected="true"  aria-controls="pp-basic" type="button">基本信息</button>
+            <button class="ui-tab" role="tab" aria-selected="false" aria-controls="pp-pwd"   type="button">修改密码</button>
+            <button class="ui-tab" role="tab" aria-selected="false" aria-controls="pp-act"   type="button">活动记录</button>
+            <button class="ui-tab" role="tab" aria-selected="false" aria-controls="pp-pref"  type="button">偏好设置</button>
+          </div>
+
+          <div class="ui-tabpanel" role="tabpanel" id="pp-basic" tabindex="0">
+            <div class="ui-card ui-card--pad">
+              <div class="ui-card__header">
+                <div class="ui-card__title">基本信息</div>
+                <div class="ui-card__desc">这些信息会出现在你的个人主页与评论署名中</div>
+              </div>
+              <div class="ui-card__body">
+                <div class="ui-form-grid">
+                  <div class="ui-field">
+                    <label class="ui-label" for="p-name">姓名<label class="ui-label__required">*</label></label>
+                    <input class="ui-input" id="p-name" type="text" value="林晚">
+                  </div>
+                  <div class="ui-field">
+                    <label class="ui-label" for="p-nick">昵称</label>
+                    <input class="ui-input" id="p-nick" type="text" value="晚晚">
+                  </div>
+                  <div class="ui-field">
+                    <label class="ui-label" for="p-mail">邮箱<label class="ui-label__required">*</label></label>
+                    <input class="ui-input" id="p-mail" type="email" value="wan.lin@example.com">
+                  </div>
+                  <div class="ui-field">
+                    <label class="ui-label" for="p-phone">手机号</label>
+                    <input class="ui-input" id="p-phone" type="tel" value="13800006621">
+                  </div>
+                  <div class="ui-field">
+                    <label class="ui-label" for="p-dept">部门</label>
+                    <select class="ui-select" id="p-dept">
+                      <option>产品技术部</option>
+                      <option>设计部</option>
+                      <option>市场部</option>
+                      <option>客户成功部</option>
+                    </select>
+                  </div>
+                  <div class="ui-field">
+                    <label class="ui-label" for="p-title">职位</label>
+                    <input class="ui-input" id="p-title" type="text" value="前端负责人">
+                  </div>
+                </div>
+                <div class="ui-field">
+                  <label class="ui-label" for="p-bio">个人简介</label>
+                  <textarea class="ui-textarea" id="p-bio" rows="4">做了八年后台系统，偏爱把复杂流程拆成几步就能走完的表单。现在负责 OwnUI 组件库的 token 体系与文档站。</textarea>
+                  <div class="ui-field__help">最多 200 字，支持纯文本</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ui-tabpanel" role="tabpanel" id="pp-pwd" tabindex="0" hidden>
+            <div class="ui-card ui-card--pad">
+              <div class="ui-card__header">
+                <div class="ui-card__title">修改密码</div>
+                <div class="ui-card__desc">修改后当前设备会保持登录，其他设备将被强制下线</div>
+              </div>
+              <div class="ui-card__body">
+                <div class="ui-stack ui-stack--4" style="max-width: 420px">
+                  <div class="ui-field">
+                    <label class="ui-label" for="p-old">当前密码</label>
+                    <input class="ui-input" id="p-old" type="password" placeholder="输入当前密码">
+                  </div>
+                  <div class="ui-field">
+                    <label class="ui-label" for="p-new">新密码</label>
+                    <input class="ui-input" id="p-new" type="password" placeholder="至少 8 位，含字母与数字">
+                    <div class="ui-field__help">强度要求：8 位以上，字母 + 数字</div>
+                  </div>
+                  <div class="ui-field">
+                    <label class="ui-label" for="p-new2">确认新密码</label>
+                    <input class="ui-input" id="p-new2" type="password" placeholder="再输一次">
+                  </div>
+                  <div class="ui-row" style="gap: var(--ui-space-2)">
+                    <button class="ui-btn ui-btn--primary ui-btn--sm" type="button" data-p-pwd>更新密码</button>
+                    <button class="ui-btn ui-btn--link ui-btn--sm" type="button">忘记密码？</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ui-card ui-card--pad" style="margin-top: var(--ui-space-4)">
+              <div class="ui-card__header">
+                <div class="ui-card__title">两步验证</div>
+                <div class="ui-card__desc">开启后每次登录需要额外输入动态验证码</div>
+              </div>
+              <div class="ui-card__body">
+                <div class="ui-row ui-row--between">
+                  <div>
+                    <div class="ui-h4">已开启 · TOTP</div>
+                    <p class="ui-caption ui-muted">绑定于 2025-06-18，使用 Authenticator 应用</p>
+                  </div>
+                  <button class="ui-btn ui-btn--danger-outline ui-btn--sm" type="button" data-p-2fa>解绑</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ui-tabpanel" role="tabpanel" id="pp-act" tabindex="0" hidden>
+            <div class="ui-card ui-card--pad">
+              <div class="ui-card__header">
+                <div class="ui-card__title">最近活动</div>
+                <div class="ui-card__desc">你在本系统内的操作轨迹</div>
+              </div>
+              <div class="ui-card__body">
+                <ol class="ui-timeline">
+                  <li class="ui-timeline__item ui-timeline__item--active">
+                    <span class="ui-timeline__dot"></span>
+                    <div class="ui-timeline__body">
+                      <div class="ui-timeline__title">更新了组件库文档</div>
+                      <div class="ui-timeline__desc">《状态方向契约》一节补充了墨黑主题的例外说明</div>
+                      <div class="ui-timeline__time">今天 09:41</div>
+                    </div>
+                  </li>
+                  <li class="ui-timeline__item ui-timeline__item--done">
+                    <span class="ui-timeline__dot"></span>
+                    <div class="ui-timeline__body">
+                      <div class="ui-timeline__title">审批通过 3 笔退款</div>
+                      <div class="ui-timeline__desc">涉及订单 #20477、#20472、#20468，合计 ¥6,719</div>
+                      <div class="ui-timeline__time">昨天 17:20</div>
+                    </div>
+                  </li>
+                  <li class="ui-timeline__item ui-timeline__item--done">
+                    <span class="ui-timeline__dot"></span>
+                    <div class="ui-timeline__body">
+                      <div class="ui-timeline__title">导出整站包并部署</div>
+                      <div class="ui-timeline__desc">ownui-site.zip（1.9 MB）已推送至 EdgeOne Pages</div>
+                      <div class="ui-timeline__time">昨天 14:05</div>
+                    </div>
+                  </li>
+                  <li class="ui-timeline__item ui-timeline__item--done">
+                    <span class="ui-timeline__dot"></span>
+                    <div class="ui-timeline__body">
+                      <div class="ui-timeline__title">把 李清照 加入了设计组</div>
+                      <div class="ui-timeline__desc">授予内容管理与文件管理的读写权限</div>
+                      <div class="ui-timeline__time">3 天前 10:32</div>
+                    </div>
+                  </li>
+                  <li class="ui-timeline__item ui-timeline__item--done">
+                    <span class="ui-timeline__dot"></span>
+                    <div class="ui-timeline__body">
+                      <div class="ui-timeline__title">修改了站点主色</div>
+                      <div class="ui-timeline__desc">由墨黑切换为品蓝，并同步了 6 套预设</div>
+                      <div class="ui-timeline__time">5 天前 16:58</div>
+                    </div>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <div class="ui-tabpanel" role="tabpanel" id="pp-pref" tabindex="0" hidden>
+            <div class="ui-card ui-card--pad">
+              <div class="ui-card__header">
+                <div class="ui-card__title">偏好设置</div>
+                <div class="ui-card__desc">只影响你自己的账号</div>
+              </div>
+              <div class="ui-card__body">
+                <div class="ui-form-grid">
+                  <div class="ui-field">
+                    <label class="ui-label" for="p-theme">界面主题</label>
+                    <select class="ui-select" id="p-theme">
+                      <option>跟随系统</option>
+                      <option selected>浅色</option>
+                      <option>深色</option>
+                    </select>
+                  </div>
+                  <div class="ui-field">
+                    <label class="ui-label" for="p-accent">主色</label>
+                    <select class="ui-select" id="p-accent">
+                      <option selected>墨黑</option>
+                      <option>品蓝</option>
+                      <option>靛蓝</option>
+                      <option>翠绿</option>
+                      <option>橙</option>
+                      <option>紫罗兰</option>
+                    </select>
+                  </div>
+                  <div class="ui-field">
+                    <label class="ui-label" for="p-density">表格密度</label>
+                    <select class="ui-select" id="p-density">
+                      <option>宽松</option>
+                      <option selected>紧凑</option>
+                    </select>
+                  </div>
+                  <div class="ui-field">
+                    <label class="ui-label" for="p-page">每页条数</label>
+                    <select class="ui-select" id="p-page">
+                      <option>10</option>
+                      <option selected>20</option>
+                      <option>50</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="ui-divider" style="margin: var(--ui-space-5) 0"></div>
+                <div class="ui-stack ui-stack--3">
+                  <label class="ui-switch"><input type="checkbox" class="ui-switch__input" checked><span class="ui-switch__track"></span><span class="ui-switch__label">侧栏默认收起</span></label>
+                  <label class="ui-switch"><input type="checkbox" class="ui-switch__input" checked><span class="ui-switch__track"></span><span class="ui-switch__label">收到新消息时桌面通知</span></label>
+                  <label class="ui-switch"><input type="checkbox" class="ui-switch__input"><span class="ui-switch__track"></span><span class="ui-switch__label">每周五发送工作周报邮件</span></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+<script>
+/* ---------- 个人资料：头像首字母联动 + 保存/改密 toast ---------- */
+(function () {
+  'use strict';
+  var nameInput = document.getElementById('p-name');
+  var avatar = document.getElementById('pAvatar');
+  nameInput.addEventListener('input', function () {
+    var v = this.value.trim();
+    avatar.textContent = v ? v.charAt(0) : '林';
+  });
+
+  var picker = document.createElement('input');
+  picker.type = 'file'; picker.accept = 'image/*'; picker.style.display = 'none';
+  document.body.appendChild(picker);
+  picker.addEventListener('change', function () {
+    var file = picker.files && picker.files[0];
+    if (!file) return;
+    var url = URL.createObjectURL(file);
+    avatar.style.backgroundImage = 'url(' + url + ')';
+    avatar.style.backgroundSize = 'cover';
+    avatar.textContent = '';
+    if (window.UI) UI.toast({ message: '头像已更新（本地预览）', type: 'success' });
+    picker.value = '';
+  });
+  document.querySelector('[data-p-avatar]').addEventListener('click', function () { picker.click(); });
+  document.querySelector('[data-p-remove]').addEventListener('click', function () {
+    avatar.style.backgroundImage = '';
+    avatar.textContent = nameInput.value.trim().charAt(0) || '林';
+    if (window.UI) UI.toast({ message: '已恢复默认头像', type: 'info' });
+  });
+
+  document.querySelector('[data-p-save]').addEventListener('click', function () {
+    if (window.UI) UI.toast({ message: '资料已保存', type: 'success' });
+  });
+  document.querySelector('[data-p-cancel]').addEventListener('click', function () {
+    if (window.UI) UI.toast({ message: '已放弃未保存的修改', type: 'warning' });
+  });
+  document.querySelector('[data-p-pwd]').addEventListener('click', function () {
+    var a = document.getElementById('p-new').value;
+    var b = document.getElementById('p-new2').value;
+    if (!document.getElementById('p-old').value) { if (window.UI) UI.toast({ message: '请先输入当前密码', type: 'danger' }); return; }
+    if (a.length < 8) { if (window.UI) UI.toast({ message: '新密码至少 8 位', type: 'danger' }); return; }
+    if (a !== b) { if (window.UI) UI.toast({ message: '两次输入的密码不一致', type: 'danger' }); return; }
+    if (window.UI) UI.toast({ message: '密码已更新', type: 'success' });
+  });
+  document.querySelector('[data-p-2fa]').addEventListener('click', function () {
+    if (window.UI) UI.toast({ message: '两步验证已解绑', type: 'warning' });
+  });
+})();
+</script>
+
+  </main>
+
+  <footer class="adm-footer">OwnUI Admin · 基于 OwnUI 组件库 · MIT License</footer>
+</div>
+
+<script src="../library/components.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

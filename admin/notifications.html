@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%2318181B'/%3E%3Ccircle cx='8' cy='8' r='4.55' fill='none' stroke='%23fff' stroke-width='1.9'/%3E%3C/svg%3E">
-<title>表单页 · OwnUI Admin</title>
+<title>消息中心 · OwnUI Admin</title>
 <link rel="stylesheet" href="../library/tokens.css">
 <link rel="stylesheet" href="../library/base.css">
 <link rel="stylesheet" href="../library/components.css">
@@ -114,6 +114,7 @@
   </div>
 </aside>
 
+
 <!-- ==================== 主区 ==================== -->
 <div class="adm-main">
 
@@ -128,7 +129,7 @@
     <nav class="ui-breadcrumb" aria-label="面包屑">
       <span class="ui-breadcrumb__item"><a href="index.html">首页</a></span>
       <span class="ui-breadcrumb__sep">/</span>
-      <span class="ui-breadcrumb__item" aria-current="page">表单页</span>
+      <span class="ui-breadcrumb__item" aria-current="page">消息中心</span>
     </nav>
 
     <div class="adm-top__spacer"></div>
@@ -163,7 +164,7 @@
       <div class="ui-dropdown-wrap" data-ui="dropdown">
         <button class="ui-icon-btn" type="button" data-ui="dropdown-trigger" aria-label="消息通知" data-tooltip="消息">
           <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3a5 5 0 015 5v3l1.5 2.5H3.5L5 11V8a5 5 0 015-5z"/><path d="M8.5 16a1.5 1.5 0 003 0"/></svg>
-          <span class="ui-badge ui-badge--danger ui-badge--pill" style="position:absolute; top:4px; right:4px; min-width:16px; height:16px; font-size:10px; line-height:16px; padding:0">3</span>
+          <span class="ui-badge ui-badge--danger ui-badge--pill" style="position:absolute; top:4px; right:4px; min-width:16px; height:16px; font-size:10px; line-height:16px; padding:0">5</span>
         </button>
         <div class="ui-menu" role="menu" aria-label="消息通知" style="min-width: 260px">
           <button class="ui-menu__item" role="menuitem" type="button"><span class="ui-status ui-status--success"><span class="ui-dot"></span></span>订单 #20481 已支付</button>
@@ -192,139 +193,158 @@
     </div>
   </header>
 
+
   <!-- 内容 -->
   <main class="adm-content">
     <div class="adm-content__head">
       <div>
-        <h1 class="adm-content__title">表单与控件</h1>
-        <p class="adm-content__desc">OwnUI 全部表单控件的实战排布，直接照抄改字段就能用。</p>
+        <h1 class="adm-content__title">消息中心</h1>
+        <p class="adm-content__desc"><span id="nUnread">5</span> 条未读 · 共 12 条</p>
+      </div>
+      <div class="ui-row" style="gap: var(--ui-space-2)">
+        <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-n-readall>全部标记已读</button>
+        <button class="ui-btn ui-btn--danger-outline ui-btn--sm" type="button" data-n-clear>清空全部</button>
       </div>
     </div>
 
-    <!-- ============ 常规设置 ============ -->
-    <div class="ui-card" id="basic" style="margin-bottom: var(--ui-space-4); scroll-margin-top: 76px">
-      <div class="ui-card__header"><div class="ui-h4" style="margin:0">常规设置</div></div>
+    <div class="ui-card">
       <div class="ui-card__body">
-        <form data-ui="validate" novalidate style="max-width: 680px">
-          <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <label class="ui-field__label" for="fs-name">站点名称 <b aria-hidden="true">*</b></label>
-            <input class="ui-input" id="fs-name" name="site" type="text" value="OwnUI Admin" data-validate="required" data-message-required="站点名称不能为空">
-            <div class="ui-field__help">显示在浏览器标题与登录页</div>
+        <div class="ui-tabs" data-ui="tabs" id="ntabs">
+          <div class="ui-tabs__list" role="tablist" aria-label="消息分类">
+            <button class="ui-tab" role="tab" aria-selected="true"  aria-controls="np-all"    data-v="all"    type="button">全部 <span class="ui-badge ui-badge--pill" data-n-count="all">12</span></button>
+            <button class="ui-tab" role="tab" aria-selected="false" aria-controls="np-unread" data-v="unread" type="button">未读 <span class="ui-badge ui-badge--danger ui-badge--pill" data-n-count="unread">5</span></button>
+            <button class="ui-tab" role="tab" aria-selected="false" aria-controls="np-order"  data-v="order"  type="button">订单 <span class="ui-badge ui-badge--pill" data-n-count="order">4</span></button>
+            <button class="ui-tab" role="tab" aria-selected="false" aria-controls="np-sys"    data-v="sys"    type="button">系统 <span class="ui-badge ui-badge--pill" data-n-count="sys">3</span></button>
+            <button class="ui-tab" role="tab" aria-selected="false" aria-controls="np-cmt"    data-v="cmt"    type="button">评论 <span class="ui-badge ui-badge--pill" data-n-count="cmt">3</span></button>
+            <button class="ui-tab" role="tab" aria-selected="false" aria-controls="np-team"   data-v="team"   type="button">团队 <span class="ui-badge ui-badge--pill" data-n-count="team">2</span></button>
           </div>
-          <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <label class="ui-field__label" for="fs-url">站点地址 <b aria-hidden="true">*</b></label>
-            <input class="ui-input" id="fs-url" name="url" type="text" placeholder="https://admin.example.com" data-validate="required|url">
-            <div class="ui-field__help">以 https:// 开头的完整地址</div>
-          </div>
-          <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <label class="ui-field__label" for="fs-desc">站点描述</label>
-            <textarea class="ui-textarea" id="fs-desc" name="desc" rows="3" placeholder="一句话介绍这个后台是做什么的"></textarea>
-          </div>
-          <div class="ui-row" style="gap: var(--ui-space-4); margin-bottom: var(--ui-space-4)">
-            <div class="ui-field" style="flex:1">
-              <label class="ui-field__label" for="fs-lang">界面语言</label>
-              <select class="ui-select" id="fs-lang">
-                <option>简体中文</option><option>English</option><option>日本語</option>
-              </select>
-            </div>
-            <div class="ui-field" style="flex:1">
-              <label class="ui-field__label" for="fs-tz">时区</label>
-              <select class="ui-select" id="fs-tz">
-                <option>UTC+8 北京</option><option>UTC+0 伦敦</option><option>UTC-5 纽约</option>
-              </select>
-            </div>
-          </div>
-          <div class="ui-field" style="margin-bottom: var(--ui-space-5)">
-            <span class="ui-field__label">维护模式</span>
-            <div class="ui-switch">
-              <input type="checkbox" id="fs-maint">
-              <span class="ui-switch__track"></span>
-              <label class="ui-switch__label" for="fs-maint">开启后除管理员外均无法访问</label>
-            </div>
-          </div>
-          <div class="ui-row" style="gap: var(--ui-space-3)">
-            <button class="ui-btn ui-btn--primary" type="submit">保存常规设置</button>
-            <button class="ui-btn ui-btn--default" type="reset">重置</button>
-          </div>
-        </form>
+
+          <div class="ui-tabpanel" role="tabpanel" id="np-all" tabindex="0"></div>
+          <div class="ui-tabpanel" role="tabpanel" id="np-unread" tabindex="0" hidden></div>
+          <div class="ui-tabpanel" role="tabpanel" id="np-order" tabindex="0" hidden></div>
+          <div class="ui-tabpanel" role="tabpanel" id="np-sys" tabindex="0" hidden></div>
+          <div class="ui-tabpanel" role="tabpanel" id="np-cmt" tabindex="0" hidden></div>
+          <div class="ui-tabpanel" role="tabpanel" id="np-team" tabindex="0" hidden></div>
+        </div>
       </div>
     </div>
 
-    <!-- ============ 高级控件 ============ -->
-    <div class="ui-card" id="advanced" style="scroll-margin-top: 76px">
-      <div class="ui-card__header"><div class="ui-h4" style="margin:0">安全设置与高级控件</div></div>
-      <div class="ui-card__body">
-        <form data-ui="validate" novalidate style="max-width: 760px">
-          <div class="ui-row" style="gap: var(--ui-space-4)">
-            <div class="ui-field" style="flex:1; margin-bottom: var(--ui-space-4)">
-              <label class="ui-field__label" for="fs-pwd">管理员密码 <b aria-hidden="true">*</b></label>
-              <input class="ui-input" id="fs-pwd" name="pwd" type="password" placeholder="至少 8 位" data-validate="required|min:8">
-              <div class="ui-field__help">修改后会要求全部设备重新登录</div>
-            </div>
-            <div class="ui-field" style="flex:1; margin-bottom: var(--ui-space-4)">
-              <label class="ui-field__label" for="fs-pwd2">确认密码 <b aria-hidden="true">*</b></label>
-              <input class="ui-input" id="fs-pwd2" name="pwd2" type="password" data-validate="required">
-            </div>
-          </div>
-          <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <label class="ui-field__label" for="fs-phone">绑定手机号 <b aria-hidden="true">*</b></label>
-            <input class="ui-input" id="fs-phone" name="phone" type="tel" placeholder="11 位手机号" data-validate="required|phone">
-          </div>
-          <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <label class="ui-field__label" for="fs-budget">单日预算上限</label>
-            <div class="ui-input-group" style="max-width: 240px">
-              <span class="ui-input-group__addon ui-input-group__addon--prefix">¥</span>
-              <input class="ui-input" id="fs-budget" type="text" inputmode="decimal" value="5,000">
-            </div>
-          </div>
-          <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <span class="ui-field__label">两步验证</span>
-            <div class="ui-stack ui-stack--2" role="radiogroup" aria-label="两步验证">
-              <div class="ui-radio"><input type="radio" name="2fa" id="fa1" checked><label for="fa1">关闭</label></div>
-              <div class="ui-radio"><input type="radio" name="2fa" id="fa2"><label for="fa2">短信验证码</label></div>
-              <div class="ui-radio"><input type="radio" name="2fa" id="fa3"><label for="fa3">TOTP 应用（推荐）</label></div>
-            </div>
-          </div>
-          <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <span class="ui-field__label">安全通知</span>
-            <div class="ui-row" style="gap: var(--ui-space-5)">
-              <div class="ui-check"><input type="checkbox" id="nt1" checked><label for="nt1">异地登录提醒</label></div>
-              <div class="ui-check"><input type="checkbox" id="nt2" checked><label for="nt2">密码修改提醒</label></div>
-              <div class="ui-check"><input type="checkbox" id="nt3"><label for="nt3">每周安全周报</label></div>
-            </div>
-          </div>
-          <div class="ui-field" style="margin-bottom: var(--ui-space-4)">
-            <label class="ui-field__label" for="fs-expire">会话超时</label>
-            <div class="ui-segmented" data-ui="segmented" role="radiogroup" aria-label="会话超时" style="align-self: flex-start">
-              <button class="ui-segment" role="radio" aria-selected="false" type="button">30 分钟</button>
-              <button class="ui-segment" role="radio" aria-selected="true" type="button">2 小时</button>
-              <button class="ui-segment" role="radio" aria-selected="false" type="button">24 小时</button>
-              <button class="ui-segment" role="radio" aria-selected="false" type="button">7 天</button>
-            </div>
-          </div>
-          <div class="ui-field" style="margin-bottom: var(--ui-space-5)">
-            <span class="ui-field__label">备案材料上传</span>
-            <div class="ui-dropzone" data-ui="dropzone" style="padding: var(--ui-space-6); text-align: center">
-              <svg width="28" height="28" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--ui-text-3)"><path d="M10 13V4M6.5 7.5L10 4l3.5 3.5"/><path d="M4 13.5V16h12v-2.5"/></svg>
-              <div class="ui-caption ui-muted" style="margin-top: var(--ui-space-2)">点击或拖拽文件到此处，支持 PDF / JPG，单个不超过 10MB</div>
-              <input type="file" multiple style="position:absolute; inset:0; opacity:0; cursor:pointer" aria-label="选择文件">
-            </div>
-            <div class="ui-file-list" data-ui-file-list></div>
-          </div>
-          <div class="ui-row" style="gap: var(--ui-space-3)">
-            <button class="ui-btn ui-btn--primary" type="submit">保存安全设置</button>
-            <span class="ui-popconfirm-host">
-              <button class="ui-btn ui-btn--danger-outline" type="button">撤销全部会话</button>
-              <span class="ui-popconfirm" hidden>
-                <span class="ui-popconfirm__text">将登出所有已登录设备，确定？</span>
-                <button class="ui-btn ui-btn--sm" type="button">取消</button>
-                <button class="ui-btn ui-btn--danger ui-btn--sm" type="button">确定</button>
-              </span>
-            </span>
-          </div>
-        </form>
-      </div>
-    </div>
+<script>
+/* ---------- 消息中心：分类 tabs + 已读未读 + 标记/清空 ---------- */
+(function () {
+  'use strict';
+  var NOTES = [
+    { id: 1,  cat: 'order', level: 'success', icon: 'order',  title: '订单 #20481 已完成',       desc: '林晚购买「企业版年费 × 1」，金额 ¥1,284，支付方式为微信。', time: '10 分钟前', unread: true },
+    { id: 2,  cat: 'sys',   level: 'warning', icon: 'warn',   title: '服务器 CPU 使用率 82%',    desc: '节点 cn-hz-03 持续 15 分钟高于阈值 80%，建议检查进程占用。', time: '32 分钟前', unread: true },
+    { id: 3,  cat: 'cmt',   level: 'info',    icon: 'chat',   title: '苏叶 评论了你的文章',      desc: '「这套 token 分层思路很清晰，尤其是状态方向的约定，省了很多沟通成本。」', time: '1 小时前', unread: true },
+    { id: 4,  cat: 'order', level: 'danger',  icon: 'order',  title: '订单 #20477 已申请退款',   desc: '周野提交退款申请，原因：重复下单。请于 48 小时内处理。', time: '2 小时前', unread: true },
+    { id: 5,  cat: 'team',  level: 'info',    icon: 'person', title: '李清照 加入了设计组',      desc: '由 陈默 邀请加入，角色为设计师，可访问内容管理与文件管理。', time: '3 小时前', unread: true },
+    { id: 6,  cat: 'order', level: 'success', icon: 'order',  title: '订单 #20479 已发货',       desc: '苏叶购买「存储扩容包 × 5」，物流单号 SF7738291002。', time: '昨天 21:05', unread: false },
+    { id: 7,  cat: 'sys',   level: 'info',    icon: 'gear',   title: '系统已于 02:00 完成升级',  desc: '数据库升级至 v14.2，期间服务中断 3 分 12 秒，无数据丢失。', time: '昨天 02:14', unread: false },
+    { id: 8,  cat: 'cmt',   level: 'info',    icon: 'chat',   title: '顾北 回复了你的评论',      desc: '「同意，深色模式那套 900 档的用法我一开始也踩过坑。」', time: '昨天 18:40', unread: false },
+    { id: 9,  cat: 'order', level: 'info',    icon: 'order',  title: '订单 #20480 待发货',       desc: '陈默购买「专业版月付 × 2」，请在 24 小时内完成发货。', time: '昨天 08:47', unread: false },
+    { id: 10, cat: 'sys',   level: 'success', icon: 'gear',   title: '备份任务执行成功',          desc: '全量备份 6.4 GB，耗时 4 分 08 秒，存储于 OSS 华东 1 区。', time: '2 天前', unread: false },
+    { id: 11, cat: 'cmt',   level: 'info',    icon: 'chat',   title: '白鹭 点赞了你的文章',      desc: '《从零搭一套组件库：token 的三层结构》获得第 128 个点赞。', time: '3 天前', unread: false },
+    { id: 12, cat: 'team',  level: 'warning', icon: 'person', title: '陈默 申请调休 1 天',       desc: '申请日期 09-28，事由：搬家。当前剩余年假 7 天。', time: '3 天前', unread: false }
+  ];
+
+  var ICON = {
+    order: '<path d="M5 3h10l1.5 3.5H3.5z"/><path d="M4.5 6.5V16a1 1 0 001 1h9a1 1 0 001-1V6.5"/><path d="M8 9.5h4"/>',
+    warn: '<path d="M10 3.5L18 16.5H2z"/><path d="M10 8.5v3.6M10 14.4v.2"/>',
+    chat: '<path d="M16.5 11.5a1.5 1.5 0 01-1.5 1.5H8l-4 3V5a1.5 1.5 0 011.5-1.5h9.5A1.5 1.5 0 0116.5 5z"/>',
+    person: '<circle cx="10" cy="7.5" r="2.6"/><path d="M4.8 16.2c.8-2.4 2.7-3.6 5.2-3.6s4.4 1.2 5.2 3.6"/>',
+    gear: '<path d="M3 6h14M3 10h14M3 14h14"/><circle cx="7" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="13" cy="10" r="1.6" fill="currentColor" stroke="none"/><circle cx="8" cy="14" r="1.6" fill="currentColor" stroke="none"/>'
+  };
+  var LEVEL_BG = { success: 'success', warning: 'warning', danger: 'danger', info: 'info' };
+
+  var tabs = document.getElementById('ntabs');
+  var panels = {
+    all: document.getElementById('np-all'),
+    unread: document.getElementById('np-unread'),
+    order: document.getElementById('np-order'),
+    sys: document.getElementById('np-sys'),
+    cmt: document.getElementById('np-cmt'),
+    team: document.getElementById('np-team')
+  };
+
+  function listHTML(rows) {
+    if (!rows.length) {
+      return '<div class="ui-empty"><div class="ui-empty__icon"><svg width="28" height="28" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3a5 5 0 015 5v3l1.5 2.5H3.5L5 11V8a5 5 0 015-5z"/><path d="M8.5 16a1.5 1.5 0 003 0"/></svg></div>' +
+        '<div class="ui-empty__title">这里空空的</div><div class="ui-empty__desc">该分类下暂时没有消息</div></div>';
+    }
+    return '<div class="adm-notes">' + rows.map(function (n) {
+      return '<div class="adm-note' + (n.unread ? ' is-unread' : '') + '" data-id="' + n.id + '" role="button" tabindex="0">' +
+        '<span class="adm-note__icon ui-badge ui-badge--' + LEVEL_BG[n.level] + '">' +
+          '<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + ICON[n.icon] + '</svg></span>' +
+        '<div class="adm-note__body">' +
+          '<div class="adm-note__top">' +
+            '<span class="adm-note__title">' + n.title + '</span>' +
+            (n.unread ? '<span class="adm-note__dot" aria-label="未读"></span>' : '') +
+          '</div>' +
+          '<p class="adm-note__desc">' + n.desc + '</p>' +
+          '<div class="adm-note__foot">' +
+            '<span class="ui-caption ui-muted">' + n.time + '</span>' +
+            '<span class="ui-badge ui-badge--pill adm-note__cat">' + { order: '订单', sys: '系统', cmt: '评论', team: '团队' }[n.cat] + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="adm-note__ops">' +
+          (n.unread ? '<button class="ui-btn ui-btn--link ui-btn--sm" type="button" data-act="read">标记已读</button>' : '') +
+          '<button class="ui-btn ui-btn--link ui-btn--sm adm-note__del" type="button" data-act="del">删除</button>' +
+        '</div>' +
+      '</div>';
+    }).join('') + '</div>';
+  }
+
+  function render() {
+    panels.all.innerHTML = listHTML(NOTES);
+    panels.unread.innerHTML = listHTML(NOTES.filter(function (n) { return n.unread; }));
+    panels.order.innerHTML = listHTML(NOTES.filter(function (n) { return n.cat === 'order'; }));
+    panels.sys.innerHTML = listHTML(NOTES.filter(function (n) { return n.cat === 'sys'; }));
+    panels.cmt.innerHTML = listHTML(NOTES.filter(function (n) { return n.cat === 'cmt'; }));
+    panels.team.innerHTML = listHTML(NOTES.filter(function (n) { return n.cat === 'team'; }));
+
+    var unread = NOTES.filter(function (n) { return n.unread; }).length;
+    document.getElementById('nUnread').textContent = unread;
+    var c = function (k, v) {
+      var el = tabs.querySelector('[data-n-count="' + k + '"]');
+      if (el) el.textContent = v;
+    };
+    c('all', NOTES.length);
+    c('unread', unread);
+    c('order', NOTES.filter(function (n) { return n.cat === 'order'; }).length);
+    c('sys', NOTES.filter(function (n) { return n.cat === 'sys'; }).length);
+    c('cmt', NOTES.filter(function (n) { return n.cat === 'cmt'; }).length);
+    c('team', NOTES.filter(function (n) { return n.cat === 'team'; }).length);
+  }
+
+  tabs.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    var row = btn.closest('.adm-note');
+    var id = parseInt(row.getAttribute('data-id'), 10);
+    var n = NOTES.find(function (x) { return x.id === id; });
+    if (!n) return;
+    var act = btn.getAttribute('data-act');
+    if (act === 'read') { n.unread = false; render(); }
+    if (act === 'del') { NOTES.splice(NOTES.indexOf(n), 1); render(); if (window.UI) UI.toast({ message: '已删除该消息', type: 'success' }); }
+  });
+
+  document.querySelector('[data-n-readall]').addEventListener('click', function () {
+    var n = NOTES.filter(function (x) { return x.unread; }).length;
+    NOTES.forEach(function (x) { x.unread = false; });
+    render();
+    if (window.UI) UI.toast({ message: '已把 ' + n + ' 条消息标记为已读', type: 'success' });
+  });
+  document.querySelector('[data-n-clear]').addEventListener('click', function () {
+    NOTES.length = 0;
+    render();
+    if (window.UI) UI.toast({ message: '消息已清空', type: 'success' });
+  });
+
+  render();
+})();
+</script>
+
   </main>
 
   <footer class="adm-footer">OwnUI Admin · 基于 OwnUI 组件库 · MIT License</footer>
@@ -332,27 +352,5 @@
 
 <script src="../library/components.js"></script>
 <script src="admin.js"></script>
-<script>
-/* 表单提交演示：校验由 data-ui="validate" 拦截，这里只负责成功反馈 */
-document.querySelectorAll('form[data-ui="validate"]').forEach(function (f) {
-  f.addEventListener('submit', function () {
-    if (window.UI) UI.toast({ message: '设置已保存', description: '演示环境，不会写入后端', type: 'success' });
-  });
-});
-/* 撤销会话的就地确认 */
-document.querySelectorAll('.ui-popconfirm').forEach(function (pop) {
-  var host = pop.parentNode;
-  var open = host.querySelector('.ui-btn');
-  open.addEventListener('click', function () { pop.hidden = !pop.hidden; });
-  pop.querySelectorAll('.ui-btn').forEach(function (b) {
-    b.addEventListener('click', function () {
-      pop.hidden = true;
-      if (b.getAttribute('class').indexOf('danger') > -1 && window.UI) {
-        UI.toast({ message: '已撤销全部会话（演示）', type: 'success' });
-      }
-    });
-  });
-});
-</script>
 </body>
 </html>

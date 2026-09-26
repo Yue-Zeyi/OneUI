@@ -110,7 +110,9 @@ const SITE_FILES = [
 ];
 
 const ADMIN_FILES = [
-  'index.html', 'users.html', 'forms.html', 'login.html', '404.html',
+  'index.html', 'users.html', 'orders.html', 'articles.html', 'files.html',
+  'notifications.html', 'settings.html', 'profile.html', 'charts.html',
+  'forms.html', 'login.html', '404.html', '500.html', 'maintenance.html',
   'admin.css', 'admin.js',
 ];
 
@@ -131,12 +133,15 @@ function buildSite() {
     writeFileSync(join(SITE, f), text);
   }
 
-  // admin/ 模板整目录进 admin/ 子目录，../library/ 同样重写
+  // admin/ 模板整目录进 admin/ 子目录：../library/ → library/，
+  // ../docs/ → ../（dist 里 docs 平铺在站点根，admin 的「组件文档」链接才不断）
   for (const f of ADMIN_FILES) {
     const src = join(P, 'admin', f);
     if (!existsSync(src)) { console.warn('跳过（不存在）：admin/' + f); continue; }
     let text = readFileSync(src, 'utf8');
-    if (/\.(html|js)$/.test(f)) text = text.replaceAll('../library/', 'library/');
+    if (/\.(html|js)$/.test(f)) {
+      text = text.replaceAll('../library/', 'library/').replaceAll('../docs/', '../');
+    }
     writeFileSync(join(SITE, 'admin', f), text);
   }
 
@@ -151,7 +156,10 @@ function buildSite() {
   for (const f of ADMIN_FILES) {
     if (!f.endsWith('.html')) continue;
     const t = readFileSync(join(SITE, 'admin', f), 'utf8');
-    if (t.includes('"../library')) throw new Error('admin/' + f + ' 仍有 ../library 引用未重写');
+    // ../docs.html 是合法的（dist 里 docs 平铺在站点根），../library 与 ../docs/ 才说明漏重写
+    if (t.includes('"../library') || t.includes('"../docs/')) {
+      throw new Error('admin/' + f + ' 仍有 ../library 或 ../docs/ 引用未重写');
+    }
   }
   console.log('写出 dist/site/（文档站 ' + SITE_FILES.length + ' 个文件 + admin 模板 '
     + ADMIN_FILES.length + ' 个文件 + library/ 5 个文件，入口 index.html）');

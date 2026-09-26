@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-ui-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%2318181B'/%3E%3Ccircle cx='8' cy='8' r='4.55' fill='none' stroke='%23fff' stroke-width='1.9'/%3E%3C/svg%3E">
+<title>图表页 · OwnUI Admin</title>
+<link rel="stylesheet" href="../library/tokens.css">
+<link rel="stylesheet" href="../library/base.css">
+<link rel="stylesheet" href="../library/components.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="adm">
+<div class="adm-veil"></div>
+
+<!-- ==================== 侧栏（全站共用，唯一数据源是 tools/sync-admin-nav.py） ==================== -->
+<aside class="adm-side" aria-label="管理侧栏">
+  <a class="adm-side__brand" href="index.html">
+    <span class="ui-navbar__logo" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4.55" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+    </span>
+    <span class="adm-brand-text">OwnUI Admin</span>
+  </a>
+
+  <div class="adm-side__menu">
+    <nav class="ui-sidenav" aria-label="功能菜单">
+      <div class="ui-sidenav__group">
+        <div class="ui-sidenav__label">总览</div>
+        <a class="ui-sidenav__item" href="index.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6" rx="1.2"/><rect x="11" y="3" width="6" height="6" rx="1.2"/><rect x="3" y="11" width="6" height="6" rx="1.2"/><rect x="11" y="11" width="6" height="6" rx="1.2"/></svg>
+          <span>仪表盘</span>
+        </a>
+        <a class="ui-sidenav__item" href="charts.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17V9M8 17V4M13 17v-6M18 17v-9"/></svg>
+          <span>图表页</span>
+        </a>
+      </div>
+      <div class="ui-sidenav__group">
+        <div class="ui-sidenav__label">业务</div>
+        <a class="ui-sidenav__item" href="users.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="6.5" r="3.2"/><path d="M3.8 16.8c.9-3 3.3-4.6 6.2-4.6s5.3 1.6 6.2 4.6"/></svg>
+          <span>用户管理</span>
+          <span class="ui-sidenav__badge ui-badge ui-badge--primary ui-badge--pill">12</span>
+        </a>
+        <a class="ui-sidenav__item" href="orders.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l1.5 3.5H3.5z"/><path d="M4.5 6.5V16a1 1 0 001 1h9a1 1 0 001-1V6.5"/><path d="M8 9.5h4"/></svg>
+          <span>订单管理</span>
+          <span class="ui-sidenav__badge ui-badge ui-badge--danger ui-badge--pill">3</span>
+        </a>
+        <a class="ui-sidenav__item" href="articles.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2.8" width="12" height="14.4" rx="1.6"/><path d="M7 7h6M7 10h6M7 13h3.5"/></svg>
+          <span>内容管理</span>
+        </a>
+        <a class="ui-sidenav__item" href="files.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6a1.5 1.5 0 011.5-1.5h3l2 2.5h8A1.5 1.5 0 0117 8.5v7A1.5 1.5 0 0115.5 17h-11A1.5 1.5 0 013 15.5z"/></svg>
+          <span>文件管理</span>
+        </a>
+      </div>
+      <div class="ui-sidenav__group">
+        <div class="ui-sidenav__label">协作</div>
+        <a class="ui-sidenav__item" href="notifications.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3a5 5 0 015 5v3l1.5 2.5H3.5L5 11V8a5 5 0 015-5z"/><path d="M8.5 16a1.5 1.5 0 003 0"/></svg>
+          <span>消息中心</span>
+          <span class="ui-sidenav__badge ui-badge ui-badge--danger ui-badge--pill">5</span>
+        </a>
+      </div>
+      <div class="ui-sidenav__group adm-menu__item">
+        <button class="ui-sidenav__item" type="button" data-sub aria-expanded="false">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h14M3 10h14M3 14h14"/><circle cx="7" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="13" cy="10" r="1.6" fill="currentColor" stroke="none"/><circle cx="8" cy="14" r="1.6" fill="currentColor" stroke="none"/></svg>
+          <span>系统设置</span>
+          <svg class="adm-caret" width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8l4.5 4.5L14.5 8"/></svg>
+        </button>
+        <div class="adm-sub">
+          <a class="ui-sidenav__item" href="settings.html"><span>站点设置</span></a>
+          <a class="ui-sidenav__item" href="settings.html#security"><span>安全与登录</span></a>
+          <a class="ui-sidenav__item" href="profile.html"><span>个人资料</span></a>
+        </div>
+      </div>
+      <div class="ui-sidenav__group">
+        <div class="ui-sidenav__label">页面</div>
+        <a class="ui-sidenav__item" href="login.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 3H16a1 1 0 011 1v12a1 1 0 01-1 1h-3.5"/><path d="M3 10h9M9.5 6.5L13 10l-3.5 3.5"/></svg>
+          <span>登录页</span>
+        </a>
+        <a class="ui-sidenav__item" href="404.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.5L18 16.5H2z"/><path d="M10 8.5v3.6M10 14.4v.2"/></svg>
+          <span>404 页面不存在</span>
+        </a>
+        <a class="ui-sidenav__item" href="500.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.5L18 16.5H2z"/><path d="M10 8.5v3.6M10 14.4v.2"/></svg>
+          <span>500 服务异常</span>
+        </a>
+        <a class="ui-sidenav__item" href="maintenance.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 5.8V10l3 1.8"/></svg>
+          <span>维护中</span>
+        </a>
+      </div>
+      <div class="ui-sidenav__group">
+        <div class="ui-sidenav__label">资源</div>
+        <a class="ui-sidenav__item" href="../docs/docs.html">
+          <svg class="adm-ico" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4.5C8.6 3.4 6.7 3 4 3v12c2.7 0 4.6.4 6 1.5 1.4-1.1 3.3-1.5 6-1.5V3c-2.7 0-4.6.4-6 1.5z"/><path d="M10 4.5v12"/></svg>
+          <span>组件文档</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="adm-side__foot">
+    <button class="ui-btn ui-btn--ghost ui-btn--sm" type="button" data-adm-fold>
+      <svg class="adm-ico" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M8 3v14"/></svg>
+      收起侧栏
+    </button>
+    <span class="adm-side__ver">v1.0.0 · MIT</span>
+  </div>
+</aside>
+
+
+<!-- ==================== 主区 ==================== -->
+<div class="adm-main">
+
+  <header class="adm-top">
+    <button class="ui-icon-btn adm-fold-btn" type="button" data-adm-fold aria-label="折叠侧栏">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 5.5h14M3 10h14M3 14.5h14"/></svg>
+    </button>
+    <button class="ui-icon-btn adm-burger" type="button" data-adm-drawer aria-label="打开侧栏" aria-expanded="false">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 5.5h14M3 10h14M3 14.5h14"/></svg>
+    </button>
+
+    <nav class="ui-breadcrumb" aria-label="面包屑">
+      <span class="ui-breadcrumb__item"><a href="index.html">首页</a></span>
+      <span class="ui-breadcrumb__sep">/</span>
+      <span class="ui-breadcrumb__item" aria-current="page">图表页</span>
+    </nav>
+
+    <div class="adm-top__spacer"></div>
+
+    <div class="ui-search adm-search--top">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="9" r="5.5"/><path d="M13 13l3.5 3.5"/></svg>
+      <input class="ui-input ui-input--sm" type="search" placeholder="搜索…" aria-label="全局搜索" style="width: 180px">
+    </div>
+
+    <div class="adm-top__actions">
+      <button class="ui-icon-btn" type="button" data-adm-theme="light" aria-pressed="false" aria-label="切换浅色" data-tooltip="浅色">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="10" cy="10" r="3.5"/><path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.7 4.7l1.4 1.4M13.9 13.9l1.4 1.4M15.3 4.7l-1.4 1.4M6.1 13.9l-1.4 1.4"/></svg>
+      </button>
+      <button class="ui-icon-btn" type="button" data-adm-theme="dark" aria-pressed="false" aria-label="切换深色" data-tooltip="深色">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 12.2A7 7 0 017.8 3.5a7 7 0 108.7 8.7z"/></svg>
+      </button>
+
+      <div class="ui-dropdown-wrap" data-ui="dropdown">
+        <button class="ui-icon-btn" type="button" data-ui="dropdown-trigger" aria-label="切换主色" data-tooltip="主色">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17a7 7 0 110-14c3.9 0 7 2.6 7 5.8 0 2-1.6 3.2-3.4 3.2h-1.4c-1 0-1.8.8-1.8 1.8 0 .5.2.9.4 1.3.2.3-.1.9-.8.9z"/><circle cx="7" cy="8" r=".9" fill="currentColor" stroke="none"/><circle cx="10.5" cy="5.8" r=".9" fill="currentColor" stroke="none"/><circle cx="14" cy="7.8" r=".9" fill="currentColor" stroke="none"/></svg>
+        </button>
+        <div class="ui-menu" role="menu" aria-label="主色预设">
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="true" type="button" data-adm-accent="brand" data-adm-label="墨黑"><span class="ui-dot" style="background:#18181B"></span>墨黑</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="blue" data-adm-label="品蓝"><span class="ui-dot" style="background:#2563EB"></span>品蓝</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="indigo" data-adm-label="靛蓝"><span class="ui-dot" style="background:#4F46E5"></span>靛蓝</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="emerald" data-adm-label="翠绿"><span class="ui-dot" style="background:#047857"></span>翠绿</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="orange" data-adm-label="橙"><span class="ui-dot" style="background:#C2410C"></span>橙</button>
+          <button class="ui-menu__item" role="menuitemradio" aria-checked="false" type="button" data-adm-accent="violet" data-adm-label="紫罗兰"><span class="ui-dot" style="background:#7C3AED"></span>紫罗兰</button>
+        </div>
+      </div>
+
+      <div class="ui-dropdown-wrap" data-ui="dropdown">
+        <button class="ui-icon-btn" type="button" data-ui="dropdown-trigger" aria-label="消息通知" data-tooltip="消息">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3a5 5 0 015 5v3l1.5 2.5H3.5L5 11V8a5 5 0 015-5z"/><path d="M8.5 16a1.5 1.5 0 003 0"/></svg>
+          <span class="ui-badge ui-badge--danger ui-badge--pill" style="position:absolute; top:4px; right:4px; min-width:16px; height:16px; font-size:10px; line-height:16px; padding:0">5</span>
+        </button>
+        <div class="ui-menu" role="menu" aria-label="消息通知" style="min-width: 260px">
+          <button class="ui-menu__item" role="menuitem" type="button"><span class="ui-status ui-status--success"><span class="ui-dot"></span></span>订单 #20481 已支付</button>
+          <button class="ui-menu__item" role="menuitem" type="button"><span class="ui-status ui-status--warning"><span class="ui-dot"></span></span>服务器 CPU 82%，请关注</button>
+          <button class="ui-menu__item" role="menuitem" type="button"><span class="ui-status ui-status--info"><span class="ui-dot"></span></span>新用户「李清照」已注册</button>
+          <div role="separator"></div>
+          <button class="ui-menu__item" role="menuitem" type="button">查看全部消息</button>
+        </div>
+      </div>
+
+      <div class="ui-dropdown-wrap" data-ui="dropdown">
+        <button class="adm-user" type="button" data-ui="dropdown-trigger" aria-label="账户菜单">
+          <span class="ui-avatar ui-avatar--sm" aria-hidden="true">林</span>
+          <span class="adm-user__meta">
+            <span class="adm-user__name">林晚</span><br>
+            <span class="adm-user__role">管理员</span>
+          </span>
+        </button>
+        <div class="ui-menu" role="menu" aria-label="账户菜单">
+          <button class="ui-menu__item" role="menuitem" type="button">个人资料</button>
+          <button class="ui-menu__item" role="menuitem" type="button">账户设置</button>
+          <div role="separator"></div>
+          <button class="ui-menu__item" role="menuitem" type="button" data-adm-logout>退出登录</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- 内容 -->
+  <main class="adm-content">
+    <div class="adm-content__head">
+      <div>
+        <h1 class="adm-content__title">图表页</h1>
+        <p class="adm-content__desc">全部由手写 SVG 绘制，零第三方依赖 · 跟随主题与主色</p>
+      </div>
+      <div class="ui-toolbar">
+        <div class="ui-segmented" data-ui="segmented" role="radiogroup" aria-label="时间范围" id="cRange">
+          <button class="ui-segment" role="radio" aria-selected="true"  type="button" data-v="7">近 7 天</button>
+          <button class="ui-segment" role="radio" aria-selected="false" type="button" data-v="12">近 12 月</button>
+        </div>
+        <button class="ui-btn ui-btn--default ui-btn--sm" type="button" data-c-export>导出 PNG</button>
+      </div>
+    </div>
+
+    <!-- 折线（多系列） -->
+    <div class="ui-card ui-card--pad">
+      <div class="ui-card__header">
+        <div class="ui-card__title">营收趋势</div>
+        <div class="ui-card__desc">三条产品线对比，单位：万元</div>
+      </div>
+      <div class="ui-card__body">
+        <div class="adm-chart-legend" id="cLegend1"></div>
+        <div class="adm-chart-wrap" id="cLine"></div>
+      </div>
+    </div>
+
+    <div class="adm-grid" style="margin-top: var(--ui-space-4)">
+      <!-- 面积 -->
+      <div class="ui-card ui-card--pad">
+        <div class="ui-card__header">
+          <div class="ui-card__title">访问量（面积图）</div>
+          <div class="ui-card__desc">日活与新增用户</div>
+        </div>
+        <div class="ui-card__body">
+          <div class="adm-chart-legend" id="cLegend2"></div>
+          <div class="adm-chart-wrap" id="cArea"></div>
+        </div>
+      </div>
+
+      <!-- 柱状 -->
+      <div class="ui-card ui-card--pad">
+        <div class="ui-card__header">
+          <div class="ui-card__title">渠道分布（分组柱状）</div>
+          <div class="ui-card__desc">各渠道的下单与退款量</div>
+        </div>
+        <div class="ui-card__body">
+          <div class="adm-chart-legend" id="cLegend3"></div>
+          <div class="adm-chart-wrap" id="cBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="adm-grid" style="margin-top: var(--ui-space-4)">
+      <!-- 饼 -->
+      <div class="ui-card ui-card--pad">
+        <div class="ui-card__header">
+          <div class="ui-card__title">流量来源（饼图）</div>
+          <div class="ui-card__desc">按会话占比</div>
+        </div>
+        <div class="ui-card__body">
+          <div class="adm-pie">
+            <div class="adm-chart-wrap" id="cPie" style="max-width: 220px"></div>
+            <div class="adm-pie__legend" id="cLegend4"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 环 -->
+      <div class="ui-card ui-card--pad">
+        <div class="ui-card__header">
+          <div class="ui-card__title">目标完成度（环形）</div>
+          <div class="ui-card__desc">季度 KPI 进度</div>
+        </div>
+        <div class="ui-card__body">
+          <div class="adm-pie">
+            <div class="adm-chart-wrap" id="cDonut" style="max-width: 220px"></div>
+            <div class="adm-pie__legend" id="cLegend5"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="adm-grid" style="margin-top: var(--ui-space-4)">
+      <!-- 散点 -->
+      <div class="ui-card ui-card--pad">
+        <div class="ui-card__header">
+          <div class="ui-card__title">客单价 / 复购率（散点）</div>
+          <div class="ui-card__desc">每个点是一个客户</div>
+        </div>
+        <div class="ui-card__body">
+          <div class="adm-chart-wrap" id="cScatter"></div>
+        </div>
+      </div>
+
+      <!-- 雷达 -->
+      <div class="ui-card ui-card--pad">
+        <div class="ui-card__header">
+          <div class="ui-card__title">能力模型（雷达）</div>
+          <div class="ui-card__desc">当前值 vs 目标值</div>
+        </div>
+        <div class="ui-card__body">
+          <div class="adm-chart-legend" id="cLegend6"></div>
+          <div class="adm-chart-wrap" id="cRadar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 数据表 -->
+    <div class="ui-card" style="margin-top: var(--ui-space-4)">
+      <div class="ui-card__header">
+        <div class="ui-card__title">明细数据</div>
+        <div class="ui-card__desc">图表背后的原始数值</div>
+      </div>
+      <div class="ui-card__body">
+        <div class="ui-table-wrap">
+          <table class="ui-table ui-table--compact ui-table--striped" id="cTable">
+            <thead><tr>
+              <th>月份</th><th class="ui-table__cell-num">企业版</th><th class="ui-table__cell-num">专业版</th>
+              <th class="ui-table__cell-num">API</th><th class="ui-table__cell-num">合计</th><th>环比</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+<script>
+/* ---------- 图表页：手写 SVG 图表引擎（无第三方依赖） ---------- */
+(function () {
+  'use strict';
+
+  function niceMax(v) {
+    if (v <= 0) return 10;
+    var mag = Math.pow(10, Math.floor(Math.log(v) / Math.LN10));
+    var n = v / mag;
+    var step = n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10;
+    return step * mag;
+  }
+  function wrap(w, h, inner, label) {
+    return '<svg class="adm-chart" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="' + label + '">' + inner + '</svg>';
+  }
+  function xAt(box, i, n) {
+    return n === 1 ? box.l + box.w / 2 : box.l + (box.w / (n - 1)) * i;
+  }
+  function gridY(box, max, ticks) {
+    var s = '';
+    for (var i = 0; i <= ticks; i++) {
+      var y = box.t + box.h - (box.h / ticks) * i;
+      s += '<line x1="' + box.l + '" y1="' + y.toFixed(1) + '" x2="' + (box.l + box.w) + '" y2="' + y.toFixed(1) +
+           '" stroke="var(--ui-border-weak)" stroke-width="1"/>';
+      s += '<text x="' + (box.l - 8) + '" y="' + (y + 4).toFixed(1) + '" text-anchor="end" font-size="11" fill="var(--ui-text-3)">' +
+           Math.round(max / ticks * i) + '</text>';
+    }
+    return s;
+  }
+  function axisX(box, labels) {
+    return labels.map(function (lb, i) {
+      var x = xAt(box, i, labels.length);
+      return '<text x="' + x.toFixed(1) + '" y="' + (box.t + box.h + 18) + '" text-anchor="middle" font-size="11" fill="var(--ui-text-3)">' + lb + '</text>';
+    }).join('');
+  }
+
+  /* 折线 / 面积 */
+  function lineChart(labels, series, opt) {
+    opt = opt || {};
+    var w = 640, h = opt.h || 260;
+    var box = { l: 44, t: 14, w: w - 60, h: h - 48 };
+    var max = 0;
+    series.forEach(function (s) { s.data.forEach(function (v) { if (v > max) max = v; }); });
+    max = niceMax(max * 1.1);
+    var s = gridY(box, max, 4) + axisX(box, labels);
+    series.forEach(function (se) {
+      var pts = se.data.map(function (v, i) { return [xAt(box, i, se.data.length), box.t + box.h - (v / max) * box.h]; });
+      var d = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join(' ');
+      if (opt.area) {
+        s += '<path d="' + d + ' L' + pts[pts.length - 1][0].toFixed(1) + ' ' + (box.t + box.h) +
+             ' L' + pts[0][0].toFixed(1) + ' ' + (box.t + box.h) + ' Z" fill="' + se.color + '" opacity=".14"/>';
+      }
+      s += '<path d="' + d + '" fill="none" stroke="' + se.color + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+      pts.forEach(function (p) {
+        s += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="3" fill="var(--ui-surface)" stroke="' + se.color + '" stroke-width="2"><title>' + se.name + '</title></circle>';
+      });
+    });
+    return wrap(w, h, s, opt.label || '折线图');
+  }
+
+  /* 分组柱状 */
+  function barChart(labels, series) {
+    var w = 640, h = 260;
+    var box = { l: 44, t: 14, w: w - 60, h: h - 48 };
+    var max = 0;
+    series.forEach(function (s) { s.data.forEach(function (v) { if (v > max) max = v; }); });
+    max = niceMax(max * 1.1);
+    var s = gridY(box, max, 4) + axisX(box, labels);
+    var groupW = box.w / labels.length;
+    var barW = Math.max(6, Math.min(16, (groupW - 12) / series.length));
+    var totalW = barW * series.length + (series.length - 1) * 3;
+    labels.forEach(function (lb, i) {
+      var gx = box.l + groupW * i + (groupW - totalW) / 2;
+      series.forEach(function (se, k) {
+        var bh = (se.data[i] / max) * box.h;
+        var x = gx + k * (barW + 3);
+        var y = box.t + box.h - bh;
+        s += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + barW.toFixed(1) + '" height="' + bh.toFixed(1) +
+             '" rx="3" fill="' + se.color + '"><title>' + se.name + ' ' + lb + '：' + se.data[i] + '</title></rect>';
+      });
+    });
+    return wrap(w, h, s, '分组柱状图');
+  }
+
+  /* 饼 / 环 */
+  function pieChart(items, donut) {
+    var w = 220, h = 220, cx = 110, cy = 110, r = 88, ir = donut ? 56 : 0;
+    var total = items.reduce(function (a, b) { return a + b.value; }, 0);
+    var a0 = -Math.PI / 2, s = '';
+    items.forEach(function (it) {
+      var a1 = a0 + (it.value / total) * Math.PI * 2;
+      var large = (a1 - a0) > Math.PI ? 1 : 0;
+      var x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0);
+      var x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+      if (!donut) {
+        s += '<path d="M' + cx + ' ' + cy + ' L' + x0.toFixed(1) + ' ' + y0.toFixed(1) +
+             ' A' + r + ' ' + r + ' 0 ' + large + ' 1 ' + x1.toFixed(1) + ' ' + y1.toFixed(1) + ' Z" fill="' + it.color + '"><title>' + it.name + '：' + it.value + '</title></path>';
+      } else {
+        var xi0 = cx + ir * Math.cos(a0), yi0 = cy + ir * Math.sin(a0);
+        var xi1 = cx + ir * Math.cos(a1), yi1 = cy + ir * Math.sin(a1);
+        s += '<path d="M' + x0.toFixed(1) + ' ' + y0.toFixed(1) +
+             ' A' + r + ' ' + r + ' 0 ' + large + ' 1 ' + x1.toFixed(1) + ' ' + y1.toFixed(1) +
+             ' L' + xi1.toFixed(1) + ' ' + yi1.toFixed(1) +
+             ' A' + ir + ' ' + ir + ' 0 ' + large + ' 0 ' + xi0.toFixed(1) + ' ' + yi0.toFixed(1) + ' Z" fill="' + it.color + '"><title>' + it.name + '：' + it.value + '</title></path>';
+      }
+      a0 = a1;
+    });
+    if (donut) {
+      s += '<text x="' + cx + '" y="' + (cy - 2) + '" text-anchor="middle" font-size="26" font-weight="700" fill="var(--ui-text)">73%</text>';
+      s += '<text x="' + cx + '" y="' + (cy + 18) + '" text-anchor="middle" font-size="12" fill="var(--ui-text-3)">完成度</text>';
+    }
+    return wrap(w, h, s, donut ? '环形图' : '饼图');
+  }
+
+  /* 散点 */
+  function scatterChart(points) {
+    var w = 640, h = 260;
+    var box = { l: 52, t: 14, w: w - 68, h: h - 48 };
+    var maxX = niceMax(Math.max.apply(null, points.map(function (p) { return p.x; })) * 1.08);
+    var maxY = niceMax(Math.max.apply(null, points.map(function (p) { return p.y; })) * 1.08);
+    var s = gridY(box, maxY, 4);
+    for (var i = 0; i <= 4; i++) {
+      var x = box.l + (box.w / 4) * i;
+      s += '<text x="' + x.toFixed(1) + '" y="' + (box.t + box.h + 18) + '" text-anchor="middle" font-size="11" fill="var(--ui-text-3)">' + Math.round(maxX / 4 * i) + '</text>';
+    }
+    s += '<text x="' + (box.l + box.w / 2) + '" y="' + (h - 4) + '" text-anchor="middle" font-size="11" fill="var(--ui-text-3)">客单价（元）</text>';
+    points.forEach(function (p) {
+      var cx = box.l + (p.x / maxX) * box.w;
+      var cy = box.t + box.h - (p.y / maxY) * box.h;
+      s += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="' + (4 + p.y / 22).toFixed(1) + '" fill="var(--ui-primary)" opacity=".55"><title>' + p.name + '：¥' + p.x + ' / 复购 ' + p.y + '%</title></circle>';
+    });
+    return wrap(w, h, s, '散点图');
+  }
+
+  /* 雷达 */
+  function radarChart(dims, series) {
+    var w = 640, h = 280, cx = 320, cy = 140, r = 100;
+    var n = dims.length, s = '';
+    for (var ring = 1; ring <= 4; ring++) {
+      var rr = r / 4 * ring;
+      var pts = [];
+      for (var i = 0; i < n; i++) {
+        var a = -Math.PI / 2 + (Math.PI * 2 / n) * i;
+        pts.push((cx + rr * Math.cos(a)).toFixed(1) + ',' + (cy + rr * Math.sin(a)).toFixed(1));
+      }
+      s += '<polygon points="' + pts.join(' ') + '" fill="none" stroke="var(--ui-border-weak)" stroke-width="1"/>';
+    }
+    for (var j = 0; j < n; j++) {
+      var ang = -Math.PI / 2 + (Math.PI * 2 / n) * j;
+      s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + r * Math.cos(ang)).toFixed(1) + '" y2="' + (cy + r * Math.sin(ang)).toFixed(1) + '" stroke="var(--ui-border-weak)" stroke-width="1"/>';
+      var lx = cx + (r + 22) * Math.cos(ang), ly = cy + (r + 22) * Math.sin(ang);
+      s += '<text x="' + lx.toFixed(1) + '" y="' + (ly + 4).toFixed(1) + '" text-anchor="middle" font-size="11" fill="var(--ui-text-3)">' + dims[j] + '</text>';
+    }
+    series.forEach(function (se) {
+      var pts = se.data.map(function (v, i) {
+        var a = -Math.PI / 2 + (Math.PI * 2 / n) * i;
+        var rr = (v / 100) * r;
+        return (cx + rr * Math.cos(a)).toFixed(1) + ',' + (cy + rr * Math.sin(a)).toFixed(1);
+      });
+      s += '<polygon points="' + pts.join(' ') + '" fill="' + se.color + '" fill-opacity=".16" stroke="' + se.color + '" stroke-width="2" stroke-linejoin="round"/>';
+    });
+    return wrap(w, h, s, '雷达图');
+  }
+
+  function legend(el, series) {
+    el.innerHTML = series.map(function (s) {
+      return '<span class="adm-chart-legend__item"><span class="ui-dot" style="background:' + s.color + '"></span>' + s.name + '</span>';
+    }).join('');
+  }
+  function pieLegend(el, items) {
+    var total = items.reduce(function (a, b) { return a + b.value; }, 0);
+    el.innerHTML = items.map(function (it) {
+      return '<div class="adm-pie__row"><span class="ui-dot" style="background:' + it.color + '"></span>' +
+        '<span class="adm-pie__name">' + it.name + '</span>' +
+        '<span class="adm-pie__val ui-num">' + Math.round(it.value / total * 100) + '%</span></div>';
+    }).join('');
+  }
+
+  var C1 = 'var(--ui-primary)', C2 = 'var(--ui-info)', C3 = 'var(--ui-success)',
+      C4 = 'var(--ui-warning)', C5 = 'var(--ui-danger)';
+
+  var DATA = {
+    '7': {
+      labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+      line: [
+        { name: '企业版', color: C1, data: [42, 48, 45, 58, 63, 51, 47] },
+        { name: '专业版', color: C2, data: [28, 25, 31, 29, 34, 38, 36] },
+        { name: 'API',    color: C3, data: [12, 15, 14, 19, 22, 18, 16] }
+      ],
+      area: [
+        { name: '日活',   color: C1, data: [3200, 3480, 3310, 3960, 4210, 3720, 3560] },
+        { name: '新增',   color: C2, data: [820, 910, 870, 1020, 1180, 960, 890] }
+      ],
+      months: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+    },
+    '12': {
+      labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+      line: [
+        { name: '企业版', color: C1, data: [186, 172, 205, 231, 248, 262, 279, 268, 291, 312, 334, 358] },
+        { name: '专业版', color: C2, data: [121, 118, 132, 141, 151, 162, 168, 174, 181, 193, 205, 218] },
+        { name: 'API',    color: C3, data: [54, 61, 68, 74, 82, 91, 96, 103, 112, 121, 133, 146] }
+      ],
+      area: [
+        { name: '日活',   color: C1, data: [9200, 8800, 10400, 11800, 12600, 13400, 14200, 13800, 15100, 16200, 17400, 18600] },
+        { name: '新增',   color: C2, data: [2400, 2200, 2900, 3300, 3600, 3900, 4200, 4000, 4500, 4900, 5300, 5700] }
+      ],
+      months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+    }
+  };
+
+  var BAR_LABELS = ['自然搜索', '付费投放', '社交分享', '邮件营销', '直访', '合作导流'];
+  var BAR = [
+    { name: '下单', color: C1, data: [1284, 962, 741, 418, 356, 214] },
+    { name: '退款', color: C5, data: [42, 88, 36, 27, 14, 9] }
+  ];
+  var PIE = [
+    { name: '自然搜索', value: 38, color: C1 },
+    { name: '付费投放', value: 24, color: C2 },
+    { name: '社交分享', value: 18, color: C3 },
+    { name: '邮件营销', value: 11, color: C4 },
+    { name: '直访',     value: 9,  color: C5 }
+  ];
+  var DONUT = [
+    { name: '已完成', value: 73, color: C1 },
+    { name: '剩余',   value: 27, color: 'var(--ui-border)' }
+  ];
+  var SCATTER = [
+    { name: '林晚', x: 1284, y: 62 }, { name: '陈默', x: 856, y: 48 }, { name: '苏叶', x: 2140, y: 81 },
+    { name: '赵拾光', x: 412, y: 22 }, { name: '周野', x: 1690, y: 57 }, { name: '李清照', x: 720, y: 39 },
+    { name: '顾北', x: 980, y: 66 }, { name: '沈书', x: 3020, y: 92 }, { name: '白鹭', x: 540, y: 18 },
+    { name: '江离', x: 1420, y: 54 }, { name: '温叙', x: 2380, y: 74 }, { name: '祁风', x: 660, y: 31 }
+  ];
+  var RADAR_DIMS = ['性能', '可访问性', '一致性', '文档', '扩展性', '主题'];
+  var RADAR = [
+    { name: '当前值', color: C1, data: [82, 74, 91, 88, 79, 95] },
+    { name: '目标值', color: C2, data: [95, 90, 95, 92, 88, 98] }
+  ];
+
+  var state = { range: '7' };
+
+  function render() {
+    var d = DATA[state.range];
+    document.getElementById('cLine').innerHTML = lineChart(d.labels, d.line, { label: '营收趋势' });
+    legend(document.getElementById('cLegend1'), d.line);
+    document.getElementById('cArea').innerHTML = lineChart(d.labels, d.area, { area: true, h: 240, label: '访问量' });
+    legend(document.getElementById('cLegend2'), d.area);
+    document.getElementById('cBar').innerHTML = barChart(BAR_LABELS, BAR);
+    legend(document.getElementById('cLegend3'), BAR);
+    document.getElementById('cPie').innerHTML = pieChart(PIE, false);
+    pieLegend(document.getElementById('cLegend4'), PIE);
+    document.getElementById('cDonut').innerHTML = pieChart(DONUT, true);
+    pieLegend(document.getElementById('cLegend5'), DONUT);
+    document.getElementById('cScatter').innerHTML = scatterChart(SCATTER);
+    document.getElementById('cRadar').innerHTML = radarChart(RADAR_DIMS, RADAR);
+    legend(document.getElementById('cLegend6'), RADAR);
+
+    var tbody = document.querySelector('#cTable tbody');
+    tbody.innerHTML = d.labels.map(function (lb, i) {
+      var a = d.line[0].data[i], b = d.line[1].data[i], c = d.line[2].data[i];
+      var sum = a + b + c;
+      var prev = i ? d.line[0].data[i - 1] + d.line[1].data[i - 1] + d.line[2].data[i - 1] : sum;
+      var delta = prev ? ((sum - prev) / prev * 100) : 0;
+      var up = delta >= 0;
+      return '<tr><td>' + lb + '</td>' +
+        '<td class="ui-table__cell-num">' + a + '</td>' +
+        '<td class="ui-table__cell-num">' + b + '</td>' +
+        '<td class="ui-table__cell-num">' + c + '</td>' +
+        '<td class="ui-table__cell-num"><strong>' + sum + '</strong></td>' +
+        '<td><span class="ui-stat__trend ' + (up ? 'ui-stat__trend--up' : 'ui-stat__trend--down') + '">' +
+          (up ? '↑' : '↓') + ' ' + Math.abs(delta).toFixed(1) + '%</span></td></tr>';
+    }).join('');
+  }
+
+  document.getElementById('cRange').addEventListener('ui:change', function (e) {
+    var seg = e.target.querySelector('[aria-selected="true"]');
+    state.range = seg ? seg.getAttribute('data-v') : '7';
+    render();
+  });
+  document.querySelector('[data-c-export]').addEventListener('click', function () {
+    if (window.UI) UI.toast({ message: '演示模板：导出 PNG 需接入 html-to-image 之类库', type: 'info' });
+  });
+
+  render();
+})();
+</script>
+
+  </main>
+
+  <footer class="adm-footer">OwnUI Admin · 基于 OwnUI 组件库 · MIT License</footer>
+</div>
+
+<script src="../library/components.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
